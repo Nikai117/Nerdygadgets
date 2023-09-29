@@ -1,4 +1,6 @@
 <!-- dit bestand bevat alle code voor het productoverzicht -->
+<a class="ListItem" href='view.php?id=<?php print $row['StockItemID']; ?>'>
+</a>
 <?php
 include __DIR__ . "/header.php";
 
