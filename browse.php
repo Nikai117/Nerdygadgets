@@ -1,6 +1,4 @@
 <!-- dit bestand bevat alle code voor het productoverzicht -->
-<a class="ListItem" href='view.php?id=<?php print $row['StockItemID']; ?>'>
-</a>
 <?php
 include __DIR__ . "/header.php";
 
@@ -121,7 +119,7 @@ if (isset($amount)) {
         foreach ($ReturnableResult as $row) {
             ?>
             <!--  coderegel 1 van User story: bekijken producten  -->
-
+            <a class="ListItem" href='view.php?id=<?php print $row['StockItemID']; ?>'>
 
 
             <!-- einde coderegel 1 van User story: bekijken producten   -->
@@ -148,7 +146,7 @@ if (isset($amount)) {
                     <h4 class="ItemQuantity"><?php print getVoorraadTekst($row["QuantityOnHand"]); ?></h4>
                 </div>
             <!--  coderegel 2 van User story: bekijken producten  -->
-
+            </a>
 
 
             <!--  einde coderegel 2 van User story: bekijken producten  -->
