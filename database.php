@@ -95,3 +95,36 @@ function getStockItemImage($id, $databaseConnection) {
 
     return $R;
 }
+
+function getQuantity($id, $databaseConnection) {
+
+    $Query = "
+    SELECT QuantityOnHand AS QOH, QuantityPerOuter AS QPO
+    FROM stockitemholdings
+    INNER JOIN stockitems USING (StockItemID)
+    WHERE StockItemID = ?";
+
+    $Statement = mysqli_prepare($databaseConnection, $Query);
+    mysqli_stmt_bind_param($Statement, "i", $id);
+    mysqli_stmt_execute($Statement);
+    $result = mysqli_stmt_get_result($Statement);
+    $Quantity = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+    return $Quantity;
+}
+
+function addToCart($id, $databaseConnection) {
+    
+        $Query = "
+        SELECT StockItemID, StockItemName, TaxRate, UnitPrice
+        FROM stockitems
+        WHERE StockItemID = ?";
+
+    $Statement = mysqli_prepare($databaseConnection, $Query);
+    mysqli_stmt_bind_param($Statement, "i", $id);
+    mysqli_stmt_execute($Statement);
+    $result = mysqli_stmt_get_result($Statement);
+    $R = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+    return $R;
+}
