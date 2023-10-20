@@ -1,5 +1,6 @@
 <!-- de inhoud van dit bestand wordt bovenaan elke pagina geplaatst -->
 <?php
+//onze session array heet "winkelmand". dus je roept het zo op: $_SESSION['winkelmand']
 session_start();
 include "database.php";
 $databaseConnection = connectToDatabase();
