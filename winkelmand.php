@@ -3,15 +3,12 @@
 include __DIR__ . "/header.php";       
 
 function checkEmpty($arr) {
-    if(!isset($arr[0]) || $arr[0] == NULL) {
-        print ("Yarr, de winkelmand is leeg."); 
-        return true;//het eerste element is leeg -> de hele winkelmand is leeg
-    }
-
-    return false; //eerste element is niet null 
+    return !isset($arr[0]) || $arr[0] == NULL; //eerste element is niet null 
 }
 
-if(!checkEmpty($_SESSION['winkelmand'])) {
+if(checkEmpty($_SESSION['winkelmand'])) {
+    print("Yarr, de winkelmand is leeg");
+} else {
     if(isset($_POST['action'])) {
         $action = explode(" ", $_POST['action']);
         if($action[0] == "remove") {//mogelijke functionaliteit om via de winkelwagen producten toe te voegen  
@@ -19,7 +16,8 @@ if(!checkEmpty($_SESSION['winkelmand'])) {
             array_splice($_SESSION['winkelmand'], $action[1], 1);//om de NULL row te verwijderen die je krijgt van unset()
             
             
-            header("Location: winkelmand.php");//refresh zodat de user          
+            if(checkEmpty($_SESSION['winkelmand']))
+                print("Yarr, de winkelmand is leeg");//beetje voor de UX        
         }
     }
 
