@@ -3,7 +3,7 @@
 include __DIR__ . "/header.php";       
 
 function checkEmpty($arr) {
-    return !isset($arr[0]) || $arr[0] == NULL; //eerste element is niet null 
+    return !isset($arr[0]); //eerste element is niet null 
 }
 
 if(checkEmpty($_SESSION['winkelmand'])) {
@@ -11,21 +11,27 @@ if(checkEmpty($_SESSION['winkelmand'])) {
 } else {
     if(isset($_POST['action'])) {
         $action = explode(" ", $_POST['action']);
-        if($action[0] == "remove") {//mogelijke functionaliteit om via de winkelwagen producten toe te voegen  
-            unset($_SESSION['winkelmand'][0][$action[1]]);//$action[1] is de index van het product in de session array
-            array_splice($_SESSION['winkelmand'], $action[1], 1);//om de NULL row te verwijderen die je krijgt van unset()
+
+        if($action[0] == "remove") {//action is verwijderen
+            unset($_SESSION['winkelmand'][$action[1]]);//$action[1] is de index van het product in de session array
+            array_splice($_SESSION['winkelmand'], $action[1], 0);//om de NULL row te verwijderen die je krijgt van unset()
             
             
             if(checkEmpty($_SESSION['winkelmand']))
                 print("Yarr, de winkelmand is leeg");//beetje voor de UX        
         }
+
+        elseif($action[0] == "add") {//action is toevoegen
+            $_SESSION['winkelmand'][] = $_SESSION['winkelmand'][$action[1]];
+        }
     }
 
-    for($i = 0; $i < count($_SESSION['winkelmand']); $i++) {
-        print_r($_SESSION['winkelmand'][$i][0]);
+    foreach($_SESSION['winkelmand'] as $key => $product) {
+        print_r($product);
         print('
-        <form method="post" action="">
-            <button type="submit" name="action" value="remove '. $i.'">Verwijder</button>
+        <form method="post" action="winkelmand.php">
+            <button type="submit" name="action" value="remove '. $key.'">Verwijder</button>
+            <button type="submit" name="action" value="add '. $key.'">Add</button>
         </form>
         ');//ik gebruik remove in value, zodat we wellicht later nog een andere functionaliteit kunnen toevoegen: toevoegen via de winkelmand - James
         print("<br>");
