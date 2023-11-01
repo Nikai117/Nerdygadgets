@@ -94,6 +94,14 @@ if(checkEmpty($_SESSION['winkelmand'])) {
         print("<br>");
     }
 
+    //checkt het totaalbedrag
+    $totaal = 0;
+    foreach ($_SESSION['winkelmand'] as $product['aantal']){
+        $totaal += $product['UnitPrice'] * $aantal;
+    }
+    if (!checkEmpty($_SESSION['winkelmand'])) {
+        print ("Totaal bedrag: $" . $totaal);
+    }
     #hieronder zijn gewoon printjes voor testen
     //print_r($_SESSION['winkelmand'][0][0]);
 
