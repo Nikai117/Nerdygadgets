@@ -26,7 +26,7 @@ function findInArray($needle, $stack) {
 function findIndexArray($needle, $stack) {
     foreach($stack as $key => $item) {
         if($item['StockItemID'] == $needle) {
-            return $key;//het staat al vast de needle in de stack zit, we hebben alleen een index nodig
+            return $key;//het staat al vast dat de needle in de stack zit, we hebben alleen een preciese plek (index) nodig
         }
     }
 }
@@ -95,11 +95,12 @@ if(checkEmpty($_SESSION['winkelmand'])) {
     }
 
     //checkt het totaalbedrag
-    $totaal = 0;
-    foreach ($_SESSION['winkelmand'] as $product['aantal']){
-        $totaal += $product['UnitPrice'] * $aantal;
-    }
     if (!checkEmpty($_SESSION['winkelmand'])) {
+        $totaal = 0;
+
+        foreach ($_SESSION['winkelmand'] as $product){
+            $totaal += $product['UnitPrice'] * $product['aantal'];
+        }
         print ("Totaal bedrag: $" . $totaal);
     }
     #hieronder zijn gewoon printjes voor testen
