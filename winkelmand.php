@@ -1,5 +1,5 @@
 <?php
-//onze session array heet "winkelmand". dus je roept het bijvoorbeeld zo op: $_SESSION['winkelmand'][0][0]['UnitPrice']
+//onze session array heet "winkelmand". dus je roept het bijvoorbeeld zo een prijs op: $_SESSION['winkelmand'][0]['UnitPrice']
 include __DIR__ . "/header.php";       
 
 function checkEmpty($arr) {
@@ -30,8 +30,8 @@ if(checkEmpty($_SESSION['winkelmand'])) {
         print_r($product);
         print('
         <form method="post" action="winkelmand.php">
-            <button type="submit" name="action" value="remove '. $key.'">Verwijder</button>
-            <button type="submit" name="action" value="add '. $key.'">Add</button>
+            <button type="submit" name="action" value="remove '. $key.'">-</button>
+            <button type="submit" name="action" value="add '. $key.'">+</button>
         </form>
         ');//ik gebruik remove in value, zodat we wellicht later nog een andere functionaliteit kunnen toevoegen: toevoegen via de winkelmand - James
         print("<br>");
