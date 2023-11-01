@@ -27,11 +27,20 @@ if(checkEmpty($_SESSION['winkelmand'])) {
     }
 
     foreach($_SESSION['winkelmand'] as $key => $product) {
-        print_r($product);
+        print ('
+        <div>
+            <h5>'.$product['StockItemName'].'</h5>
+            <p>$'.$product['UnitPrice'].'</p>
+        </div>
+       ');
+        $StockItemImage = getStockItemImage($product['StockItemID'], $databaseConnection);
+        if ($StockItemImage != null) {
+            print ('<img src="Public/StockItemIMG/' . $StockItemImage[0]['ImagePath'] . '" style="height: 120px;">');
+        }
         print('
         <form method="post" action="winkelmand.php">
-            <button type="submit" name="action" value="remove '. $key.'">-</button>
-            <button type="submit" name="action" value="add '. $key.'">+</button>
+            <button type="submit" name="action" value="remove '. $key.'" style="background-color: #856404">-</button>
+            <button type="submit" name="action" value="add '. $key.'" style="background-color: green; ">+</button>
         </form>
         ');//ik gebruik remove in value, zodat we wellicht later nog een andere functionaliteit kunnen toevoegen: toevoegen via de winkelmand - James
         print("<br>");
