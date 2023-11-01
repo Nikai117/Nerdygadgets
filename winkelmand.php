@@ -3,7 +3,7 @@
 include __DIR__ . "/header.php";       
 
 function checkEmpty($arr) {
-    return !isset($arr[0]); //eerste element is niet null 
+    return !isset($arr[0]); //eerste element is null 
 }
 
 function removeRow($arr, $index) {
@@ -14,28 +14,63 @@ function removeRow($arr, $index) {
 }
 
 function findInArray($needle, $stack) {
+    #met for-loop
+    //for($i = 0; $i < $upBound; $i++) {
+    //    if($stack[$i]['StockItemID'] == $needle) {//needle is de ID dat je wilt vinden
+    //        print("gevonden match");
+    //        return true;
+    //    }
+    //}
+    #end
+
+    #met foreach-loop
     foreach($stack as $item) {
-        if($item['StockItemID'] == $needle) {//needle is de ID dat je wilt vinden
+        if($item['StockItemID'] == $needle) {
             return true;
         }
     }
+    #end
 
     return false;
 }
 
 function findIndexArray($needle, $stack) {
+    #met for-loop
+    //for($i = 0; $i < $upBound; $i++) {
+    //    if($stack[$i]['StockItemID'] == $needle) {
+    //        print("gevonden index");
+    //        return $i;//het staat al vast dat de needle in de stack zit, we hebben alleen een preciese plek (index) nodig. de index van de eerste match wordt gereturned
+    //    }
+    //}
+    #end
+
+    #met foreach-loop
     foreach($stack as $key => $item) {
         if($item['StockItemID'] == $needle) {
-            return $key;//het staat al vast dat de needle in de stack zit, we hebben alleen een preciese plek (index) nodig
+            return $key;
         }
     }
+    #end
 }
 
-function groupArray($sess_arr) {
-    $new_arr = array();//nieuwe array initialiseren
+function groupArray($arr) {
+    $new_arr = array();//nieuwe array initialiseren. alleen nodig bij het foreach-algoritme
 
-    foreach($sess_arr as $item) {
-        if($item['aantal'] == 1) {//de item is nog niet gegroupd/kan niet groupen
+    #met for-loop
+    //for($i = 0; $i < count($arr); $i++) {//sess_arr is niet null, want deze functie wordt alleen opgeroepen mits sess_arr != null
+    //    if($arr[$i]['aantal'] == 1 && $i > 0) {//dit niet bij het eerste element in de array
+    //        if(findInArray($arr[$i]['StockItemID'], $arr, $i)) {//als true, element zat hiervoor al in de array
+    //            $index = findIndexArray($arr[$i]['StockItemID'], $arr, $i);
+    //            $arr[$index]['aantal']++;
+    //            $arr = removeRow($arr, $i);
+    //        }
+    //    }
+    //}
+    #end
+
+    #met foreach-loop.  findInArray en findIndexArray hun parameters aanpassen als deze gebruikt wordt
+    foreach($arr as $item) {
+        if($item['aantal'] == 1) {//het item is nog niet gegroupd/kan niet groupen
             if(findInArray($item['StockItemID'], $new_arr)) {
                 $index = findIndexArray($item['StockItemID'], $new_arr);
                 $new_arr[$index]['aantal']++;//increment het aantal van het gezochte product   
@@ -46,13 +81,24 @@ function groupArray($sess_arr) {
             $new_arr[] = $item;
         }
     }
+    #end
 
     return $new_arr;
 }
 
+if(isset($_POST['clear']) && !checkEmpty($_SESSION['winkelmand'])) {//het winkelmandje leegmaken
+    $_SESSION['winkelmand'] = array();
+}
+
 if(checkEmpty($_SESSION['winkelmand'])) {
-    print("Yarr, de winkelmand is leeg");
+    print('<h1 style="text-align: center">Yarr, de winkelmand is leeg</h1>');
 } else {
+    print('
+    <form method="post" action="winkelmand.php">
+        <button type="submit" name="clear" value=" " style="background-color: red">Clear mandje</button>'.//knop om het winkelmandje te legen
+    '</form>
+    ');
+
     if(isset($_POST['action'])) {
         $action = explode(" ", $_POST['action']);//action bestaat uit een command + een index
 
@@ -90,7 +136,7 @@ if(checkEmpty($_SESSION['winkelmand'])) {
             <button type="submit" name="action" value="remove '. $key.'" style="background-color: #856404">-</button>'.//verwijderen van product
             '<button type="submit" name="action" value="add '. $key.'" style="background-color: green; ">+</button>'.//voeg 1 product toe
         '</form>
-        ');//ik gebruik remove in value, zodat we wellicht later nog een andere functionaliteit kunnen toevoegen: toevoegen via de winkelmand - James
+        ');
         print("<br>");
     }
 
@@ -99,9 +145,10 @@ if(checkEmpty($_SESSION['winkelmand'])) {
         $totaal = 0;
 
         foreach ($_SESSION['winkelmand'] as $product){
-            $totaal += $product['UnitPrice'] * $product['aantal'];
+            $totaal += $product['UnitPrice'] * $product['aantal'];//prijs van een enkel product * het aantal dat het in de winkelmand zit. exclusief BTW
         }
-        print ("Totaal bedrag: $" . $totaal);
+
+        print ("Totaal bedrag: €" . $totaal);
     }
     #hieronder zijn gewoon printjes voor testen
     //print_r($_SESSION['winkelmand'][0][0]);
