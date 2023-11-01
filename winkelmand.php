@@ -16,7 +16,7 @@ function removeRow($arr, $index) {
 function findInArray($needle, $stack) {
     #met for-loop
     //for($i = 0; $i < $upBound; $i++) {
-    //    if($stack[$i]['StockItemID'] == $needle) {//needle is de ID dat je wilt vinden
+    //    if($stack[$i]['StockItemID'] == $needle) {
     //        print("gevonden match");
     //        return true;
     //    }
@@ -25,7 +25,7 @@ function findInArray($needle, $stack) {
 
     #met foreach-loop
     foreach($stack as $item) {
-        if($item['StockItemID'] == $needle) {
+        if($item['StockItemID'] == $needle) {//needle is de ID dat je wilt vinden
             return true;
         }
     }
@@ -39,14 +39,14 @@ function findIndexArray($needle, $stack) {
     //for($i = 0; $i < $upBound; $i++) {
     //    if($stack[$i]['StockItemID'] == $needle) {
     //        print("gevonden index");
-    //        return $i;//het staat al vast dat de needle in de stack zit, we hebben alleen een preciese plek (index) nodig. de index van de eerste match wordt gereturned
+    //        return $i;
     //    }
     //}
     #end
 
     #met foreach-loop
     foreach($stack as $key => $item) {
-        if($item['StockItemID'] == $needle) {
+        if($item['StockItemID'] == $needle) {//het staat al vast dat de needle in de stack zit, we hebben alleen een preciese plek (index) nodig. de index van de eerste match wordt gereturned
             return $key;
         }
     }
@@ -71,14 +71,18 @@ function groupArray($arr) {
     #met foreach-loop.  findInArray en findIndexArray hun parameters aanpassen als deze gebruikt wordt
     foreach($arr as $item) {
         if($item['aantal'] == 1) {//het item is nog niet gegroupd/kan niet groupen
-            if(findInArray($item['StockItemID'], $new_arr)) {
-                $index = findIndexArray($item['StockItemID'], $new_arr);
+            if(findInArray($item['StockItemID'], $new_arr)) {//als true, element zat hiervoor al in de array
+                $index = findIndexArray($item['StockItemID'], $new_arr);//index vinden van dat product
+
                 $new_arr[$index]['aantal']++;//increment het aantal van het gezochte product   
+
             } elseif(!findInArray($item['StockItemID'], $new_arr)) {//het zit nog niet in de array
+
                 $new_arr[] = $item;//het product zit er niet dubbel in, dus voeg je deze simpelweg toe
+
             }
         } else {
-            $new_arr[] = $item;
+            $new_arr[] = $item;//als het item hiervoor gegroupd is, dan direct toevoegen
         }
     }
     #end
