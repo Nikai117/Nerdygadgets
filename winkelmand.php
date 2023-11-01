@@ -106,19 +106,22 @@ if(checkEmpty($_SESSION['winkelmand'])) {
     if(isset($_POST['action'])) {
         $action = explode(" ", $_POST['action']);//action bestaat uit een command + een index
 
-        if($action[0] == "remove") {//action is verwijderen
-            if($_SESSION['winkelmand'][$action[1]]['aantal'] == 1)//bij 0 producten uit de mand verwijderen
-                $_SESSION['winkelmand'] = removeRow($_SESSION['winkelmand'], $action[1]);//action[1] is de index van het product
-            else
-                $_SESSION['winkelmand'][$action[1]]['aantal']--;
+        if(isset($action[1]) && $action[1] >= 0 && $action[1] < count($_SESSION['winkelmand'])) {//assertion voor de actieknoppen op de winkelmand pagina
 
-            if(checkEmpty($_SESSION['winkelmand']))
-                print("Yarr, de winkelmand is leeg");//beetje voor de UX        
-        }
+            if($action[0] == "remove") {//action is verwijderen
+                if($_SESSION['winkelmand'][$action[1]]['aantal'] == 1)//bij 0 producten uit de mand verwijderen
+                    $_SESSION['winkelmand'] = removeRow($_SESSION['winkelmand'], $action[1]);//action[1] is de index van het product
+                else
+                    $_SESSION['winkelmand'][$action[1]]['aantal']--;
 
-        elseif($action[0] == "add") {//action is toevoegen
-            $_SESSION['winkelmand'][$action[1]]['aantal']++;
-        }
+                if(checkEmpty($_SESSION['winkelmand']))
+                    print("Yarr, de winkelmand is leeg");//beetje voor de UX        
+            }
+
+            elseif($action[0] == "add") {//action is toevoegen
+                $_SESSION['winkelmand'][$action[1]]['aantal']++;
+            }
+        }  
     }
     
     $_SESSION['winkelmand'] = groupArray($_SESSION['winkelmand']);//om de elementen te groupen
