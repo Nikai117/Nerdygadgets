@@ -54,6 +54,11 @@ $databaseConnection = connectToDatabase();
 
         <ul id="ul-class-navigation">
             <li>
+                <a href="winkelmand.php">
+                    <img alt="Winkelmandje" src="Public/Img/Winkelmandje.png" width="23" height="20">
+                </a>
+            </li>
+            <li>
                 <a href="browse.php" class="HrefDecoration"><i class="fas fa-search search"></i> Zoeken</a>
             </li>
         </ul>
