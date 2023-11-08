@@ -116,7 +116,7 @@ function getQuantity($id, $databaseConnection) {
 function addToCart($id, $databaseConnection) {
     
         $Query = "
-        SELECT StockItemID, StockItemName, TaxRate, UnitPrice
+        SELECT StockItemID, StockItemName, (RecommendedRetailPrice*(1+(TaxRate/100))) AS SellPrice
         FROM stockitems
         WHERE StockItemID = ?";
 

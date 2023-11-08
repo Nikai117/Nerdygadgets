@@ -5,9 +5,9 @@ include __DIR__ . "/header.php";
 $StockItem = getStockItem($_GET['id'], $databaseConnection);
 $StockItemImage = getStockItemImage($_GET['id'], $databaseConnection);
 
-$voorraad = getQuantity($_GET['id'], $databaseConnection);
-$QOH = $voorraad[0]["QOH"];//quantity on hand; voorraad
-$QPO = $voorraad[0]["QPO"];//quantity per outer; hoeveelheid per doos die je gaat shippen
+// $voorraad = getQuantity($_GET['id'], $databaseConnection);
+// $QOH = $voorraad[0]["QOH"];//quantity on hand; voorraad
+// $QPO = $voorraad[0]["QPO"];//quantity per outer; hoeveelheid per doos die je gaat shippen
 ?>
 <div id="CenteredContent">
     <?php
@@ -89,18 +89,19 @@ $QPO = $voorraad[0]["QPO"];//quantity per outer; hoeveelheid per doos die je gaa
                         <!-- code voor de knop om producten toe te voegen aan het winkelmandje-->
                         <?php 
                     
-                        if($QOH < $QPO) {//als er minder units in te voorraad zitten dan er nodig zijn om een doos te vullen?>
-                        <p class="notEnough">Niet genoeg units om te shippen!</p>
-                        <?php } else {?>
-                            <form method="post" action="view.php?id=<?php print $_GET['id']; ?>">
-                                <input type="submit" value="Bestel nu!" name="product">
-                            </form>
-                        <?php }
+                        //if($QOH < $QPO) {//als er minder units in te voorraad zitten dan er nodig zijn om een doos te vullen?>
+                        <!-- <p class="notEnough">Niet genoeg units om te shippen!</p>-->
+                        <?php //} else {?>
+
+                        <form method="post" action="view.php?id=<?php print $_GET['id']; ?>">
+                            <input type="submit" value="Bestel nu!" name="product">
+                        </form>
+                        <?php //}
                         if(isset($_POST['product'])) {
                             $new = addToCart($_GET['id'], $databaseConnection);//voeg het product toe, met informatie, aan het einde van de array
                             foreach($new as $row) {
                                 $_SESSION['winkelmand'][] = $row;
-                                $_SESSION['winkelmand'][count($_SESSION['winkelmand'])-1]['aantal'] = 1;//met count pak je et laatste element van de array
+                                $_SESSION['winkelmand'][count($_SESSION['winkelmand'])-1]['aantal'] = 1;//met count pak je het laatste element van de array
                             }
                             print('<p class="bestelling"><b><i>Product toegevoegd!</i></b></p>');
                         }
