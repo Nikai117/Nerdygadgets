@@ -98,10 +98,16 @@ $StockItemImage = getStockItemImage($_GET['id'], $databaseConnection);
                         </form>
                         <?php //}
                         if(isset($_POST['product'])) {
-                            $new = addToCart($_GET['id'], $databaseConnection);//voeg het product toe, met informatie, aan het einde van de array
+                            $new = addToCart($_GET['id'], $databaseConnection);
+
+                            // $new is 2-dimensionaal, dus gebruik foreach voordat je een product toevoegt
                             foreach($new as $row) {
-                                $_SESSION['winkelmand'][] = $row;
-                                $_SESSION['winkelmand'][count($_SESSION['winkelmand'])-1]['aantal'] = 1;//met count pak je het laatste element van de array
+                                if(!isset($_SESSION['winkelmand'][$row["StockItemID"]])) {// als het item nog niet in de winkelmand zit
+                                    $_SESSION['winkelmand'][$row["StockItemID"]] = $row;
+                                    $_SESSION['winkelmand'][$row["StockItemID"]]['aantal'] = 1;
+                                } else {
+                                    $_SESSION['winkelmand'][$row["StockItemID"]]['aantal']++;
+                                }
                             }
                             print('<p class="bestelling"><b><i>Product toegevoegd!</i></b></p>');
                         }
