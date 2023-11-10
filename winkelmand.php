@@ -2,7 +2,7 @@
 include __DIR__ . "/header.php";       
 
 function removeRow($arr, $index) {
-    unset($arr[$index]);//de index van het product in de session array
+    unset($arr[$index]);
     array_splice($arr, $index, 0);//om de NULL row te verwijderen die je krijgt van unset()
 
     return $arr;
@@ -53,29 +53,35 @@ if(!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
     print('<h1 style="text-align: center">Yarr, de winkelmand is leeg</h1>
             <h2 style="text-align: center"><a class="redirect" href="browse.php"> Op zoek naar producten?</a></h2>');
 } else {
-    if(isset($_POST['remove'])) {
-        $actionTarget = $_POST['remove'];
-    } elseif(isset($_POST['add'])) {
-        $actionTarget = $_POST['add'];
-    }
 
-    if(isset($actionTarget) && $actionTarget != NULL) {//actionTarget kan zijn meegegeven, maar mag niet NULL zijn
+    if($_POST != NULL) {//actionTarget kan zijn meegegeven, maar mag niet NULL zijn
 
-        if(isset($_SESSION['winkelmand'][$actionTarget])) {//pre-conditie: $actionTarget moet een array key zijn
+        //declareert de key van het product waarop de actie zal worden uitgevoerd
+        foreach($_POST as $value) {
+            $key = $value;
+        }
 
-            if(isset($_POST['remove'])) {
-                if($_SESSION['winkelmand'][$actionTarget]['aantal'] == 1)//bij 0 producten uit de mand verwijderen
-                    $_SESSION['winkelmand'] = removeRow($_SESSION['winkelmand'], $actionTarget);
-                else
-                    $_SESSION['winkelmand'][$actionTarget]['aantal']--;
+        if(isset($_SESSION['winkelmand'][$key])) {//pre-conditie: $actionTarget moet een array key zijn
 
-                if($_SESSION['winkelmand'] == NULL)
-                    header("Location: winkelmand.php");//beetje voor de UX        
+            //loopt een keer door post om action te krijgen en target. alleen maar else-ifs voor als bijv. iemand met inspect de name heeft aangepast
+            foreach($_POST as $action => $target) {
+
+                if($action == "remove") {
+                    if($_SESSION['winkelmand'][$target]['aantal'] == 1)//bij 0 producten uit de mand verwijderen
+                        $_SESSION['winkelmand'] = removeRow($_SESSION['winkelmand'], $target);
+                    else
+                        $_SESSION['winkelmand'][$target]['aantal']--;
+
+                } elseif($action == "add") {//nog een limiet stellen
+                    $_SESSION['winkelmand'][$target]['aantal']++;
+
+                } elseif($action == "clear") {
+                    $_SESSION['winkelmand'] = removeRow($_SESSION['winkelmand'], $target);
+                }
             }
 
-            elseif(isset($_POST['add'])) {//nog een limiet stellen
-                $_SESSION['winkelmand'][$actionTarget]['aantal']++;
-            }
+            if($_SESSION['winkelmand'] == NULL)
+                header("Location: winkelmand.php");//beetje voor de UX    
         }  
     }
     ?>
@@ -90,6 +96,7 @@ if(!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
                 $productTotaal += $product['SellPrice'] * $product['aantal'];
             }
 
+            //zodat afgeronde getallen altijd 2 decimalen hebben (9.6 => 9.60)
             $productTotaal = number_format(round($productTotaal, 2), 2, '.', '');
 
             print("Productkosten: €" . $productTotaal . "<br>");
@@ -124,10 +131,13 @@ if(!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
                     <form method="post" action="winkelmand.php">
                         <button type="submit" name="remove" value="'.$key.'" class="removebutton">-</button>'.//verwijderen van product
                         '<button type="submit" name="add" value="'.$key.'" class="addbutton">+</button>'.//voeg 1 product toe
+                        '<button type="submit" name="clear" value="'.$key.'" class="bin"><img alt="Prullenbak" src="Public/Img/Prullenbak.png" width="20" height="20"></button>'.
                     '</form>
                     ');
                     print("<br></td></tr>");
                 }?>
+
+
             
         </table>
     </div>
@@ -181,6 +191,12 @@ if(!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
     }
     .addbutton:hover {
         background-color: #018203;
+    }
+    .bin {
+        background-color: #f2f2f2;
+    }
+    .bin:hover {
+        background-color: #d6d6d6;
     }
     #prijs {
         float: right;
