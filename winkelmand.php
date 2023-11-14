@@ -150,7 +150,7 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
 
     #lijst {
         margin: auto;
-        width: 25%;
+        width: 35%;
         padding: 10px;
         filter: drop-shadow(0 0 0.75rem #413a5e);
         background-color: #603980;
