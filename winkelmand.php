@@ -9,47 +9,6 @@ function removeRow($arr, $index)
     return $arr;
 }
 
-// function findInArray($needle, $stack) {
-//     foreach($stack as $item) {
-//         if($item['StockItemID'] == $needle) {//needle is de ID dat je wilt vinden
-//             return true;
-//         }
-//     }
-
-//     return false;
-// }
-
-// function findIndexArray($needle, $stack) {
-//     foreach($stack as $key => $item) {
-//         if($item['StockItemID'] == $needle) {//het staat al vast dat de needle in de stack zit, we hebben alleen een preciese plek (index) nodig. de index van de eerste match wordt gereturned
-//             return $key;
-//         }
-//     }
-// }
-
-// function groupArray($arr) {
-//     $new_arr = array();//nieuwe array initialiseren. 
-
-//     foreach($arr as $item) {
-//         if($item['aantal'] == 1) {//het item is nog niet gegroupd/kan niet groupen
-//             if(findInArray($item['StockItemID'], $new_arr)) {//als true, element zat hiervoor al in de array
-//                 $index = findIndexArray($item['StockItemID'], $new_arr);//index vinden van dat product
-
-//                 $new_arr[$index]['aantal']++;//increment het aantal van het gezochte product   
-
-//             } else {//het zit nog niet in de array
-
-//                 $new_arr[] = $item;//het product zit er niet dubbel in, dus voeg je deze simpelweg toe
-
-//             }
-//         } else {
-//             $new_arr[] = $item;//als het item hiervoor gegroupd is, dan direct toevoegen
-//         }
-//     }
-
-//     return $new_arr;
-// }
-
 if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
     print('<h1 style="text-align: center">Yarr, de winkelmand is leeg</h1>
             <h2 style="text-align: center"><a class="redirect" href="browse.php"> Op zoek naar producten?</a></h2>');
@@ -74,7 +33,7 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
                         $_SESSION['winkelmand'][$target]['aantal']--;
                     header("Location: winkelmand.php");
 
-                } elseif ($action == "add") {//nog een limiet stellen
+                } elseif ($action == "add") {
                     $_SESSION['winkelmand'][$target]['aantal']++;
                     header("Location: winkelmand.php");
 
@@ -84,15 +43,13 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
             }
 
             if ($_SESSION['winkelmand'] == NULL)
-                header("Location: winkelmand.php");//beetje voor de UX
+                header("Location: winkelmand.php");
         }
     }
     ?>
 
     <div id="prijs">
         <?php
-
-
         //checkt het totaalbedrag
         if (isset($_SESSION['winkelmand'])) {
             $productTotaal = 0;
@@ -104,7 +61,7 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
 
             }
 
-//            verzendkosten berekenen
+            //verzendkosten berekenen
             if ($productTotaal <= 300) {
                 //gebruik je voor berekeningen
                 $verzendkosten = number_format(35.50, 2);
@@ -130,8 +87,8 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
             $productTotaal = number_format(round($productTotaal, 2), 2, '.', '');
 
             print("Productkosten: €" . $productTotaal . "<br>");
-            print("Verzendkosten: $verzendkostenText,-<br>");
-            print("Servicekosten: $serviceKostenText,-<br>");
+            print("Verzendkosten: $verzendkostenText<br>");
+            print("Servicekosten: $serviceKostenText<br>");
 
             //Check of er producten limiet wordt overschreden
             if ($productUnits <= 500) {
@@ -144,34 +101,36 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
 
     <div id="lijst">
         <table id="winkelmand">
-
+            <!-- maak tabelvakje aan per product -->
             <?php foreach ($_SESSION['winkelmand'] as $key => $product) {
-                print ('<tr><td>
-                    <div>
-                        <a href="view.php?id=' . $product['StockItemID'] . '">
-                            <h5>' . $product['StockItemName'] . '</h5>
-                        </a>
-                        <p>€' . number_format(round($product['SellPrice'], 2), 2, '.', '') . '
-                        Aantal: ' . $product['aantal'] . '</p>
-                    </div>
-                    ');
 
                 $StockItemImage = getStockItemImage($product['StockItemID'], $databaseConnection);
-                if ($StockItemImage != null) {
-                    print ('
-                                <img src="Public/StockItemIMG/' . $StockItemImage[0]['ImagePath'] . '" class="itemimage">
-                                </a>');
+                $BackupImage = getBackupImage($product['StockItemID'], $databaseConnection);
+
+                if ($StockItemImage != NULL) {
+                    $image = '<img src="Public/StockItemIMG/' . $StockItemImage[0]['ImagePath'] . '" class="itemimage"></a>';
+                } else { 
+                    $image = '<img src="Public/StockGroupIMG/' . $BackupImage['ImagePath'] . '" class="itemimage"></a>';
                 }
+
+                print ('<tr class="product"><td>
+                    <div>
+                        <a href="view.php?id=' . $product['StockItemID'] . '">
+                            <h5>' . $product['StockItemName'] . '</h5>'. $image . '
+                        </a>
+                        <p class="prijs">€' . number_format(round($product['SellPrice'], 2), 2, '.', '') . '</p>
+                        <p class="aantal">' . $product['aantal'] . '</p>
+                    ');
+
                 print('
                     <form method="post" action="winkelmand.php">
                         <button type="submit" name="remove" value="' . $key . '" class="removebutton">-</button>' .//verwijderen van product
                     '<button type="submit" name="add" value="' . $key . '" class="addbutton">+</button>' .//voeg 1 product toe
-                    '<button type="submit" name="clear" value="' . $key . '" class="bin"><img alt="Prullenbak" src="Public/Img/Prullenbak.png" width="20" height="20"></button>' .
+                    '<button type="submit" name="clear" value="' . $key . '" class="bin" style="position: absolute; top: 0; right: 0;"><img alt="Prullenbak" src="Public/Img/Prullenbak.png" width="20" height="20"></button>' .
                     '</form>
                     ');
-                print("<br></td></tr>");
+                print("<br></div></td></tr>");
             } ?>
-
 
         </table>
     </div>
@@ -194,11 +153,16 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
         width: 25%;
         padding: 10px;
         filter: drop-shadow(0 0 0.75rem #413a5e);
+        background-color: #603980;
+        box-shadow: 5px 5px 5px 15px #603980;
+        margin-top: 10px;
     }
 
     #winkelmand {
+        width: 100%;
         border: 5px solid;
         filter: drop-shadow(0 0 0.75rem #413a5e);
+        margin: auto;
     }
 
     #winkelmand tr {
@@ -211,6 +175,7 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
 
     #winkelmand a {
         all: unset;
+        text-shadow: 2px 2px 2px black;
     }
 
     #winkelmand a:hover {
@@ -223,8 +188,34 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
         float: right;
     }
 
+    .product {
+        position: relative;
+    }
+
+    .prijs {
+        color: #676EFF;
+        font-family: vortice-concept, sans-serif;
+        font-weight: bold;      
+        text-shadow: 2px 2px 2px black;
+    }
+
+    .aantal {
+        background-color: #76499c;
+        position: absolute;
+        bottom: 0;
+        left: 65px;
+        width: 50px;
+        border: 1px solid;
+        text-align: center;
+        text-shadow: 2px 2px 2px black;
+    }
+
     .removebutton {
-        background-color: #856404;
+        background-color: #b88a04;
+        position: absolute; 
+        bottom: 14px; 
+        left: 10px;
+        width: 50px;
     }
 
     .removebutton:hover {
@@ -233,6 +224,10 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
 
     .addbutton {
         background-color: #02c205;
+        position: absolute; 
+        bottom: 14px; 
+        left: 120px;
+        width: 50px;
     }
 
     .addbutton:hover {

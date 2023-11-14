@@ -25,7 +25,7 @@ $StockItemImage = getStockItemImage($_GET['id'], $databaseConnection);
 
         <div id="ArticleHeader">
             <?php
-            if (isset($StockItemImage)) {//deze if-statement heeft een foutje
+            if ($StockItemImage != NULL) {
                 // één plaatje laten zien
                 if (count($StockItemImage) == 1) {
                     ?>
