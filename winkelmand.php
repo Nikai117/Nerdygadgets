@@ -87,8 +87,8 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
             $productTotaal = number_format(round($productTotaal, 2), 2, '.', '');
 
             print("Productkosten: €" . $productTotaal . "<br>");
-            print("Verzendkosten: $verzendkostenText<br>");
-            print("Servicekosten: $serviceKostenText<br>");
+            print("Verzendkosten: €$verzendkostenText<br>");
+            print("Servicekosten: €$serviceKostenText<br>");
 
             //Check of er producten limiet wordt overschreden
             if ($productUnits <= 500) {

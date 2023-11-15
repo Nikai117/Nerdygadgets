@@ -96,6 +96,7 @@ function getStockItemImage($id, $databaseConnection) {
     return $R;
 }
 
+//zelf gemaakt
 function getBackupImage($id, $databaseConnection) {
  
     $Query = "
@@ -114,6 +115,7 @@ function getBackupImage($id, $databaseConnection) {
     return $R;
 }
 
+//zelfgemaakt
 function getQuantity($id, $databaseConnection) {
 
     $Query = "
@@ -131,6 +133,7 @@ function getQuantity($id, $databaseConnection) {
     return $Quantity;
 }
 
+//zelfgemaakt
 function addToCart($id, $databaseConnection) {
     
         $Query = "
