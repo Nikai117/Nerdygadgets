@@ -92,7 +92,7 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
 
             //Check of er producten limiet wordt overschreden
             if ($productUnits <= 500) {
-                print ("<p style='color: darkolivegreen; font-weight: bold'>Totaal bedrag: €" . $productTotaal + $verzendkosten + $serviceKosten . "</p>");
+                print ("<p style='color: darkolivegreen; font-weight: bold'>Totaal bedrag: €" . number_format(($productTotaal + $verzendkosten + $serviceKosten), 2) . "</p>");
             } else
                 print ("Verzenden niet mogelijk door te hoog aantal producten, bel service desk a.u.b.");
             print ("<br><i>Inclusief BTW</i>");
@@ -216,6 +216,7 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
 
     .removebutton {
         background-color: #b88a04;
+        border-radius: 30px;
         float: right;
         margin-top: 30%;
         bottom: 14px; 
@@ -230,6 +231,7 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
     .addbutton {
         background-color: #02c205;
         margin-top: 30%;
+        border-radius: 30px;
         bottom: 14px; 
         left: 120px;
         width: 50px;
