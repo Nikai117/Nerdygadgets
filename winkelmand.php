@@ -88,11 +88,11 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
 
             print("Productkosten: €" . $productTotaal . "<br>");
             print("Verzendkosten: $verzendkostenText<br>");
-            print("Servicekosten: $serviceKostenText<br>");
+            print("<p style='color: black'>Servicekosten: $serviceKostenText</p><br>");
 
             //Check of er producten limiet wordt overschreden
             if ($productUnits <= 500) {
-                print ("Totaal bedrag: €" . $productTotaal + $verzendkosten + $serviceKosten . "<br>");
+                print ("<p style='color: darkolivegreen; font-weight: bold'>Totaal bedrag: €" . $productTotaal + $verzendkosten + $serviceKosten . "</p>");
             } else
                 print ("Verzenden niet mogelijk door te hoog aantal producten, bel service desk a.u.b.");
             print ("<br><i>Inclusief BTW</i>");
@@ -114,20 +114,24 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
                 }
 
                 print ('<tr class="product"><td>
-                    <div>
+                    <div id="productCard">
+                        <div id="image_card">
                         <a href="view.php?id=' . $product['StockItemID'] . '">
                             <h5>' . $product['StockItemName'] . '</h5>'. $image . '
                         </a>
+                        </div>
                         <p class="prijs">€' . number_format(round($product['SellPrice'], 2), 2, '.', '') . '</p>
                         <p class="aantal">' . $product['aantal'] . '</p>
                     ');
 
                 print('
-                    <form method="post" action="winkelmand.php">
+                    <div id="quantityButtons">
+                    <form method="post" action="winkelmand.php" style="float: right">
                         <button type="submit" name="remove" value="' . $key . '" class="removebutton">-</button>' .//verwijderen van product
                     '<button type="submit" name="add" value="' . $key . '" class="addbutton">+</button>' .//voeg 1 product toe
                     '<button type="submit" name="clear" value="' . $key . '" class="bin" style="position: absolute; top: 0; right: 0;"><img alt="Prullenbak" src="Public/Img/Prullenbak.png" width="20" height="20"></button>' .
                     '</form>
+                     </div>
                     ');
                 print("<br></div></td></tr>");
             } ?>
@@ -149,24 +153,18 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
     }
 
     #lijst {
-        margin: auto;
-        width: 35%;
+        margin-left: 50px;
+        width: 60%;
         padding: 10px;
-        filter: drop-shadow(0 0 0.75rem #413a5e);
-        background-color: #603980;
-        box-shadow: 5px 5px 5px 15px #603980;
+        background-color: #2C2F33;
+        /*box-shadow: 5px 5px 5px 15px #603980;*/
         margin-top: 10px;
+        border-radius: 10px;
     }
 
     #winkelmand {
         width: 100%;
-        border: 5px solid;
-        filter: drop-shadow(0 0 0.75rem #413a5e);
         margin: auto;
-    }
-
-    #winkelmand tr {
-        border: 5px solid;
     }
 
     #winkelmand tr:hover {
@@ -185,7 +183,7 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
 
     .itemimage {
         height: 120px;
-        float: right;
+        float: left;
     }
 
     .product {
@@ -194,14 +192,20 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
 
     .prijs {
         color: #676EFF;
+        float: right;
         font-family: vortice-concept, sans-serif;
         font-weight: bold;      
         text-shadow: 2px 2px 2px black;
     }
 
+    .quantityButtons {
+        float: right;
+    }
+
     .aantal {
         background-color: #76499c;
         position: absolute;
+        float: right;
         bottom: 0;
         left: 65px;
         width: 50px;
@@ -212,7 +216,8 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
 
     .removebutton {
         background-color: #b88a04;
-        position: absolute; 
+        float: right;
+        margin-top: 30%;
         bottom: 14px; 
         left: 10px;
         width: 50px;
@@ -224,7 +229,7 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
 
     .addbutton {
         background-color: #02c205;
-        position: absolute; 
+        margin-top: 30%;
         bottom: 14px; 
         left: 120px;
         width: 50px;
@@ -236,6 +241,7 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
 
     .bin {
         background-color: #f2f2f2;
+        float: left;
     }
 
     .bin:hover {
@@ -244,8 +250,10 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
 
     #prijs {
         float: right;
-        border: 5px solid;
-        width: 15%;
+        border-radius: 10px;
+        background-color: whitesmoke;
+        color: black;
+        width: 18%;
         text-align: left;
         padding-left: 10px;
         margin-right: 5%;
