@@ -39,9 +39,12 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
 
                     if($_SESSION['winkelmand'][$target]['aantal'] < $QOH) {
                         $_SESSION['winkelmand'][$target]['aantal']++;
+                    } else {
+                        //hulp variabele om error te bepalen
+                        $_SESSION['error'] = "overschot";
                     }
                     
-                    header("Location: winkelmand.php");
+                    //header("Location: winkelmand.php");
 
                 } elseif ($action == "clear") {
                     $_SESSION['winkelmand'] = removeRow($_SESSION['winkelmand'], $target);
@@ -53,6 +56,17 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
         }
     }
     ?>
+
+    <div id="error">
+    <?php 
+    if(isset($_SESSION['error'])) {
+        if($_SESSION['error'] == "overschot") {
+            print('<h5>Toevoegen is niet gelukt! Geen units meer over in voorraad.</h5>');
+        }
+        unset($_SESSION['error']);
+    }
+    ?>
+    </div>
 
     <div id="prijs">
         <?php
@@ -185,6 +199,7 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
 
     .itemimage {
         height: 120px;
+        width: 120px;
         float: left;
     }
 
@@ -262,5 +277,14 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
         padding-left: 10px;
         margin-right: 5%;
         margin-top: 10px;
+    }
+
+    input[type=number]::-webkit-inner-spin-button, 
+    input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none; 
+    }
+
+    input[type=number] {
+    -moz-appearance: textfield;
     }
 </style>

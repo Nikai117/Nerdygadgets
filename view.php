@@ -105,11 +105,11 @@ $QOH = $voorraad[0]["QOH"];//quantity on hand; voorraad
                                 if(!isset($_SESSION['winkelmand'][$row["StockItemID"]])) {// als het item nog niet in de winkelmand zit
                                     $_SESSION['winkelmand'][$row["StockItemID"]] = $row;
                                     $_SESSION['winkelmand'][$row["StockItemID"]]['aantal'] = 1;
-                                    print('<p class="bestelling"><b><i>Product toegevoegd!</i></b></p>');
+                                    print('<p class="bestelling"><b><i>Product toegevoegd aan <a href="winkelmand.php">winkelmand</a>!</i></b></p>');
                                 } else {
                                     if($_SESSION['winkelmand'][$row["StockItemID"]]['aantal'] < $QOH) {
                                         $_SESSION['winkelmand'][$row["StockItemID"]]['aantal']++;       
-                                        print('<p class="bestelling"><b><i>Product toegevoegd!</i></b></p>');
+                                        print('<p class="bestelling"><b><i>Product toegevoegd aan <a href="winkelmand.php">winkelmand</a>!</i></b></p>');
                                     } else {
                                         print('<p class="bestelling"><b><i>Mislukt! Niet genoeg in voorraad.</i></b></p>');
                                     }
