@@ -13,7 +13,6 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
     print('<h1 style="text-align: center">Yarr, de winkelmand is leeg</h1>
             <h2 style="text-align: center"><a class="redirect" href="browse.php"> Op zoek naar producten?</a></h2>');
 } else {
-
     if ($_POST != NULL) {//actionTarget kan zijn meegegeven, maar mag niet NULL zijn
 
         //declareert de key van het product waarop de actie zal worden uitgevoerd
@@ -31,10 +30,17 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
                         $_SESSION['winkelmand'] = removeRow($_SESSION['winkelmand'], $target);
                     else
                         $_SESSION['winkelmand'][$target]['aantal']--;
+
                     header("Location: winkelmand.php");
 
-                } elseif ($action == "add") {
-                    $_SESSION['winkelmand'][$target]['aantal']++;
+                } elseif ($action == "add") {   
+                    $voorraad = getQuantity($target, $databaseConnection);
+                    $QOH = $voorraad[0]["QOH"];//quantity on hand; voorraad
+
+                    if($_SESSION['winkelmand'][$target]['aantal'] < $QOH) {
+                        $_SESSION['winkelmand'][$target]['aantal']++;
+                    }
+                    
                     header("Location: winkelmand.php");
 
                 } elseif ($action == "clear") {
@@ -58,7 +64,6 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
             foreach ($_SESSION['winkelmand'] as $product) {
                 $productTotaal += $product['SellPrice'] * $product['aantal'];
                 $productUnits = $productUnits + $product['aantal'];
-
             }
 
             //verzendkosten berekenen
@@ -131,8 +136,9 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
                     '<button type="submit" name="add" value="' . $key . '" class="addbutton">+</button>' .//voeg 1 product toe
                     '<button type="submit" name="clear" value="' . $key . '" class="bin" style="position: absolute; top: 0; right: 0;"><img alt="Prullenbak" src="Public/Img/Prullenbak.png" width="20" height="20"></button>' .
                     '</form>
-                     </div>
+                    </div>
                     ');
+                    
                 print("<br></div></td></tr>");
             } ?>
 
@@ -165,10 +171,6 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
     #winkelmand {
         width: 100%;
         margin: auto;
-    }
-
-    #winkelmand tr:hover {
-        background-color: #4e437a;
     }
 
     #winkelmand a {

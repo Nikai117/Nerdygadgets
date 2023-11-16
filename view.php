@@ -5,8 +5,8 @@ include __DIR__ . "/header.php";
 $StockItem = getStockItem($_GET['id'], $databaseConnection);
 $StockItemImage = getStockItemImage($_GET['id'], $databaseConnection);
 
-// $voorraad = getQuantity($_GET['id'], $databaseConnection);
-// $QOH = $voorraad[0]["QOH"];//quantity on hand; voorraad
+$voorraad = getQuantity($_GET['id'], $databaseConnection);
+$QOH = $voorraad[0]["QOH"];//quantity on hand; voorraad
 // $QPO = $voorraad[0]["QPO"];//quantity per outer; hoeveelheid per doos die je gaat shippen
 ?>
 <div id="CenteredContent">
@@ -88,15 +88,15 @@ $StockItemImage = getStockItemImage($_GET['id'], $databaseConnection);
                         <h6> Inclusief BTW </h6>
                         <!-- code voor de knop om producten toe te voegen aan het winkelmandje-->
                         <?php 
-                    
-                        //if($QOH < $QPO) {//als er minder units in te voorraad zitten dan er nodig zijn om een doos te vullen?>
-                        <!-- <p class="notEnough">Niet genoeg units om te shippen!</p>-->
-                        <?php //} else {?>
+                        //als er minder units in te voorraad zitten dan er nodig zijn om een doos te vullen
+                        if($QOH < 1) {?>
+                            <p class="notEnough">Niet genoeg units om te shippen!</p>
+                        <?php } else {?>
 
                         <form method="post" action="view.php?id=<?php print $_GET['id']; ?>">
                             <input type="submit" value="Bestel nu!" name="product">
                         </form>
-                        <?php //}
+                        <?php }
                         if(isset($_POST['product'])) {
                             $new = addToCart($_GET['id'], $databaseConnection);
 
@@ -105,11 +105,16 @@ $StockItemImage = getStockItemImage($_GET['id'], $databaseConnection);
                                 if(!isset($_SESSION['winkelmand'][$row["StockItemID"]])) {// als het item nog niet in de winkelmand zit
                                     $_SESSION['winkelmand'][$row["StockItemID"]] = $row;
                                     $_SESSION['winkelmand'][$row["StockItemID"]]['aantal'] = 1;
+                                    print('<p class="bestelling"><b><i>Product toegevoegd!</i></b></p>');
                                 } else {
-                                    $_SESSION['winkelmand'][$row["StockItemID"]]['aantal']++;
+                                    if($_SESSION['winkelmand'][$row["StockItemID"]]['aantal'] < $QOH) {
+                                        $_SESSION['winkelmand'][$row["StockItemID"]]['aantal']++;       
+                                        print('<p class="bestelling"><b><i>Product toegevoegd!</i></b></p>');
+                                    } else {
+                                        print('<p class="bestelling"><b><i>Mislukt! Niet genoeg in voorraad.</i></b></p>');
+                                    }
                                 }
                             }
-                            print('<p class="bestelling"><b><i>Product toegevoegd!</i></b></p>');
                         }
                         ?>
                         <!-- einde code -->
