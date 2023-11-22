@@ -1,6 +1,6 @@
 <!-- de inhoud van dit bestand wordt bovenaan elke pagina geplaatst -->
 <?php
-session_start();
+session_start();//voorbeeld
 include "database.php";
 if(!isset($_SESSION['winkelmand'])) {
     $_SESSION['winkelmand'] = array();//maak de winkelmand session
