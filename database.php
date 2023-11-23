@@ -149,3 +149,16 @@ function addToCart($id, $databaseConnection) {
 
     return $R;
 }
+
+function updateStocks($id, $amount, $databaseConnection) {
+    
+        $Query = "
+        UPDATE stockitemholdings
+        SET LastStocktakeQuantity = QuantityOnHand,
+            QuantityOnHand = QuantityOnHand - ?
+        WHERE StockItemID = ?";
+
+    $Statement = mysqli_prepare($databaseConnection, $Query);
+    mysqli_stmt_bind_param($Statement, "ii", $amount, $id);
+    mysqli_stmt_execute($Statement);    
+}
