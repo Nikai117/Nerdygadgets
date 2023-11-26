@@ -158,6 +158,17 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
 
         </table>
     </div>
+    <script>
+        function redirectToAnotherPage() {
+            // Hier kun je eventueel wat JavaScript-code toevoegen voordat je doorverwijst
+            window.location.href = 'Betaalgegevens.php';
+        }
+    </script>
+
+    <form method="post" action="">
+        <button type="button" onclick="redirectToAnotherPage()">Betalen</button>
+    </form>
+
 <?php }
 ?>
 
