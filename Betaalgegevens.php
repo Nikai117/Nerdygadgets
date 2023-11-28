@@ -46,7 +46,7 @@ $mollie->setApiKey("test_fJJbkmF9gjs3JsrzaNapaAF68dVv9C");
         <label>UPS</label>
         <input type="radio" id="ups" name="verzenden" value="ups" required>
     </div>
-    <div id="KlantGegegevens"
+    <div id="KlantGegegevens">
     <h1>Klant gegevens</h1><br>
 
     <label for="mail">Email:</label>
@@ -90,12 +90,38 @@ if(isset($_GET['knop'])){
                 "order_id" => "12345",
             ],
         ]);
-
         header("Location: " . $payment->getCheckoutUrl());
+        $_SESSION['payment_id'] = $payment->id;
+
         ob_end_flush();
         exit();
     } catch ( Exception $exception) {
         print ($exception);
+    }
+}
+
+if(isset($_SESSION['payment_id'])) {
+    $paymentId = $_SESSION['payment_id'];
+    $payment = $mollie->payments->get($paymentId);
+
+    switch($payment->status) {
+        case "expired":
+        case "canceled":
+        case "failed":
+        case "open":
+            header("Location: " . $payment->getCheckoutUrl());
+            break;
+        case "paid":
+            unset($_SESSION['payment_id']);
+
+            foreach ($_SESSION['winkelmand'] as $key => $product) {
+
+            }
+
+
+            $_SESSION['winkelmand'] = array();
+            header("location: index.php");
+            break;
     }
 }
 ?>
