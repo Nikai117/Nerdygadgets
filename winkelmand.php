@@ -8,6 +8,7 @@ function removeRow($arr, $index)
 
     return $arr;
 }
+session_reset();
 
 if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
     print('<h1 style="text-align: center">Yarr, de winkelmand is leeg</h1>
@@ -112,6 +113,7 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
             //Check of er producten limiet wordt overschreden
             if ($productUnits <= 500) {
                 print ("<p style='color: darkolivegreen; font-weight: bold'>Totaal bedrag: €" . number_format(($productTotaal + $verzendkosten + $serviceKosten), 2) . "</p>");
+                $_SESSION['totaalprijs'] = number_format(($productTotaal + $verzendkosten + $serviceKosten), 2);
             } else
                 print ("Verzenden niet mogelijk door te hoog aantal producten, bel service desk a.u.b.");
             print ("<br><i>Inclusief BTW</i>");
@@ -158,6 +160,17 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
 
         </table>
     </div>
+    <script>
+        function redirectToPayment() {
+            // Hier kun je eventueel wat JavaScript-code toevoegen voordat je doorverwijst
+            window.location.href = 'Betaalgegevens.php';
+        }
+    </script>
+
+    <form method="post" action="">
+        <button type="button" onclick="redirectToPayment()">Betalen</button>
+    </form>
+
 <?php }
 ?>
 
