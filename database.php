@@ -137,7 +137,7 @@ function getQuantity($id, $databaseConnection) {
 function addToCart($id, $databaseConnection) {
     
         $Query = "
-        SELECT StockItemID, StockItemName, (RecommendedRetailPrice*(1+(TaxRate/100))) AS SellPrice
+        SELECT StockItemID, StockItemName, (RecommendedRetailPrice*(1+(TaxRate/100))) AS SellPrice, TaxRate, UnitPrice
         FROM stockitems
         WHERE StockItemID = ?";
 
@@ -212,14 +212,78 @@ function getCustomerID($name, $databaseConnection) {
         $Query = "
         SELECT CustomerID
         From customers
-        WHERE name = ?
+        WHERE CustomerName = ?
         LIMIT 1;";
 
     $Statement = mysqli_prepare($databaseConnection, $Query);
     mysqli_stmt_bind_param($Statement, "s", $name);
     mysqli_stmt_execute($Statement);
     $R = mysqli_stmt_get_result($Statement);
-    $R = mysqli_fetch_all($R, MYSQLI_ASSOC);
+    $R = mysqli_fetch_all($R, MYSQLI_ASSOC)[0]["CustomerID"];
 
     return $R;
+}
+
+function addOrder($name, $databaseConnection) {
+    $customerID = getCustomerID($name, $databaseConnection);
+    $vandaag = date("Y-m-d");
+    $morgen = date('Y-m-d', strtotime($vandaag. ' + 1 days'));
+    $nu = date("Y-m-d H:i:s");
+
+        $Query = "
+        INSERT INTO orders 
+        VALUES (NULL, ?, '2', NULL, '3032', NULL, $vandaag, $morgen, NULL, '1', NULL, NULL, NULL, NULL, '1','$nu');";
+
+    $Statement = mysqli_prepare($databaseConnection, $Query);
+    mysqli_stmt_bind_param($Statement, "i", $customerID);
+    mysqli_stmt_execute($Statement);
+}
+
+function getOrderId($name, $databaseConnection) {
+    $customerID = getCustomerID($name, $databaseConnection);
+    
+    $Query = " 
+       SELECT OrderID
+       From orders
+       WHERE CustomerID = ?
+       ORDER BY OrderID DESC
+       LIMIT 1";
+
+    $Statement = mysqli_prepare($databaseConnection, $Query);
+    mysqli_stmt_bind_param($Statement, "i", $customerID);
+    mysqli_stmt_execute($Statement);
+    $R = mysqli_stmt_get_result($Statement);
+    $R = mysqli_fetch_all($R, MYSQLI_ASSOC)[0]["OrderID"];
+
+    return $R;
+
+}
+
+function addOrderLine($name, $databaseConnection, $product) {
+    $orderID = getOrderId($name, $databaseConnection);
+    $stockItemID = $product['StockItemID'];
+    $stockItemDesc = $product['StockItemName'];//description voert die verkeerd in; nog naar kijken
+    $quantity = $product['aantal'];
+    $price = $product['UnitPrice'];
+    $taxrate = $product['TaxRate'];
+    $vandaag = date("Y-m-d");
+
+    $Query = "
+        INSERT INTO orderlines
+        VALUES (NULL,
+            $orderID,
+            $stockItemID,
+            'hahah',
+            7,
+            $quantity,
+            $price,
+            $taxrate,
+            0,
+            NULL,
+            1,
+            $vandaag
+        );";
+
+    $Statement = mysqli_prepare($databaseConnection, $Query);
+    mysqli_stmt_execute($Statement);
 }
