@@ -5,13 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b5707d94-885a-46a4-8032-b546f08eb300" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Nerdygadgets.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Nerdygadgets.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/discord.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Betaalgegevens.php" beforeDir="false" afterPath="$PROJECT_DIR$/Betaalgegevens.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test.php" beforeDir="false" afterPath="$PROJECT_DIR$/test.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database.php" beforeDir="false" afterPath="$PROJECT_DIR$/database.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/header.php" beforeDir="false" afterPath="$PROJECT_DIR$/header.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/winkelmand.php" beforeDir="false" afterPath="$PROJECT_DIR$/winkelmand.php" afterDir="false" />
     </list>
     <list id="6daa27d2-2b31-48b3-bbff-0bccd4935f4e" name="Changes by nikai" comment="">
       <change beforePath="$PROJECT_DIR$/Betaalgegevens.php" beforeDir="false" afterPath="$PROJECT_DIR$/Betaalgegevens.php" afterDir="false" />
@@ -31,10 +30,16 @@
   <component name="LineStatusTrackerManager">
     <file path="$PROJECT_DIR$/Betaalgegevens.php">
       <ranges>
-        <range start1="48" end1="49" start2="48" end2="49" changelist="b5707d94-885a-46a4-8032-b546f08eb300" />
-        <range start1="92" end1="93" start2="92" end2="92" changelist="b5707d94-885a-46a4-8032-b546f08eb300" />
-        <range start1="94" end1="94" start2="93" end2="95" changelist="b5707d94-885a-46a4-8032-b546f08eb300" />
-        <range start1="100" end1="100" start2="101" end2="126" changelist="6daa27d2-2b31-48b3-bbff-0bccd4935f4e" />
+        <range start1="36" end1="37" start2="36" end2="37" changelist="b5707d94-885a-46a4-8032-b546f08eb300" />
+        <range start1="60" end1="61" start2="60" end2="60" changelist="6daa27d2-2b31-48b3-bbff-0bccd4935f4e" />
+        <range start1="76" end1="77" start2="75" end2="76" changelist="b5707d94-885a-46a4-8032-b546f08eb300" />
+        <range start1="78" end1="94" start2="77" end2="80" changelist="b5707d94-885a-46a4-8032-b546f08eb300" />
+        <range start1="95" end1="100" start2="81" end2="108" changelist="b5707d94-885a-46a4-8032-b546f08eb300" />
+        <range start1="107" end1="107" start2="115" end2="118" changelist="b5707d94-885a-46a4-8032-b546f08eb300" />
+        <range start1="108" end1="109" start2="119" end2="119" changelist="b5707d94-885a-46a4-8032-b546f08eb300" />
+        <range start1="110" end1="112" start2="120" end2="123" changelist="b5707d94-885a-46a4-8032-b546f08eb300" />
+        <range start1="116" end1="116" start2="127" end2="130" changelist="b5707d94-885a-46a4-8032-b546f08eb300" />
+        <range start1="120" end1="121" start2="134" end2="134" changelist="b5707d94-885a-46a4-8032-b546f08eb300" />
       </ranges>
     </file>
   </component>
@@ -47,10 +52,10 @@
       <path value="$PROJECT_DIR$/mollie-api-php/vendor/composer" />
     </include_path>
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 3
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 3
+}</component>
   <component name="ProjectId" id="2Yo8etb7IhJEXEiCVOuebGqYtT5" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -61,6 +66,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
     "git-widget-placeholder": "US4__database__interactie",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -79,6 +85,7 @@
       <option name="presentableId" value="Default" />
       <updated>1701180670920</updated>
       <workItem from="1701180672051" duration="3679000" />
+      <workItem from="1701199486834" duration="3123000" />
     </task>
     <servers />
   </component>

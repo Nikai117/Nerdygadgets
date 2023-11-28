@@ -162,3 +162,64 @@ function updateStocks($id, $amount, $databaseConnection) {
     mysqli_stmt_bind_param($Statement, "ii", $amount, $id);
     mysqli_stmt_execute($Statement);    
 }
+
+//klant toevoegen
+function addCustomer($klantArray, $databaseConnection) {
+    
+        $Query = "
+        INSERT INTO customers
+        VALUES ( NULL,
+            ?,
+            1,
+            9,
+            null,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0.00,
+            '2023-01-01',
+            0.00,
+            0,
+            0,
+            30,
+            '(201) 555-0100',
+            '(201) 555-0101',
+            1,
+            1,
+            'http://www.example.com',
+            ?,
+            null,
+            ?,
+            'TestDeliveryLocation',
+            'TestPostalAddressLine1',
+            'TestPostalAddressLine2',
+            'TestPostalPostalCode',
+            1,
+            '2023-01-01 00:00:00',
+            '9999-12-31 23:59:59',
+            ?
+        );";
+
+    $Statement = mysqli_prepare($databaseConnection, $Query);
+    mysqli_stmt_bind_param($Statement, "ssss", $klantArray['naam'], $klantArray['adres'], $klantArray['postcode'], $klantArray['email']);
+    mysqli_stmt_execute($Statement);   
+}
+
+function getCustomerID($name, $databaseConnection) {
+
+        $Query = "
+        SELECT CustomerID
+        From customers
+        WHERE name = ?
+        LIMIT 1;";
+
+    $Statement = mysqli_prepare($databaseConnection, $Query);
+    mysqli_stmt_bind_param($Statement, "s", $name);
+    mysqli_stmt_execute($Statement);
+    $R = mysqli_stmt_get_result($Statement);
+    $R = mysqli_fetch_all($R, MYSQLI_ASSOC);
+
+    return $R;
+}
