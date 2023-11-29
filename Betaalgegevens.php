@@ -132,12 +132,12 @@ if(isset($_SESSION['payment_id'])) {
 
             foreach ($_SESSION['winkelmand'] as $key => $product) {
                 addOrderLine($_SESSION['klant']['email'], $databaseConnection, $product);
-                //updateStocks($key, $product['aantal'], $databaseConnection);
+                updateStocks($key, $product['aantal'], $databaseConnection);
             }
 
             $_SESSION['klant'] = array();
             $_SESSION['winkelmand'] = array();
-            header("location: index.php");
+            header("location: resultaat.php?order=paid");
             break;
     }
 }
