@@ -103,7 +103,7 @@ if(isset($_POST['knop'])){
     <a href="winkelmand.php" class="HrefDecoration"><- Terug naar winkelmand</a>
 </li><br>
 
-<!-- plaats alles wat niet PHP is voorlopig onderaan-->
+<?php
     print_r($_POST);
 
     //$pattern = "/^[a-z]+$/i";
@@ -135,7 +135,6 @@ if(isset($_POST['knop'])){
      } catch ( Exception $exception) {
          print ($exception);
      }
-}
 
 if(isset($_SESSION['payment_id'])) {
     $paymentId = $_SESSION['payment_id'];
