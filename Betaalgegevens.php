@@ -75,6 +75,35 @@ $mollie->setApiKey("test_fJJbkmF9gjs3JsrzaNapaAF68dVv9C");
 <?php
 if(isset($_POST['knop'])){
     print("U wordt nu doorverwezen naar de betaalpagina");
+
+    $totPrijs = $_SESSION['totaalprijs'];
+    $orderNum = "Order ".random_int(1, 400);
+    try {
+        $payment = $mollie->payments->create([
+            "amount" => [
+                "currency" => "EUR",
+                "value" => $totPrijs // You must send the correct number of decimals, thus we enforce the use of strings
+            ],
+            "description" => $orderNum,
+            "redirectUrl" => "http://localhost/nerdygadgets/resultaat.php",
+            "metadata" => [
+                "order_id" => "12345",
+            ],
+        ]);
+
+        header("Location: " . $payment->getCheckoutUrl());
+        ob_end_flush();
+        exit();
+    } catch ( Exception $exception) {
+        print ($exception);
+    }
+}
+?>
+<br><li>
+    <a href="winkelmand.php" class="HrefDecoration"><- Terug naar winkelmand</a>
+</li><br>
+
+<!-- plaats alles wat niet PHP is voorlopig onderaan-->
     print_r($_POST);
 
     //$pattern = "/^[a-z]+$/i";
@@ -143,6 +172,7 @@ if(isset($_SESSION['payment_id'])) {
 }
 ?>
 <!-- plaats alles wat niet PHP is voorlopig onderaan -->
+
 <style>
     /*body {*/
     /*    font-family: Arial, sans-serif;*/
