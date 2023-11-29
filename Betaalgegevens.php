@@ -132,7 +132,7 @@ if(isset($_SESSION['payment_id'])) {
 
             foreach ($_SESSION['winkelmand'] as $key => $product) {
                 addOrderLine($_SESSION['klant']['email'], $databaseConnection, $product);
-                //updateStocks($key, $product['aantal'], $databaseConnection);
+                updateStocks($key, $product['aantal'], $databaseConnection);
             }
 
             $_SESSION['klant'] = array();
