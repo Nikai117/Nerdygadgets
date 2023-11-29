@@ -103,10 +103,8 @@ if(isset($_POST['knop'])){
     <a href="winkelmand.php" class="HrefDecoration"><- Terug naar winkelmand</a>
 </li><br>
 
-<?php
-    print_r($_POST);
-
-    //$pattern = "/^[a-z]+$/i";
+<?php  
+ //$pattern = "/^[a-z]+$/i";
 
     $_SESSION['klant']['naam'] = ucfirst(strtolower($_POST['voornaam'])) . " " . ucfirst(strtolower($_POST['achternaam']));
     $_SESSION['klant']['adres'] = $_POST['adres'];
