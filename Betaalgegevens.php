@@ -117,12 +117,22 @@ if(isset($_SESSION['payment_id'])) {
             header("Location: " . $payment->getCheckoutUrl());
             break;
         case "expired":
-        case "failed":
-        case "canceled":
             unset($_SESSION['payment_id']);
 
             $_SESSION['klant'] = array();//klantgegevens verwijderen
-            header("location: winkelmand.php");
+            header("location: resultaat.php?order=expired");
+            break;
+        case "failed":
+            unset($_SESSION['payment_id']);
+
+            $_SESSION['klant'] = array();
+            header("location: resultaat.php?order=failed");
+            break;
+        case "canceled":
+            unset($_SESSION['payment_id']);
+
+            $_SESSION['klant'] = array();
+            header("location: resultaat.php?order=canceled");
             break;
         case "paid":
             unset($_SESSION['payment_id']);
