@@ -1,5 +1,6 @@
 <?php
 include __DIR__ . "/header.php";
 
-addOrderLine("hoi achhat", $databaseConnection, $_SESSION['winkelmand']['86']);
+$klantEmail = addCustomer($_SESSION['klant'], $databaseConnection);
+print_r($klantEmail);
 ?>

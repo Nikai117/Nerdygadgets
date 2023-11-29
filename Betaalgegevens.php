@@ -84,28 +84,28 @@ if(isset($_POST['knop'])){
     $_SESSION['klant']['postcode'] = $_POST['postcode'];
     $_SESSION['klant']['email'] = $_POST['email'];
 
-    // $totPrijs = $_SESSION['totaalprijs'];
-    // $orderNum = "Order ".random_int(1, 400);
-    // try {
-    //     $payment = $mollie->payments->create([
-    //         "amount" => [
-    //             "currency" => "EUR",
-    //             "value" => $totPrijs // You must send the correct number of decimals, thus we enforce the use of strings
-    //         ],
-    //         "description" => $orderNum,
-    //         "redirectUrl" => "http://localhost/nerdygadgets/betaalgegevens.php",
-    //         "metadata" => [
-    //             "order_id" => "12345",
-    //         ],
-    //     ]);
-    //     header("Location: " . $payment->getCheckoutUrl());
-    //     $_SESSION['payment_id'] = $payment->id;
+     $totPrijs = $_SESSION['totaalprijs'];
+     $orderNum = "Order ".random_int(1, 400);
+     try {
+         $payment = $mollie->payments->create([
+             "amount" => [
+                 "currency" => "EUR",
+                 "value" => $totPrijs // You must send the correct number of decimals, thus we enforce the use of strings
+             ],
+             "description" => $orderNum,
+             "redirectUrl" => "http://localhost/nerdygadgets/betaalgegevens.php",
+             "metadata" => [
+                 "order_id" => "12345",
+             ],
+         ]);
+         header("Location: " . $payment->getCheckoutUrl());
+         $_SESSION['payment_id'] = $payment->id;
 
-    //     ob_end_flush();
-    //     exit();
-    // } catch ( Exception $exception) {
-    //     print ($exception);
-    // }
+         ob_end_flush();
+         exit();
+     } catch ( Exception $exception) {
+         print ($exception);
+     }
 }
 
 if(isset($_SESSION['payment_id'])) {
@@ -119,22 +119,95 @@ if(isset($_SESSION['payment_id'])) {
         case "expired":
         case "failed":
         case "canceled":
+            unset($_SESSION['payment_id']);
+
             $_SESSION['klant'] = array();//klantgegevens verwijderen
             header("location: winkelmand.php");
             break;
         case "paid":
             unset($_SESSION['payment_id']);
 
-            addCustomer($_SESSION['klant'], $databaseConnection);
-            $_SESSION['klant'] = array();
+            $email = addCustomer($_SESSION['klant'], $databaseConnection);
+            addOrder($_SESSION['klant']['email'], $databaseConnection);
 
             foreach ($_SESSION['winkelmand'] as $key => $product) {
-
+                addOrderLine($_SESSION['klant']['email'], $databaseConnection, $product);
+                //updateStocks($key, $product['aantal'], $databaseConnection);
             }
 
+            $_SESSION['klant'] = array();
             $_SESSION['winkelmand'] = array();
             header("location: index.php");
             break;
     }
 }
 ?>
+<style>
+    #VerzendMethode {
+        float: right;
+        display: block;
+        background-color: #2C2F33;
+        border-radius: 5px;
+        margin-right: 200px;
+        margin-bottom: 20px;
+        margin-top: 50px;
+        width: 15%;
+        padding: 10px;
+    }
+
+    input[type=radio] {
+        border: 0px;
+        width: 10%;
+        height: 1.5em;
+        float: left;
+        margin-right: 10px;
+        margin-left: 10px;
+    }
+
+    #KlantGegevens {
+        margin-top: 20px;
+        margin-left: 40px;
+    }
+
+    #Besteladres {
+        margin-top: 20px;
+        margin-left: 40px;
+    }
+
+    h1 {
+        /*color: #333;*/
+        font-size: larger;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    select {
+        width: 60%;
+        padding: 8px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    input[type="submit"] {
+        display: block;
+        margin: 0 auto;
+        margin-bottom: 20px;
+        width: 30%;
+        background-color: Blue;
+        color: #fff;
+        padding: 10px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    input[type="submit"]:hover {
+        background-color: darkblue;
+    }
+</style>

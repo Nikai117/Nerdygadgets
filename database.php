@@ -165,7 +165,10 @@ function updateStocks($id, $amount, $databaseConnection) {
 
 //klant toevoegen
 function addCustomer($klantArray, $databaseConnection) {
-    
+
+    $klant = getCustomerByEmail($klantArray['email'], $databaseConnection);
+
+    if ($klant == NULL) {
         $Query = "
         INSERT INTO customers
         VALUES ( NULL,
@@ -202,21 +205,26 @@ function addCustomer($klantArray, $databaseConnection) {
             ?
         );";
 
-    $Statement = mysqli_prepare($databaseConnection, $Query);
-    mysqli_stmt_bind_param($Statement, "ssss", $klantArray['naam'], $klantArray['adres'], $klantArray['postcode'], $klantArray['email']);
-    mysqli_stmt_execute($Statement);   
+        $Statement = mysqli_prepare($databaseConnection, $Query);
+        mysqli_stmt_bind_param($Statement, "ssss", $klantArray['naam'], $klantArray['adres'], $klantArray['postcode'], $klantArray['email']);
+        mysqli_stmt_execute($Statement);
+
+        return "";
+    }else {
+        return $klant;
+    }
 }
 
-function getCustomerID($name, $databaseConnection) {
+function getCustomerID($email, $databaseConnection) {
 
-        $Query = "
+    $Query = "
         SELECT CustomerID
         From customers
-        WHERE CustomerName = ?
+        WHERE email = ?
         LIMIT 1;";
 
     $Statement = mysqli_prepare($databaseConnection, $Query);
-    mysqli_stmt_bind_param($Statement, "s", $name);
+    mysqli_stmt_bind_param($Statement, "s", $email);
     mysqli_stmt_execute($Statement);
     $R = mysqli_stmt_get_result($Statement);
     $R = mysqli_fetch_all($R, MYSQLI_ASSOC)[0]["CustomerID"];
@@ -224,8 +232,26 @@ function getCustomerID($name, $databaseConnection) {
     return $R;
 }
 
-function addOrder($name, $databaseConnection) {
-    $customerID = getCustomerID($name, $databaseConnection);
+function getCustomerByEmail($email, $databaseConnection) {
+
+    $Query = "
+    SELECT email 
+    FROM customers
+    WHERE email = ?;
+    ";
+
+    $statement = mysqli_prepare($databaseConnection, $Query);
+    mysqli_stmt_bind_param($statement, "s", $email);
+    mysqli_stmt_execute($statement);
+    $R = mysqli_stmt_get_result($statement);
+    $R = mysqli_fetch_all($R, MYSQLI_ASSOC);
+
+    return $R;
+}
+
+function addOrder($email, $databaseConnection) {
+    $customerID = getCustomerID($email, $databaseConnection);
+
     $vandaag = date("Y-m-d");
     $morgen = date('Y-m-d', strtotime($vandaag. ' + 1 days'));
     $nu = date("Y-m-d H:i:s");
@@ -239,8 +265,8 @@ function addOrder($name, $databaseConnection) {
     mysqli_stmt_execute($Statement);
 }
 
-function getOrderId($name, $databaseConnection) {
-    $customerID = getCustomerID($name, $databaseConnection);
+function getOrderId($email, $databaseConnection) {
+    $customerID = getCustomerID($email, $databaseConnection);
     
     $Query = " 
        SELECT OrderID
@@ -259,8 +285,8 @@ function getOrderId($name, $databaseConnection) {
 
 }
 
-function addOrderLine($name, $databaseConnection, $product) {
-    $orderID = getOrderId($name, $databaseConnection);
+function addOrderLine($email, $databaseConnection, $product) {
+    $orderID = getOrderId($email, $databaseConnection);
     $stockItemID = $product['StockItemID'];
     $stockItemDesc = $product['StockItemName'];//description voert die verkeerd in; nog naar kijken
     $quantity = $product['aantal'];
@@ -273,7 +299,7 @@ function addOrderLine($name, $databaseConnection, $product) {
         VALUES (NULL,
             $orderID,
             $stockItemID,
-            'hahah',
+            ?,
             7,
             $quantity,
             $price,
@@ -285,5 +311,6 @@ function addOrderLine($name, $databaseConnection, $product) {
         );";
 
     $Statement = mysqli_prepare($databaseConnection, $Query);
+    mysqli_stmt_bind_param($Statement, "s", $stockItemDesc);
     mysqli_stmt_execute($Statement);
 }
