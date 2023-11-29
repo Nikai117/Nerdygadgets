@@ -85,7 +85,7 @@ if(isset($_POST['knop'])){
                 "value" => $totPrijs // You must send the correct number of decimals, thus we enforce the use of strings
             ],
             "description" => $orderNum,
-            "redirectUrl" => "http://localhost/nerdygadgets/resultaat.php",
+            "redirectUrl" => "http://localhost/nerdygadgets/betaalgegevens.php",
             "metadata" => [
                 "order_id" => "12345",
             ],
