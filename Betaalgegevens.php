@@ -49,24 +49,24 @@ $mollie->setApiKey("test_fJJbkmF9gjs3JsrzaNapaAF68dVv9C");
     <div id="KlantGegegevens">
     <h1>Klant gegevens</h1><br>
 
-    <label for="mail">Email:</label>
-    <input type="email" name="email" id="mail" placeholder="Emailadres" required style="width: 60%; margin-left: 10%; margin-bottom: 20px"><br><br>
+    <input type="email" name="email" id="mail" placeholder="Emailadres" required style="width: 60%; margin-left: 10%; margin-bottom: 20px"><br>
+    <input type="text" name="voornaam" id="vnaam" placeholder="Voornaam" required style="width: 60%; margin-left: 10%; margin-bottom: 20px"><br>
+    <input type="text" name="achternaam" id="anaam" placeholder="Achternaam" required style="width: 60%; margin-left: 10%; margin-bottom: 20px"><br>
+    <input type="text" name="bedrijfsnaam" id="bnaam" placeholder="Bedrijfsnaam (Optioneel)" style="width: 60%; margin-left: 10%; margin-bottom: 20px"><br>
     </div>
     <div id="Besteladres"></div>
     <h1>Besteladres</h1><br>
-    <label for="vnaam">Voornaam:</label><input type="text" name="voornaam" id="vnaam" required style="width: 60%; margin-left: 10%; margin-bottom: 20px"><br>
-    <label for="anaam">Achternaam:</label><input type="text" name="achternaam" id="anaam" required style="width: 60%; margin-left: 10%; margin-bottom: 20px"><br>
-    <label for="bnaam">Bedrijfsnaam:</label><input type="text" name="bedrijfsnaam" id="bnaam" placeholder="(Optioneel)" style="width: 60%; margin-left: 10%; margin-bottom: 20px"><br>
-    <label for="adres">Adres:</label><input type="text" name="adres" id="adres" required style="width: 60%; margin-left: 10%; margin-bottom: 20px"><br>
-
-    <label for="land">Land:</label><select style="width: 60%; margin-left: 10%; margin-bottom: 20px">
+    <input type="text" name="adres" id="adres" placeholder="Adres" required style="width: 60%; margin-left: 10%; margin-bottom: 20px"><br>
+    <select required style="width: 60%; margin-left: 10%; margin-bottom: 20px">
         <option value="">Selecteer een land</option>
+        <option>België</option>
+        <option>Duitsland</option>
+        <option>Frankrijk</option>
+        <option>Luxemburg</option>
+        <option>Nederland</option>
+        <option>Oostenrijk</option>
     </select>
-    <label for="provincie">Provincie:</label><select style="width: 60%; margin-left: 10%; margin-bottom: 20px">
-        <option value="">Selecteer een provincie</option>
-    </select>
-
-    <label for="pcode">Postcode:</label><input type="text" name="postcode" id="pcode" required style="width: 60%; margin-left: 10%; margin-bottom: 20px"><br><br>
+    <input type="text" name="postcode" id="pcode" placeholder="Postcode" required style="width: 60%; margin-left: 10%; margin-bottom: 20px"><br><br>
 
     <input type="submit" name='knop' required style="width: 30%; align-items: center; justify-content: center; margin-left: 30%">
     </div>
