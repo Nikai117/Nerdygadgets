@@ -1,13 +1,6 @@
 <?php
 include __DIR__ . "/header.php";
 
-function removeRow($arr, $index)
-{
-    unset($arr[$index]);
-    array_splice($arr, $index, 0);//om de NULL row te verwijderen die je krijgt van unset()
-
-    return $arr;
-}
 session_reset();
 
 if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {

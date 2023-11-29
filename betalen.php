@@ -146,3 +146,7 @@ if(isset($_GET['knop'])){
     /*}*/
 
     /*Include winkelmand tot. prijs, verz, btw*/
+
+<br><li>
+    <a href="winkelmand.php" class="HrefDecoration"><- Terug naar winkelmand</a>
+</li><br>

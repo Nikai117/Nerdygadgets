@@ -34,7 +34,7 @@ $mollie->setApiKey("test_fJJbkmF9gjs3JsrzaNapaAF68dVv9C");
     } ?>
         </table>
     </div>
-<form>
+<form method="post">
     <div id="VerzendMethode">
         <p><span style="font-weight:bold;">Verzendmethode:</span></p>
         <input type="radio" id="postnl" name="verzenden" value="postnl" required>
@@ -48,27 +48,31 @@ $mollie->setApiKey("test_fJJbkmF9gjs3JsrzaNapaAF68dVv9C");
     </div>
     <br>
     <p class="solid"></p>
-    <div id="KlantGegevens">
+
+    <div id="KlantGegegevens">
     <h1>Klant gegevens</h1><br>
-    <input type="email" name="email" id="mail" placeholder="E-mailadres" required style="width: 60%; margin-left: 10%; margin-bottom: 20px"><br><br>
+
+    <input type="email" name="email" id="mail" placeholder="Emailadres" required style="width: 60%; margin-left: 10%; margin-bottom: 20px"><br>
+    <input type="text" name="voornaam" id="vnaam" placeholder="Voornaam" required style="width: 60%; margin-left: 10%; margin-bottom: 20px"><br>
+    <input type="text" name="achternaam" id="anaam" placeholder="Achternaam" required style="width: 60%; margin-left: 10%; margin-bottom: 20px"><br>
+    <input type="text" name="bedrijfsnaam" id="bnaam" placeholder="Bedrijfsnaam (Optioneel)" style="width: 60%; margin-left: 10%; margin-bottom: 20px"><br>
+    <input type="text" name="telnummer"  id="telnummer" placeholder="Telefoonnummer" required style="width: 60%; margin-left: 10%; margin-bottom: 20px"><br>
     </div>
 
     <div id="Besteladres">
     <h1>Besteladres</h1><br>
-    <input type="text" name="voornaam" id="vnaam" placeholder="Voornaam" required style="width: 60%; margin-left: 10%; margin-bottom: 20px"><br>
-    <input type="text" name="achternaam" id="anaam" placeholder="Achternaam" required style="width: 60%; margin-left: 10%; margin-bottom: 20px"><br>
-        <input type="text" name="telnummer" id="telnummer" placeholder="Telefoonnummer" required style="width: 60%; margin-left: 10%; margin-bottom: 20px"><br>
-    <input type="text" name="bedrijfsnaam" id="bnaam" placeholder="Bedrijfsnaam (optioneel)" style="width: 60%; margin-left: 10%; margin-bottom: 20px"><br>
+                          
     <input type="text" name="adres" id="adres" placeholder="Adres" required style="width: 60%; margin-left: 10%; margin-bottom: 20px"><br>
-    <input type="text" name="toevoeging" id="toevoeging" placeholder="Toevoeging (optioneel)" style="width: 60%; margin-left: 10%; margin-bottom: 20px"><br>
-
-    <select style="width: 60%; margin-left: 10%; margin-bottom: 20px">
-        <option value="">Land</option>
-    </select>
-
-<!--    <label for="provincie">Provincie:</label><select style="width: 60%; margin-left: 10%; margin-bottom: 20px">-->
-<!--        <option value="">Selecteer een provincie</option>-->
-<!--    </select>-->
+    <input type="text" name="toevoeging" id="toevoeging" placeholder="Toevoeging (optioneel)" style="widith: 60%; margin-left: 10%; margin-bottom: 20px"><br>
+    <select required style="width: 60%; margin-left: 10%; margin-bottom: 20px">
+        <option value="">Selecteer een land</option>
+        <option>België</option>
+        <option>Duitsland</option>
+        <option>Frankrijk</option>
+        <option>Luxemburg</option>
+        <option>Nederland</option>
+        <option>Oostenrijk</option>
+      </select>
 
     <input type="text" name="postcode" id="pcode" placeholder="Postcode" required style="width: 60%; margin-left: 10%; margin-bottom: 20px"><br><br>
 
@@ -77,33 +81,78 @@ $mollie->setApiKey("test_fJJbkmF9gjs3JsrzaNapaAF68dVv9C");
 </form>
 
 <?php
-if(isset($_GET['knop'])){
+if(isset($_POST['knop'])){
     print("U wordt nu doorverwezen naar de betaalpagina");
-    $totPrijs = $_SESSION['totaalprijs'];
-    $orderNum = "Order ".random_int(1, 400);
-    try {
-        $payment = $mollie->payments->create([
-            "amount" => [
-                "currency" => "EUR",
-                "value" => $totPrijs // You must send the correct number of decimals, thus we enforce the use of strings
-            ],
-            "description" => $orderNum,
-            "redirectUrl" => "http://localhost/nerdygadgets/betaalgegevens.php",
-            "metadata" => [
-                "order_id" => "12345",
-            ],
-        ]);
 
-        header("Location: " . $payment->getCheckoutUrl());
-        ob_end_flush();
-        exit();
-    } catch ( Exception $exception) {
-        print ($exception);
+    //$pattern = "/^[a-z]+$/i";
+
+    $_SESSION['klant']['naam'] = ucfirst(strtolower($_POST['voornaam'])) . " " . ucfirst(strtolower($_POST['achternaam']));
+    $_SESSION['klant']['adres'] = $_POST['adres'];
+    $_SESSION['klant']['postcode'] = $_POST['postcode'];
+    $_SESSION['klant']['email'] = $_POST['email'];
+
+     $totPrijs = $_SESSION['totaalprijs'];
+     $orderNum = "Order ".random_int(1, 400);
+     try {
+         $payment = $mollie->payments->create([
+             "amount" => [
+                 "currency" => "EUR",
+                 "value" => $totPrijs // You must send the correct number of decimals, thus we enforce the use of strings
+             ],
+             "description" => $orderNum,
+             "redirectUrl" => "http://localhost/nerdygadgets/betaalgegevens.php",
+             "metadata" => [
+                 "order_id" => "12345",
+             ],
+         ]);
+         header("Location: " . $payment->getCheckoutUrl());
+         $_SESSION['payment_id'] = $payment->id;
+
+         ob_end_flush();
+         exit();
+     } catch ( Exception $exception) {
+         print ($exception);
+     }
+}
+
+if(isset($_SESSION['payment_id'])) {
+    $paymentId = $_SESSION['payment_id'];
+    $payment = $mollie->payments->get($paymentId);
+
+    switch($payment->status) {
+        case "open":
+            header("Location: " . $payment->getCheckoutUrl());
+            break;
+        case "expired":
+            unset($_SESSION['payment_id']);
+            header("location: resultaat.php?order=expired");
+            break;
+        case "failed":
+            unset($_SESSION['payment_id']);
+            header("location: resultaat.php?order=failed");
+            break;
+        case "canceled":
+            unset($_SESSION['payment_id']);
+            header("location: resultaat.php?order=canceled");
+            break;
+        case "paid":
+            unset($_SESSION['payment_id']);
+
+            $email = addCustomer($_SESSION['klant'], $databaseConnection);
+            addOrder($_SESSION['klant']['email'], $databaseConnection);
+
+            foreach ($_SESSION['winkelmand'] as $key => $product) {
+                addOrderLine($_SESSION['klant']['email'], $databaseConnection, $product);
+                updateStocks($key, $product['aantal'], $databaseConnection);
+            }
+
+            $_SESSION['winkelmand'] = array();
+            header("location: resultaat.php?order=paid");
+            break;
     }
 }
 ?>
-
-<!-- plaats alles wat niet PHP is voorlopig onderaan-->
+<!-- plaats alles wat niet PHP is voorlopig onderaan -->
 <style>
     /*body {*/
     /*    font-family: Arial, sans-serif;*/
