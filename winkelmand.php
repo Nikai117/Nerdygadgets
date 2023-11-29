@@ -111,6 +111,11 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
                 print ("Verzenden niet mogelijk door te hoog aantal producten, bel service desk a.u.b.");
             print ("<br><i>Inclusief BTW</i>");
         } ?>
+
+        <br>
+        <form method="post" action="">
+            <button type="button" onclick="redirectToPayment()">Betalen</button>
+        </form>
     </div>
 
     <div id="lijst">
@@ -160,9 +165,7 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
         }
     </script>
 
-    <form method="post" action="">
-        <button type="button" onclick="redirectToPayment()">Betalen</button>
-    </form>
+
 
 <?php }
 ?>
