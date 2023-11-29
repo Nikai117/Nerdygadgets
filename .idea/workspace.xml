@@ -4,12 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="22b4179a-d9db-46f8-bd7b-9bd280677cd8" name="Changes" comment="Bugfixes and variables added to shopper">
-      <change beforePath="$PROJECT_DIR$/.idea/Nerdygadgets.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Nerdygadgets.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
+    <list default="true" id="b5707d94-885a-46a4-8032-b546f08eb300" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Betaalgegevens.php" beforeDir="false" afterPath="$PROJECT_DIR$/Betaalgegevens.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/winkelmand.php" beforeDir="false" afterPath="$PROJECT_DIR$/winkelmand.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database.php" beforeDir="false" afterPath="$PROJECT_DIR$/database.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test.php" beforeDir="false" afterPath="$PROJECT_DIR$/test.php" afterDir="false" />
+    </list>
+    <list id="11e29af2-402d-40ec-9693-3273b5e76702" name="Changes by nikai" comment="">
+      <change beforePath="$PROJECT_DIR$/database.php" beforeDir="false" afterPath="$PROJECT_DIR$/database.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,34 +22,26 @@
     <pharConfigPath>$PROJECT_DIR$/mollie-api-php/composer.json</pharConfigPath>
     <execution />
   </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="HTML File" />
-      </list>
-    </option>
-  </component>
   <component name="Git.Settings">
-    <option name="RECENT_BRANCH_BY_REPOSITORY">
-      <map>
-        <entry key="$PROJECT_DIR$" value="main" />
-      </map>
-    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory">{
-  &quot;lastFilter&quot;: {
-    &quot;state&quot;: &quot;OPEN&quot;,
-    &quot;assignee&quot;: &quot;Nikai117&quot;
-  }
-}</component>
-  <component name="GithubPullRequestsUISettings">
-    <option name="selectedUrlAndAccountId">
-      <UrlAndAccount>
-        <option name="accountId" value="80642769-20b5-471d-9f34-ff2b0f84c6cd" />
-        <option name="url" value="https://github.com/Nikai117/Nerdygadgets.git" />
-      </UrlAndAccount>
-    </option>
+  <component name="LineStatusTrackerManager">
+    <file path="$PROJECT_DIR$/database.php">
+      <ranges>
+        <range start1="167" end1="168" start2="167" end2="171" changelist="b5707d94-885a-46a4-8032-b546f08eb300" />
+        <range start1="204" end1="207" start2="207" end2="215" changelist="b5707d94-885a-46a4-8032-b546f08eb300" />
+        <range start1="209" end1="210" start2="217" end2="218" changelist="b5707d94-885a-46a4-8032-b546f08eb300" />
+        <range start1="211" end1="212" start2="219" end2="220" changelist="11e29af2-402d-40ec-9693-3273b5e76702" />
+        <range start1="214" end1="215" start2="222" end2="223" changelist="b5707d94-885a-46a4-8032-b546f08eb300" />
+        <range start1="218" end1="219" start2="226" end2="227" changelist="b5707d94-885a-46a4-8032-b546f08eb300" />
+        <range start1="222" end1="222" start2="230" end2="247" changelist="b5707d94-885a-46a4-8032-b546f08eb300" />
+        <range start1="226" end1="228" start2="251" end2="254" changelist="b5707d94-885a-46a4-8032-b546f08eb300" />
+        <range start1="241" end1="243" start2="267" end2="269" changelist="b5707d94-885a-46a4-8032-b546f08eb300" />
+        <range start1="261" end1="263" start2="287" end2="289" changelist="b5707d94-885a-46a4-8032-b546f08eb300" />
+        <range start1="275" end1="276" start2="301" end2="302" changelist="11e29af2-402d-40ec-9693-3273b5e76702" />
+        <range start1="287" end1="287" start2="313" end2="314" changelist="b5707d94-885a-46a4-8032-b546f08eb300" />
+      </ranges>
+    </file>
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -60,90 +54,43 @@
   </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
-  &quot;associatedIndex&quot;: 8
+  &quot;associatedIndex&quot;: 3
 }</component>
-  <component name="ProjectId" id="2Y8ELcgtCHaNJHO7sF9bpgclRfa" />
+  <component name="ProjectId" id="2Yo8etb7IhJEXEiCVOuebGqYtT5" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
-    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;US4__database__interactie&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.webide.settings.project.settings.php&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RunManager" selected="JavaScript Debug.betalen.php">
-    <configuration name="betalen.php" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/header.php/betalen.php" useBuiltInWebServerPort="true">
-      <method v="2" />
-    </configuration>
-    <configuration name="betalen.php" type="PhpLocalRunConfigurationType" factoryName="PHP Console" temporary="true" path="$PROJECT_DIR$/betalen.php">
-      <method v="2" />
-    </configuration>
-    <configuration name="browse.php" type="PhpLocalRunConfigurationType" factoryName="PHP Console" temporary="true" path="$PROJECT_DIR$/browse.php">
-      <method v="2" />
-    </configuration>
-    <configuration name="header.php" type="PhpLocalRunConfigurationType" factoryName="PHP Console" temporary="true" path="$PROJECT_DIR$/header.php">
-      <method v="2" />
-    </configuration>
-    <configuration name="winkelmand.php" type="PhpLocalRunConfigurationType" factoryName="PHP Console" temporary="true" path="$PROJECT_DIR$/winkelmand.php">
-      <method v="2" />
-    </configuration>
-    <recent_temporary>
-      <list>
-        <item itemvalue="JavaScript Debug.betalen.php" />
-        <item itemvalue="PHP Script.winkelmand.php" />
-        <item itemvalue="PHP Script.betalen.php" />
-        <item itemvalue="PHP Script.header.php" />
-        <item itemvalue="PHP Script.browse.php" />
-      </list>
-    </recent_temporary>
-  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="22b4179a-d9db-46f8-bd7b-9bd280677cd8" name="Changes" comment="" />
-      <created>1699898751792</created>
+      <changelist id="b5707d94-885a-46a4-8032-b546f08eb300" name="Changes" comment="" />
+      <created>1701180670920</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1699898751792</updated>
-      <workItem from="1699898752998" duration="141000" />
-      <workItem from="1699898905265" duration="6226000" />
-      <workItem from="1700032808462" duration="3729000" />
-      <workItem from="1700048761762" duration="2900000" />
-      <workItem from="1700060285156" duration="1457000" />
-      <workItem from="1700070420215" duration="3379000" />
-      <workItem from="1700124889433" duration="3795000" />
-      <workItem from="1700656436963" duration="7365000" />
-      <workItem from="1701087183115" duration="9013000" />
-      <workItem from="1701112231985" duration="1466000" />
-      <workItem from="1701117856180" duration="1405000" />
+      <updated>1701180670920</updated>
+      <workItem from="1701180672051" duration="3679000" />
+      <workItem from="1701199486834" duration="7199000" />
+      <workItem from="1701248883046" duration="2066000" />
     </task>
-    <task id="LOCAL-00001" summary="Bugfixes and variables added to shopper">
-      <option name="closed" value="true" />
-      <created>1699908065996</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1699908065997</updated>
-    </task>
-    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
-  </component>
-  <component name="VcsManagerConfiguration">
-    <MESSAGE value="Bugfixes and variables added to shopper" />
-    <option name="LAST_COMMIT_MESSAGE" value="Bugfixes and variables added to shopper" />
   </component>
 </project>

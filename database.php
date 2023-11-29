@@ -137,7 +137,7 @@ function getQuantity($id, $databaseConnection) {
 function addToCart($id, $databaseConnection) {
     
         $Query = "
-        SELECT StockItemID, StockItemName, (RecommendedRetailPrice*(1+(TaxRate/100))) AS SellPrice
+        SELECT StockItemID, StockItemName, (RecommendedRetailPrice*(1+(TaxRate/100))) AS SellPrice, TaxRate, UnitPrice
         FROM stockitems
         WHERE StockItemID = ?";
 
@@ -148,4 +148,169 @@ function addToCart($id, $databaseConnection) {
     $R = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
     return $R;
+}
+
+function updateStocks($id, $amount, $databaseConnection) {
+    
+        $Query = "
+        UPDATE stockitemholdings
+        SET LastStocktakeQuantity = QuantityOnHand,
+            QuantityOnHand = QuantityOnHand - ?
+        WHERE StockItemID = ?";
+
+    $Statement = mysqli_prepare($databaseConnection, $Query);
+    mysqli_stmt_bind_param($Statement, "ii", $amount, $id);
+    mysqli_stmt_execute($Statement);    
+}
+
+//klant toevoegen
+function addCustomer($klantArray, $databaseConnection) {
+
+    $klant = getCustomerByEmail($klantArray['email'], $databaseConnection);
+
+    if ($klant == NULL) {
+        $Query = "
+        INSERT INTO customers
+        VALUES ( NULL,
+            ?,
+            1,
+            9,
+            null,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0.00,
+            '2023-01-01',
+            0.00,
+            0,
+            0,
+            30,
+            '(201) 555-0100',
+            '(201) 555-0101',
+            1,
+            1,
+            'http://www.example.com',
+            ?,
+            null,
+            ?,
+            'TestDeliveryLocation',
+            'TestPostalAddressLine1',
+            'TestPostalAddressLine2',
+            'TestPostalPostalCode',
+            1,
+            '2023-01-01 00:00:00',
+            '9999-12-31 23:59:59',
+            ?
+        );";
+
+        $Statement = mysqli_prepare($databaseConnection, $Query);
+        mysqli_stmt_bind_param($Statement, "ssss", $klantArray['naam'], $klantArray['adres'], $klantArray['postcode'], $klantArray['email']);
+        mysqli_stmt_execute($Statement);
+
+        return "";
+    }else {
+        return $klant;
+    }
+}
+
+function getCustomerID($email, $databaseConnection) {
+
+    $Query = "
+        SELECT CustomerID
+        From customers
+        WHERE email = ?
+        LIMIT 1;";
+
+    $Statement = mysqli_prepare($databaseConnection, $Query);
+    mysqli_stmt_bind_param($Statement, "s", $email);
+    mysqli_stmt_execute($Statement);
+    $R = mysqli_stmt_get_result($Statement);
+    $R = mysqli_fetch_all($R, MYSQLI_ASSOC)[0]["CustomerID"];
+
+    return $R;
+}
+
+function getCustomerByEmail($email, $databaseConnection) {
+
+    $Query = "
+    SELECT email 
+    FROM customers
+    WHERE email = ?;
+    ";
+
+    $statement = mysqli_prepare($databaseConnection, $Query);
+    mysqli_stmt_bind_param($statement, "s", $email);
+    mysqli_stmt_execute($statement);
+    $R = mysqli_stmt_get_result($statement);
+    $R = mysqli_fetch_all($R, MYSQLI_ASSOC);
+
+    return $R;
+}
+
+function addOrder($email, $databaseConnection) {
+    $customerID = getCustomerID($email, $databaseConnection);
+
+    $vandaag = date("Y-m-d");
+    $morgen = date('Y-m-d', strtotime($vandaag. ' + 1 days'));
+    $nu = date("Y-m-d H:i:s");
+
+        $Query = "
+        INSERT INTO orders 
+        VALUES (NULL, ?, '2', NULL, '3032', NULL, $vandaag, $morgen, NULL, '1', NULL, NULL, NULL, NULL, '1','$nu');";
+
+    $Statement = mysqli_prepare($databaseConnection, $Query);
+    mysqli_stmt_bind_param($Statement, "i", $customerID);
+    mysqli_stmt_execute($Statement);
+}
+
+function getOrderId($email, $databaseConnection) {
+    $customerID = getCustomerID($email, $databaseConnection);
+    
+    $Query = " 
+       SELECT OrderID
+       From orders
+       WHERE CustomerID = ?
+       ORDER BY OrderID DESC
+       LIMIT 1";
+
+    $Statement = mysqli_prepare($databaseConnection, $Query);
+    mysqli_stmt_bind_param($Statement, "i", $customerID);
+    mysqli_stmt_execute($Statement);
+    $R = mysqli_stmt_get_result($Statement);
+    $R = mysqli_fetch_all($R, MYSQLI_ASSOC)[0]["OrderID"];
+
+    return $R;
+
+}
+
+function addOrderLine($email, $databaseConnection, $product) {
+    $orderID = getOrderId($email, $databaseConnection);
+    $stockItemID = $product['StockItemID'];
+    $stockItemDesc = $product['StockItemName'];//description voert die verkeerd in; nog naar kijken
+    $quantity = $product['aantal'];
+    $price = $product['UnitPrice'];
+    $taxrate = $product['TaxRate'];
+    $vandaag = date("Y-m-d");
+
+    $Query = "
+        INSERT INTO orderlines
+        VALUES (NULL,
+            $orderID,
+            $stockItemID,
+            ?,
+            7,
+            $quantity,
+            $price,
+            $taxrate,
+            0,
+            NULL,
+            1,
+            $vandaag
+        );";
+
+    $Statement = mysqli_prepare($databaseConnection, $Query);
+    mysqli_stmt_bind_param($Statement, "s", $stockItemDesc);
+    mysqli_stmt_execute($Statement);
 }

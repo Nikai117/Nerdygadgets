@@ -5,6 +5,17 @@ include "database.php";
 if(!isset($_SESSION['winkelmand'])) {
     $_SESSION['winkelmand'] = array();//maak de winkelmand session
 }
+if(!isset($_SESSION['klant'])) {
+    $_SESSION['klant'] = array();
+}
+
+function removeRow($arr, $index)
+{
+    unset($arr[$index]);
+    array_splice($arr, $index, 0);//om de NULL row te verwijderen die je krijgt van unset()
+
+    return $arr;
+}
 $databaseConnection = connectToDatabase();
 ?>
 <!DOCTYPE html>
