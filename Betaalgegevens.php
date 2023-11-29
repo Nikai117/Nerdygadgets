@@ -142,7 +142,24 @@ if(isset($_SESSION['payment_id'])) {
     }
 }
 ?>
+<!-- plaats alles wat niet PHP is voorlopig onderaan -->
 <style>
+    /*body {*/
+    /*    font-family: Arial, sans-serif;*/
+    /*    background-color: #f8f8f8;*/
+    /*    margin: 0;*/
+    /*    padding: 0;*/
+    /*}*/
+
+    /*form {*/
+    /*    max-width: 600px;*/
+    /*    margin: 20px auto;*/
+    /*    background-color: #fff;*/
+    /*    padding: 20px;*/
+    /*    border-radius: 8px;*/
+    /*    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);*/
+    /*}*/
+
     #VerzendMethode {
         float: right;
         display: block;
@@ -210,4 +227,14 @@ if(isset($_SESSION['payment_id'])) {
     input[type="submit"]:hover {
         background-color: darkblue;
     }
-</style>
+
+    #prijs
+
+    /* Responsive styles */
+    /*@media screen and (max-width: 600px) {*/
+    /*    form {*/
+    /*        width: 90%;*/
+    /*    }*/
+    /*}*/
+
+    /*Include winkelmand tot. prijs, verz, btw*/
