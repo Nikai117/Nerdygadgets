@@ -85,7 +85,7 @@ if(isset($_GET['knop'])){
                 "value" => $totPrijs // You must send the correct number of decimals, thus we enforce the use of strings
             ],
             "description" => $orderNum,
-            "redirectUrl" => "http://localhost/nerdygadgets/betaalgegevens.php",
+            "redirectUrl" => "http://localhost/nerdygadgets/resultaat.php",
             "metadata" => [
                 "order_id" => "12345",
             ],
@@ -99,6 +99,9 @@ if(isset($_GET['knop'])){
     }
 }
 ?>
+<br><li>
+    <a href="winkelmand.php" class="HrefDecoration"><- Terug naar winkelmand</a>
+</li><br>
 
 <!-- plaats alles wat niet PHP is voorlopig onderaan-->
 <style>
