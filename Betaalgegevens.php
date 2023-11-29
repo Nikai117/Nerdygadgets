@@ -34,7 +34,7 @@ $mollie->setApiKey("test_fJJbkmF9gjs3JsrzaNapaAF68dVv9C");
     } ?>
         </table>
     </div>
-<form>
+<form method="post">
     <div id="VerzendMethode">
         <label for="verzenden">Verzendmethode:</label>
         <label>PostNL</label>
@@ -46,7 +46,7 @@ $mollie->setApiKey("test_fJJbkmF9gjs3JsrzaNapaAF68dVv9C");
         <label>UPS</label>
         <input type="radio" id="ups" name="verzenden" value="ups" required>
     </div>
-    <div id="KlantGegegevens"
+    <div id="KlantGegegevens">
     <h1>Klant gegevens</h1><br>
 
     <label for="mail">Email:</label>
@@ -58,7 +58,6 @@ $mollie->setApiKey("test_fJJbkmF9gjs3JsrzaNapaAF68dVv9C");
     <label for="anaam">Achternaam:</label><input type="text" name="achternaam" id="anaam" required style="width: 60%; margin-left: 10%; margin-bottom: 20px"><br>
     <label for="bnaam">Bedrijfsnaam:</label><input type="text" name="bedrijfsnaam" id="bnaam" placeholder="(Optioneel)" style="width: 60%; margin-left: 10%; margin-bottom: 20px"><br>
     <label for="adres">Adres:</label><input type="text" name="adres" id="adres" required style="width: 60%; margin-left: 10%; margin-bottom: 20px"><br>
-    <label for="flat">Flat:</label><input type="text" name="flat" id="flat" placeholder="(Optioneel)" style="width: 60%; margin-left: 10%; margin-bottom: 20px"><br>
 
     <label for="land">Land:</label><select style="width: 60%; margin-left: 10%; margin-bottom: 20px">
         <option value="">Selecteer een land</option>
@@ -74,8 +73,9 @@ $mollie->setApiKey("test_fJJbkmF9gjs3JsrzaNapaAF68dVv9C");
 </form>
 
 <?php
-if(isset($_GET['knop'])){
+if(isset($_POST['knop'])){
     print("U wordt nu doorverwezen naar de betaalpagina");
+
     $totPrijs = $_SESSION['totaalprijs'];
     $orderNum = "Order ".random_int(1, 400);
     try {
@@ -104,6 +104,75 @@ if(isset($_GET['knop'])){
 </li><br>
 
 <!-- plaats alles wat niet PHP is voorlopig onderaan-->
+    print_r($_POST);
+
+    //$pattern = "/^[a-z]+$/i";
+
+    $_SESSION['klant']['naam'] = ucfirst(strtolower($_POST['voornaam'])) . " " . ucfirst(strtolower($_POST['achternaam']));
+    $_SESSION['klant']['adres'] = $_POST['adres'];
+    $_SESSION['klant']['postcode'] = $_POST['postcode'];
+    $_SESSION['klant']['email'] = $_POST['email'];
+
+     $totPrijs = $_SESSION['totaalprijs'];
+     $orderNum = "Order ".random_int(1, 400);
+     try {
+         $payment = $mollie->payments->create([
+             "amount" => [
+                 "currency" => "EUR",
+                 "value" => $totPrijs // You must send the correct number of decimals, thus we enforce the use of strings
+             ],
+             "description" => $orderNum,
+             "redirectUrl" => "http://localhost/nerdygadgets/betaalgegevens.php",
+             "metadata" => [
+                 "order_id" => "12345",
+             ],
+         ]);
+         header("Location: " . $payment->getCheckoutUrl());
+         $_SESSION['payment_id'] = $payment->id;
+
+         ob_end_flush();
+         exit();
+     } catch ( Exception $exception) {
+         print ($exception);
+     }
+}
+
+if(isset($_SESSION['payment_id'])) {
+    $paymentId = $_SESSION['payment_id'];
+    $payment = $mollie->payments->get($paymentId);
+
+    switch($payment->status) {
+        case "open":
+            header("Location: " . $payment->getCheckoutUrl());
+            break;
+        case "expired":
+        case "failed":
+        case "canceled":
+            unset($_SESSION['payment_id']);
+
+            $_SESSION['klant'] = array();//klantgegevens verwijderen
+            header("location: winkelmand.php");
+            break;
+        case "paid":
+            unset($_SESSION['payment_id']);
+
+            $email = addCustomer($_SESSION['klant'], $databaseConnection);
+            addOrder($_SESSION['klant']['email'], $databaseConnection);
+
+            foreach ($_SESSION['winkelmand'] as $key => $product) {
+                addOrderLine($_SESSION['klant']['email'], $databaseConnection, $product);
+                updateStocks($key, $product['aantal'], $databaseConnection);
+            }
+
+            $_SESSION['klant'] = array();
+            $_SESSION['winkelmand'] = array();
+            header("location: index.php");
+            break;
+    }
+}
+?>
+<!-- plaats alles wat niet PHP is voorlopig onderaan -->
+
 <style>
     /*body {*/
     /*    font-family: Arial, sans-serif;*/
