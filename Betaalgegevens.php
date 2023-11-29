@@ -138,7 +138,6 @@ if(isset($_SESSION['payment_id'])) {
                 updateStocks($key, $product['aantal'], $databaseConnection);
             }
 
-            $_SESSION['winkelmand'] = array();
             header("location: resultaat.php?order=paid");
             break;
     }

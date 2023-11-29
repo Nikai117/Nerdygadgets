@@ -292,7 +292,7 @@ function addOrderLine($email, $databaseConnection, $product) {
     $quantity = $product['aantal'];
     $price = $product['UnitPrice'];
     $taxrate = $product['TaxRate'];
-    $vandaag = date("Y-m-d");
+    $vandaag = date("Y-m-d H:i:s");
 
     $Query = "
         INSERT INTO orderlines
