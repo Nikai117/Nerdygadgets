@@ -118,20 +118,14 @@ if(isset($_SESSION['payment_id'])) {
             break;
         case "expired":
             unset($_SESSION['payment_id']);
-
-            $_SESSION['klant'] = array();//klantgegevens verwijderen
             header("location: resultaat.php?order=expired");
             break;
         case "failed":
             unset($_SESSION['payment_id']);
-
-            $_SESSION['klant'] = array();
             header("location: resultaat.php?order=failed");
             break;
         case "canceled":
             unset($_SESSION['payment_id']);
-
-            $_SESSION['klant'] = array();
             header("location: resultaat.php?order=canceled");
             break;
         case "paid":
@@ -145,7 +139,6 @@ if(isset($_SESSION['payment_id'])) {
                 updateStocks($key, $product['aantal'], $databaseConnection);
             }
 
-            $_SESSION['klant'] = array();
             $_SESSION['winkelmand'] = array();
             header("location: resultaat.php?order=paid");
             break;
