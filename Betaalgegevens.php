@@ -33,16 +33,28 @@ $mollie->setApiKey("test_fJJbkmF9gjs3JsrzaNapaAF68dVv9C");
             $verzendkostenText = "gratis";
         }
 
+        //service kosten berekenen
+        if ($productUnits <= 5) {
+            //gebruik je voor berekeningen
+            $serviceKosten = number_format(22.50, 2);
+            //gebruik je voor tekst en UI
+        } else {
+            $serviceKostenBerekening = 22.50 + (2.50 * $productUnits);
+            $serviceKosten = number_format($serviceKostenBerekening, 2);
+        }
+        $serviceKostenText = "€" . $serviceKosten;
+
         //zodat afgeronde getallen altijd 2 decimalen hebben (9.6 => 9.60)
         $productTotaal = number_format(round($productTotaal, 2), 2, '.', '');
 
         print("Productkosten: €" . $productTotaal . "<br>");
         print("Verzendkosten: $verzendkostenText<br>");
+        print("<p style='color: black'>Servicekosten: $serviceKostenText</p><br>");
 
         //Check of er producten limiet wordt overschreden
         if ($productUnits <= 500) {
             print ("<p style='color: darkolivegreen; font-weight: bold'>Totaal bedrag: €" . number_format(($productTotaal + $verzendkosten), 2) . "</p>");
-            $_SESSION['totaalprijs'] = number_format(($productTotaal + $verzendkosten), 2);
+            $_SESSION['totaalprijs'] = number_format(($productTotaal + $verzendkosten + $serviceKosten), 2);
             $_SESSION['producttotaal'] = $productTotaal;
             $_SESSION['verzendkosten'] = $verzendkosten;
         } else
