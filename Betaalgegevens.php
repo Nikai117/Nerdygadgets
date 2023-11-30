@@ -7,6 +7,45 @@ $mollie = new \Mollie\Api\MollieApiClient();
 $mollie->setApiKey("test_fJJbkmF9gjs3JsrzaNapaAF68dVv9C");
 ?>
 
+<div id="prijs">
+    <?php
+    //checkt het totaalbedrag
+    if (isset($_SESSION['winkelmand'])) {
+        $productTotaal = 0;
+        $productUnits = 0;
+
+        foreach ($_SESSION['winkelmand'] as $product) {
+            $productTotaal += $product['SellPrice'] * $product['aantal'];
+            $productUnits = $productUnits + $product['aantal'];
+        }
+
+        //verzendkosten berekenen
+        if ($productTotaal <= 300) {
+            //gebruik je voor berekeningen
+            $verzendkosten = number_format(35.50, 2);
+            //gebruik je voor tekst en UI
+            $verzendkostenText = "€" . $verzendkosten;
+        } else {
+            $verzendkosten = 0;
+            $verzendkostenText = "gratis";
+        }
+
+        //zodat afgeronde getallen altijd 2 decimalen hebben (9.6 => 9.60)
+        $productTotaal = number_format(round($productTotaal, 2), 2, '.', '');
+
+        print("Productkosten: €" . $productTotaal . "<br>");
+        print("Verzendkosten: $verzendkostenText<br>");
+
+        //Check of er producten limiet wordt overschreden
+        if ($productUnits <= 500) {
+            print ("<p style='color: darkolivegreen; font-weight: bold'>Totaal bedrag: €" . number_format(($productTotaal + $verzendkosten), 2) . "</p>");
+            $_SESSION['totaalprijs'] = number_format(($productTotaal + $verzendkosten), 2);
+        } else
+            print ("Verzenden niet mogelijk door te hoog aantal producten, bel service desk a.u.b.");
+        print ("<br><i>Inclusief BTW</i>");
+    } ?>
+</div>
+
 <div id="lijst">
         <table id="winkelmand">
             <!-- maak tabelvakje aan per product -->
@@ -34,6 +73,7 @@ $mollie->setApiKey("test_fJJbkmF9gjs3JsrzaNapaAF68dVv9C");
     } ?>
         </table>
     </div>
+
 <form method="post">
     <div id="VerzendMethode">
         <p><span style="font-weight:bold;">Verzendmethode:</span></p>
@@ -46,25 +86,31 @@ $mollie->setApiKey("test_fJJbkmF9gjs3JsrzaNapaAF68dVv9C");
         <input type="radio" id="ups" name="verzenden" value="ups" required>
         <label>UPS</label>
     </div>
-    <br>
-    <p class="solid"></p>
+    <br><br>
+
+    <p class="solid1"></p>
 
     <div id="KlantGegegevens">
     <h1>Klant gegevens</h1><br>
 
-    <input type="email" name="email" id="mail" placeholder="Emailadres" required style="width: 60%; margin-left: 10%; margin-bottom: 20px"><br>
-    <input type="text" name="voornaam" id="vnaam" placeholder="Voornaam" required style="width: 60%; margin-left: 10%; margin-bottom: 20px"><br>
-    <input type="text" name="achternaam" id="anaam" placeholder="Achternaam" required style="width: 60%; margin-left: 10%; margin-bottom: 20px"><br>
-    <input type="text" name="bedrijfsnaam" id="bnaam" placeholder="Bedrijfsnaam (Optioneel)" style="width: 60%; margin-left: 10%; margin-bottom: 20px"><br>
-    <input type="text" name="telnummer"  id="telnummer" placeholder="Telefoonnummer" required style="width: 60%; margin-left: 10%; margin-bottom: 20px"><br>
+    <input type="email" name="email" id="mail" placeholder="Emailadres" required style="width: 60%; margin-left: 50px; margin-bottom: 20px"><br>
+    <input type="text" name="voornaam" id="vnaam" placeholder="Voornaam" required style="width: 29.5%; margin-left: 50px; margin-bottom: 20px">
+    <input type="text" name="achternaam" id="anaam" placeholder="Achternaam" required style="width: 29.5%; margin-left: 10px; margin-bottom: 20px">
+    <input type="text" name="bedrijfsnaam" id="bnaam" placeholder="Bedrijfsnaam (Optioneel)" style="width: 60%; margin-left: 50px; margin-bottom: 20px"><br>
+    <input type="text" name="telnummer"  id="telnummer" placeholder="Telefoonnummer" required style="width: 60%; margin-left: 50px; margin-bottom: 20px"><br>
     </div>
+    <br>
+
+    <p class="solid2"></p>
 
     <div id="Besteladres">
     <h1>Besteladres</h1><br>
-                          
-    <input type="text" name="adres" id="adres" placeholder="Adres" required style="width: 60%; margin-left: 10%; margin-bottom: 20px"><br>
-    <input type="text" name="toevoeging" id="toevoeging" placeholder="Toevoeging (optioneel)" style="widith: 60%; margin-left: 10%; margin-bottom: 20px"><br>
-    <select required style="width: 60%; margin-left: 10%; margin-bottom: 20px">
+
+    <input type="text" name="adres" id="adres" placeholder="Adres" required style="width: 21.5%; margin-left: 50px; margin-bottom: 20px">
+    <input type="text" name="toevoeging" id="toevoeging" placeholder="Toevoeging (optioneel)" style="width: 15%; margin-left: 10px; margin-bottom: 20px">
+        <input type="text" name="postcode" id="pcode" placeholder="Postcode" required style="width: 21.5%; margin-left: 10px; margin-bottom: 20px">
+<br>
+        <select required style="width: 60%; margin-left: 50px; margin-bottom: 20px">
         <option value="">Selecteer een land</option>
         <option>België</option>
         <option>Duitsland</option>
@@ -74,7 +120,7 @@ $mollie->setApiKey("test_fJJbkmF9gjs3JsrzaNapaAF68dVv9C");
         <option>Oostenrijk</option>
       </select>
 
-    <input type="text" name="postcode" id="pcode" placeholder="Postcode" required style="width: 60%; margin-left: 10%; margin-bottom: 20px"><br><br>
+   <br><br>
 
     <input type="submit" name='knop' value="Verder naar betalen" required style="width: 30%; align-items: center; justify-content: center; margin-left: 30%">
     </div>
@@ -154,22 +200,6 @@ if(isset($_SESSION['payment_id'])) {
 ?>
 <!-- plaats alles wat niet PHP is voorlopig onderaan -->
 <style>
-    /*body {*/
-    /*    font-family: Arial, sans-serif;*/
-    /*    background-color: #f8f8f8;*/
-    /*    margin: 0;*/
-    /*    padding: 0;*/
-    /*}*/
-
-    /*form {*/
-    /*    max-width: 600px;*/
-    /*    margin: 20px auto;*/
-    /*    background-color: #fff;*/
-    /*    padding: 20px;*/
-    /*    border-radius: 8px;*/
-    /*    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);*/
-    /*}*/
-
     #lijst {
         margin-left: 50px;
         width: 60%;
@@ -178,10 +208,21 @@ if(isset($_SESSION['payment_id'])) {
         /*box-shadow: 5px 5px 5px 15px #603980;*/
         margin-top: 10px;
         border-radius: 10px;
-        /*background-color: lightblue;*/
-        width: 1000px;
+        width: 910px;
         height: 1000px;
         overflow: auto;
+    }
+
+    #prijs {
+        float: right;
+        border-radius: 10px;
+        background-color: #2C2F33;
+        color: white;
+        width: 18%;
+        text-align: left;
+        margin-right: 5%;
+        margin-top: 5px;
+        padding: 10px;
     }
 
     #winkelmand {
@@ -234,9 +275,9 @@ if(isset($_SESSION['payment_id'])) {
         display: block;
         background-color: #2C2F33;
         border-radius: 5px;
-        margin-right: 200px;
+        margin-right: 150px;
         margin-bottom: 20px;
-        margin-top: 50px;
+        margin-top: 100px;
         width: 15%;
         padding: 10px;
     }
@@ -263,7 +304,14 @@ if(isset($_SESSION['payment_id'])) {
         margin-top: 20px;
     }
 
-    p.solid {
+    p.solid1 {
+        border-style: solid;
+        width: 60%;
+        margin-left: 50px;
+        color: purple;
+    }
+
+    p.solid2 {
         border-style: solid;
         width: 60%;
         margin-left: 50px;
@@ -284,9 +332,9 @@ if(isset($_SESSION['payment_id'])) {
     input[type="text"],
     input[type="email"],
     select {
-        width: 60%;
-        padding: 8px;
-        margin-bottom: 10px;
+    /*    width: 60%;*/
+    /*    padding: 8px;*/
+    /*    margin-bottom: 10px;*/
         border: 1px solid #ccc;
         border-radius: 4px;
     }

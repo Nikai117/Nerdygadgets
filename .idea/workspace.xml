@@ -5,6 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b5707d94-885a-46a4-8032-b546f08eb300" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Betaalgegevens.php" beforeDir="false" afterPath="$PROJECT_DIR$/Betaalgegevens.php" afterDir="false" />
     </list>
     <list id="11e29af2-402d-40ec-9693-3273b5e76702" name="Changes by nikai" comment="" />
@@ -44,7 +45,8 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
     "codeWithMe.voiceChat.enabledByDefault": "false",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "Styling",
+    "ignore.virus.scanning.warn.message": "true",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -64,6 +66,7 @@
       <workItem from="1701180672051" duration="3679000" />
       <workItem from="1701199486834" duration="7199000" />
       <workItem from="1701248883046" duration="2066000" />
+      <workItem from="1701289269161" duration="9676000" />
     </task>
     <servers />
   </component>
