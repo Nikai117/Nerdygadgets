@@ -209,7 +209,7 @@ if(isset($_SESSION['payment_id'])) {
         margin-top: 10px;
         border-radius: 10px;
         width: 910px;
-        height: 1000px;
+        height: 680px;
         overflow: auto;
     }
 
