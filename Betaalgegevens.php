@@ -11,6 +11,9 @@ $mollie->setApiKey("test_fJJbkmF9gjs3JsrzaNapaAF68dVv9C");
     <?php
     //checkt het totaalbedrag
     if (isset($_SESSION['winkelmand'])) {
+        if($_SESSION['winkelmand'] == NULL) {
+            header("Location: winkelmand.php");
+        }
         $productTotaal = 0;
         $productUnits = 0;
 
@@ -136,6 +139,7 @@ if(isset($_POST['knop'])){
     $_SESSION['klant']['adres'] = $_POST['adres'];
     $_SESSION['klant']['postcode'] = $_POST['postcode'];
     $_SESSION['klant']['email'] = $_POST['email'];
+    $_SESSION['klant']['telnummer'] = $_POST['telnummer'];
 
      $totPrijs = $_SESSION['totaalprijs'];
      $orderNum = "Order ".random_int(1, 400);
@@ -191,8 +195,7 @@ if(isset($_SESSION['payment_id'])) {
                 addOrderLine($_SESSION['klant']['email'], $databaseConnection, $product);
                 updateStocks($key, $product['aantal'], $databaseConnection);
             }
-
-            $_SESSION['winkelmand'] = array();
+            $_SESSION['paid'] = true;
             header("location: resultaat.php?order=paid");
             break;
     }

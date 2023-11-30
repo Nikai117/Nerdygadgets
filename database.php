@@ -187,7 +187,7 @@ function addCustomer($klantArray, $databaseConnection) {
             0,
             0,
             30,
-            '(201) 555-0100',
+            ?,
             '(201) 555-0101',
             1,
             1,
@@ -206,7 +206,7 @@ function addCustomer($klantArray, $databaseConnection) {
         );";
 
         $Statement = mysqli_prepare($databaseConnection, $Query);
-        mysqli_stmt_bind_param($Statement, "ssss", $klantArray['naam'], $klantArray['adres'], $klantArray['postcode'], $klantArray['email']);
+        mysqli_stmt_bind_param($Statement, "sssss", $klantArray['naam'], $klantArray['telnummer'], $klantArray['adres'], $klantArray['postcode'], $klantArray['email']);
         mysqli_stmt_execute($Statement);
 
         return "";
@@ -258,10 +258,10 @@ function addOrder($email, $databaseConnection) {
 
         $Query = "
         INSERT INTO orders 
-        VALUES (NULL, ?, '2', NULL, '3032', NULL, $vandaag, $morgen, NULL, '1', NULL, NULL, NULL, NULL, '1','$nu');";
+        VALUES (NULL, ?, '2', NULL, '3032', NULL, ?, ?, NULL, '1', NULL, NULL, NULL, NULL, '1', ?);";
 
     $Statement = mysqli_prepare($databaseConnection, $Query);
-    mysqli_stmt_bind_param($Statement, "i", $customerID);
+    mysqli_stmt_bind_param($Statement, "isss", $customerID, $vandaag, $morgen, $nu);
     mysqli_stmt_execute($Statement);
 }
 
@@ -292,7 +292,7 @@ function addOrderLine($email, $databaseConnection, $product) {
     $quantity = $product['aantal'];
     $price = $product['UnitPrice'];
     $taxrate = $product['TaxRate'];
-    $vandaag = date("Y-m-d");
+    $nu = date("Y-m-d H:i:s");
 
     $Query = "
         INSERT INTO orderlines
@@ -307,10 +307,10 @@ function addOrderLine($email, $databaseConnection, $product) {
             0,
             NULL,
             1,
-            $vandaag
+            ?
         );";
 
     $Statement = mysqli_prepare($databaseConnection, $Query);
-    mysqli_stmt_bind_param($Statement, "s", $stockItemDesc);
+    mysqli_stmt_bind_param($Statement, "ss", $stockItemDesc, $nu);
     mysqli_stmt_execute($Statement);
 }

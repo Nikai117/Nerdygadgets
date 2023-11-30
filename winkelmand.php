@@ -2,7 +2,6 @@
 include __DIR__ . "/header.php";
 
 session_reset();
-
 if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
     print('<h1 style="text-align: center">Yarr, de winkelmand is leeg</h1>
             <h2 style="text-align: center"><a class="redirect" href="browse.php"> Op zoek naar producten?</a></h2>');
@@ -113,9 +112,7 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
         } ?>
 
         <br>
-        <form method="post" action="">
             <button type="button" onclick="redirectToPayment()">Betalen</button>
-        </form>
     </div>
 
     <div id="lijst">
