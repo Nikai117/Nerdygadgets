@@ -138,7 +138,7 @@ if(isset($_POST['knop'])){
     //$pattern = "/^[a-z]+$/i";
 
     $_SESSION['klant']['naam'] = ucfirst(strtolower($_POST['voornaam'])) . " " . ucfirst(strtolower($_POST['achternaam']));
-    $_SESSION['klant']['adres'] = $_POST['adres'];
+    $_SESSION['klant']['adres'] = $_POST['adres'] . $_POST['postcode'];
     $_SESSION['klant']['postcode'] = $_POST['postcode'];
     $_SESSION['klant']['email'] = $_POST['email'];
     $_SESSION['klant']['telnummer'] = $_POST['telnummer'];
