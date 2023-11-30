@@ -49,7 +49,7 @@ $mollie->setApiKey("test_fJJbkmF9gjs3JsrzaNapaAF68dVv9C");
 
         print("Productkosten: €" . $productTotaal . "<br>");
         print("Verzendkosten: $verzendkostenText<br>");
-        print("<p style='color: black'>Servicekosten: $serviceKostenText</p><br>");
+        print("<p>Servicekosten: $serviceKostenText</p><br>");
 
         //Check of er producten limiet wordt overschreden
         if ($productUnits <= 500) {
