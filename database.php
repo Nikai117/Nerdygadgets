@@ -314,3 +314,21 @@ function addOrderLine($email, $databaseConnection, $product) {
     mysqli_stmt_bind_param($Statement, "ss", $stockItemDesc, $nu);
     mysqli_stmt_execute($Statement);
 }
+
+function getDeliveryDate($email, $databaseConnection) {
+    $orderID = getOrderId($email, $databaseConnection);
+
+    $Query = "
+            SELECT ExpectedDeliveryDate
+            FROM orders
+            WHERE OrderID = ?;";
+
+    $Statement = mysqli_prepare($databaseConnection, $Query);
+    mysqli_stmt_bind_param($Statement, "i", $orderID);
+    mysqli_stmt_execute($Statement);
+
+    $R = mysqli_stmt_get_result($Statement);
+    $R = mysqli_fetch_all($R, MYSQLI_ASSOC)[0]["ExpectedDeliveryDate"];
+
+    return $R;
+}

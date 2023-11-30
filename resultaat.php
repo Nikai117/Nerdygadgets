@@ -7,21 +7,27 @@ include __DIR__ . "/header.php";
         if(isset($_SESSION['paid'])) {
 ?>
     <br><h1>Betaling is succesvol!</h1><br>
-    <br><h2>Uw bestelling:</h2><br>
+    <?php 
+        $deliveryDate = getDeliveryDate($_SESSION['klant']['email'], $databaseConnection);
+        print('<br><h2>Verwachte levering: ' . $deliveryDate . '</h2><br>');
+
+        print('<br><h2>Totaalprijs producten: €'. $_SESSION['producttotaal'] . ' | Uw bestelling:</h2><br>');
+    ?>
+    
 <div id="lijst">
 <table id="bestelling">
     <!-- maak tabelvakje aan per product -->
     <?php if(isset($_SESSION['winkelmand'])) {
      foreach ($_SESSION['winkelmand'] as $key => $product) {
 
-        $StockItemImage = getStockItemImage($product['StockItemID'], $databaseConnection);
-        $BackupImage = getBackupImage($product['StockItemID'], $databaseConnection);
+        // $StockItemImage = getStockItemImage($product['StockItemID'], $databaseConnection);
+        // $BackupImage = getBackupImage($product['StockItemID'], $databaseConnection);
 
-        if ($StockItemImage != NULL) {
-            $image = '<img src="Public/StockItemIMG/' . $StockItemImage[0]['ImagePath'] . '" class="itemimage"></a>';
-        } else { 
-            $image = '<img src="Public/StockGroupIMG/' . $BackupImage['ImagePath'] . '" class="itemimage"></a>';
-        }
+        // if ($StockItemImage != NULL) {
+        //     $image = '<img src="Public/StockItemIMG/' . $StockItemImage[0]['ImagePath'] . '" class="itemimage"></a>';
+        // } else { 
+        //     $image = '<img src="Public/StockGroupIMG/' . $BackupImage['ImagePath'] . '" class="itemimage"></a>';
+        // }
 
         // print ('<tr class="product"><td>
         //     <div id="productCard">
@@ -34,13 +40,15 @@ include __DIR__ . "/header.php";
 
         print('<div>
                     <h5>' . $product['StockItemName'] . ' | Artikelnummer: ' . $product['StockItemID'] .' | €' . number_format(round($product['SellPrice'], 2), 2, '.', '') . ' x '. $product['aantal'] . '</h5><br>
-                    '. $image .'
                 </div>');
             
         print("<br></div></td></tr>");
     }
+
     $_SESSION['winkelmand'] = array();
+    $_SESSION['klant'] = array();
     unset($_SESSION['paid']);
+    print('<h2>Prijs + verzendkosten: €' . $_SESSION['totaalprijs']. '</h2><br>');
     print('<button type="button" onclick="redirectToHome()" id="href">Naar hoofdpagina</button>');
     } else {
         header("Location: index.php");
@@ -89,11 +97,6 @@ else {header("location: winkelmand.php");}
 </script>
 
 <style>
-.itemimage {
-    height: 120px;
-    width: 120px;
-    float: left;
-}
 #href {
         display: block;
         margin: 0 auto;

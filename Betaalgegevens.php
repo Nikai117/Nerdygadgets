@@ -43,6 +43,8 @@ $mollie->setApiKey("test_fJJbkmF9gjs3JsrzaNapaAF68dVv9C");
         if ($productUnits <= 500) {
             print ("<p style='color: darkolivegreen; font-weight: bold'>Totaal bedrag: €" . number_format(($productTotaal + $verzendkosten), 2) . "</p>");
             $_SESSION['totaalprijs'] = number_format(($productTotaal + $verzendkosten), 2);
+            $_SESSION['producttotaal'] = $productTotaal;
+            $_SESSION['verzendkosten'] = $verzendkosten;
         } else
             print ("Verzenden niet mogelijk door te hoog aantal producten, bel service desk a.u.b.");
         print ("<br><i>Inclusief BTW</i>");
