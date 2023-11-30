@@ -94,9 +94,9 @@ $mollie->setApiKey("test_fJJbkmF9gjs3JsrzaNapaAF68dVv9C");
     <p class="solid1"></p>
 
     <div id="KlantGegegevens">
-    <h1>Klant gegevens</h1><br>
+    <h1>Klantgegevens</h1><br>
 
-    <input type="email" name="email" id="mail" placeholder="Emailadres" required style="width: 60%; margin-left: 50px; margin-bottom: 20px"><br>
+    <input type="email" name="email" id="mail" placeholder="E-mailadres" required style="width: 60%; margin-left: 50px; margin-bottom: 20px"><br>
     <input type="text" name="voornaam" id="vnaam" placeholder="Voornaam" required style="width: 29.5%; margin-left: 50px; margin-bottom: 20px">
     <input type="text" name="achternaam" id="anaam" placeholder="Achternaam" required style="width: 29.5%; margin-left: 10px; margin-bottom: 20px">
     <input type="text" name="bedrijfsnaam" id="bnaam" placeholder="Bedrijfsnaam (Optioneel)" style="width: 60%; margin-left: 50px; margin-bottom: 20px"><br>
@@ -212,7 +212,7 @@ if(isset($_SESSION['payment_id'])) {
         margin-top: 10px;
         border-radius: 10px;
         width: 910px;
-        height: 1000px;
+        height: 680px;
         overflow: auto;
     }
 
