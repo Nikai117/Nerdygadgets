@@ -4,13 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b5707d94-885a-46a4-8032-b546f08eb300" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/login.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/registratie.php" afterDir="false" />
+    <list default="true" id="b5707d94-885a-46a4-8032-b546f08eb300" name="Changes" comment="Created register">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database.php" beforeDir="false" afterPath="$PROJECT_DIR$/database.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/header.php" beforeDir="false" afterPath="$PROJECT_DIR$/header.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test.php" beforeDir="false" afterPath="$PROJECT_DIR$/test.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/login.php" beforeDir="false" afterPath="$PROJECT_DIR$/login.php" afterDir="false" />
     </list>
     <list id="11e29af2-402d-40ec-9693-3273b5e76702" name="Changes by nikai" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -77,11 +74,24 @@
       <workItem from="1701859284797" duration="2211000" />
       <workItem from="1701940421831" duration="6142000" />
       <workItem from="1701948424396" duration="6120000" />
-      <workItem from="1701976190540" duration="4276000" />
+      <workItem from="1701976190540" duration="5773000" />
     </task>
+    <task id="LOCAL-00001" summary="Created register">
+      <option name="closed" value="true" />
+      <created>1701981844993</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1701981844993</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Created register" />
+    <option name="LAST_COMMIT_MESSAGE" value="Created register" />
   </component>
 </project>

@@ -71,6 +71,12 @@ $databaseConnection = connectToDatabase();
                     Registreer
                 </a>
             </li>
+            |
+            <li>
+                <a href="login.php">
+                    Login
+                </a>
+            </li>
             <li>
                 <a href="winkelmand.php">
                     <img alt="Winkelmandje" src="Public/Img/Winkelmandje.png" width="23" height="20">

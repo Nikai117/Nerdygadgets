@@ -43,6 +43,7 @@ include __DIR__ . "/header.php";
         padding: 20px;
         border: 1px solid #ccc;
         border-radius: 5px;
+        margin-top: 2%;
         margin-left: 30%;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
@@ -63,7 +64,7 @@ include __DIR__ . "/header.php";
     }
 
     button {
-        background-color: #4caf50;
+        background-color: #566472;
         color: white;
         padding: 10px;
         border: none;
@@ -73,6 +74,6 @@ include __DIR__ . "/header.php";
     }
 
     button:hover {
-        background-color: #45a049;
+        background-color:#424e5d;
     }
 </style>
