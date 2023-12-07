@@ -8,6 +8,9 @@ if(!isset($_SESSION['winkelmand'])) {
 if(!isset($_SESSION['klant'])) {
     $_SESSION['klant'] = array();
 }
+if (!isset($_SESSION['account'])) {
+    $_SESSION['account'] = array();
+}
 
 function removeRow($arr, $index)
 {
@@ -63,6 +66,11 @@ $databaseConnection = connectToDatabase();
 <!-- code voor US3: zoeken -->
 
         <ul id="ul-class-navigation">
+            <li>
+                <a href="registratie.php">
+                    Registreer
+                </a>
+            </li>
             <li>
                 <a href="winkelmand.php">
                     <img alt="Winkelmandje" src="Public/Img/Winkelmandje.png" width="23" height="20">

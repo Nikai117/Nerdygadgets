@@ -1,6 +1,6 @@
 <?php
 include __DIR__ . "/header.php";
 
-$klantEmail = addCustomer($_SESSION['klant'], $databaseConnection);
-print_r($klantEmail);
-?>
+$user = getAccountById(112233, $databaseConnection);
+print_r($user);
+
