@@ -9,6 +9,10 @@ if(!isset($_SESSION['klant'])) {
     $_SESSION['klant'] = array();
 }
 
+if(!isset($_SESSION['verlanglijst'])) {
+    $_SESSION['verlanglijst'] = array();
+}
+
 function removeRow($arr, $index)
 {
     unset($arr[$index]);
