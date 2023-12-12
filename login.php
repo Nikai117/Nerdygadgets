@@ -23,6 +23,9 @@ include __DIR__ . "/header.php";
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" required>
         </div>
+        <div class="link-group">
+        <a id="registerLink" href="registratie.php">Geen account? Registreer hier</a>
+        </div>
         <input type="submit" name="submitButton" id="submitButton">
     </form>
 </div>
@@ -66,6 +69,10 @@ include __DIR__ . "/header.php";
         margin-top: 2%;
         margin-left: 30%;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .link-group {
+        margin-bottom: 20px;
     }
 
     .form-group {

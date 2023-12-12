@@ -11,6 +11,7 @@ include __DIR__ . "/header.php";
 <body>
 
 <form method="post">
+    <h1 style="color: black">Registreren</h1><br>
     <label for="email">Email:</label>
     <input type="email" id="email" name="email" required>
 
