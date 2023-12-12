@@ -314,6 +314,39 @@ function addCustomer($klantArray, $databaseConnection)
     }
 }
 
+function checkLogin($email, $password, $databaseConnection) {
+
+    $Query = "
+        SELECT userID
+        FROM accounts
+        WHERE email = ? AND password = ?;
+    ";
+
+    $Statement = mysqli_prepare($databaseConnection, $Query);
+    mysqli_stmt_bind_param($Statement, "ss", $email, $password);
+    mysqli_stmt_execute($Statement);
+    $result = mysqli_stmt_get_result($Statement);
+    $result = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    return $result;
+}
+
+function getCustomerByAccountID($id, $databaseConnection) {
+
+    $Query = "
+    SELECT *
+    FROM customers
+    WHERE userID = ?
+    LIMIT 1;
+    ";
+
+    $Statement = mysqli_prepare($databaseConnection, $Query);
+    mysqli_stmt_bind_param($Statement, "i", $id);
+    mysqli_stmt_execute($Statement);
+    $result = mysqli_stmt_get_result($Statement);
+    $result = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    return $result;
+}
+
 function getCustomerID($email, $databaseConnection)
 {
 

@@ -11,6 +11,9 @@ if(!isset($_SESSION['klant'])) {
 if (!isset($_SESSION['account'])) {
     $_SESSION['account'] = array();
 }
+if (!isset($_SESSION['activeUser'])) {
+    $_SESSION['activeUser'] = array();
+}
 
 function removeRow($arr, $index)
 {
@@ -19,6 +22,15 @@ function removeRow($arr, $index)
 
     return $arr;
 }
+
+function isLoggedIn() {
+    if ($_SESSION['activeUser'] == array()) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
 $databaseConnection = connectToDatabase();
 ?>
 <!DOCTYPE html>
@@ -66,7 +78,9 @@ $databaseConnection = connectToDatabase();
 <!-- code voor US3: zoeken -->
 
         <ul id="ul-class-navigation">
-            <li>
+            <?php
+            if ($_SESSION['activeUser'] == array()){
+                echo ' <li>
                 <a href="registratie.php">
                     Registreer
                 </a>
@@ -76,7 +90,18 @@ $databaseConnection = connectToDatabase();
                 <a href="login.php">
                     Login
                 </a>
-            </li>
+            </li>';
+            } else {
+                echo '
+                <li>
+                    <a>', $_SESSION['activeUser'][0]['CustomerName'],'</a>
+                </li>
+                <li>
+                   <a href="logout.php" style="margin-right: 20px">| Log uit</a>
+                </li>
+                ';
+            }
+            ?>
             <li>
                 <a href="winkelmand.php">
                     <img alt="Winkelmandje" src="Public/Img/Winkelmandje.png" width="23" height="20">

@@ -1,4 +1,5 @@
 <?php
+ob_start();
 include __DIR__ . "/header.php";
 ?>
 
@@ -22,11 +23,30 @@ include __DIR__ . "/header.php";
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" required>
         </div>
-        <button type="submit">Login</button>
+        <input type="submit" name="submitButton" id="submitButton">
     </form>
 </div>
 </body>
 </html>
+
+<?php
+    if (isset($_POST['submitButton'])) {
+        $email = $_POST['email'];
+        $password = $_POST['password'];
+
+        $account = checkLogin($email, $password, $databaseConnection);
+
+        if ($account == NULL) {
+            print ("verkeerde gegevens");
+        } else {
+            $userID = $account[0]['userID'];
+
+            $_SESSION['activeUser'] = getCustomerByAccountID($userID, $databaseConnection);
+            header("location: index.php");
+        }
+    }
+    ob_end_flush();
+?>
 
 <style>
     body {
@@ -63,7 +83,7 @@ include __DIR__ . "/header.php";
         box-sizing: border-box;
     }
 
-    button {
+    #submitButton {
         background-color: #566472;
         color: white;
         padding: 10px;
@@ -73,7 +93,7 @@ include __DIR__ . "/header.php";
         width: 100%;
     }
 
-    button:hover {
+    #submitButton:hover {
         background-color:#424e5d;
     }
 </style>

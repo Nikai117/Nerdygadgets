@@ -45,17 +45,22 @@ include __DIR__ . "/header.php";
 
 </body>
 <?php
-if (isset($_POST['submitButton'])) {
-    $_SESSION['account']['email'] = $_POST['email'];
-    $_SESSION['account']['password'] = $_POST['password'];
-    $_SESSION['account']['name'] = ucfirst(strtolower($_POST['name'])) . " " . ucfirst(strtolower($_POST['surname']));
-    $_SESSION['account']['company'] = $_POST['company'];
-    $_SESSION['account']['phone'] = $_POST['phone'];
-    $_SESSION['account']['address'] = $_POST['address'] . $_POST['toevoeging'];
-    $_SESSION['account']['toevoeging'] = $_POST['toevoeging'];
-    $_SESSION['account']['postalcode'] = $_POST['postalcode'];
+    if (isset($_POST['submitButton'])) {
+        if (getCustomerByEmail($_POST['email'], $databaseConnection) == array()) {
+        $_SESSION['account']['email'] = $_POST['email'];
+        $_SESSION['account']['password'] = $_POST['password'];
+        $_SESSION['account']['name'] = ucfirst(strtolower($_POST['name'])) . " " . ucfirst(strtolower($_POST['surname']));
+        $_SESSION['account']['company'] = $_POST['company'];
+        $_SESSION['account']['phone'] = $_POST['phone'];
+        $_SESSION['account']['address'] = $_POST['address'] . " " . $_POST['toevoeging'];
+        $_SESSION['account']['toevoeging'] = $_POST['toevoeging'];
+        $_SESSION['account']['postalcode'] = $_POST['postalcode'];
 
-    registerCustomer($_SESSION['account'], $databaseConnection);
+        registerCustomer($_SESSION['account'], $databaseConnection);
+        header("Location: login.php");
+    } else {
+            print ("Email is al in gebruik");
+        }
 }
 
 ?>

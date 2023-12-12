@@ -87,7 +87,28 @@ $mollie->setApiKey("test_fJJbkmF9gjs3JsrzaNapaAF68dVv9C");
                         <p class="prijs">€' . number_format(round($product['SellPrice'], 2), 2, '.', '') . '</p>
                         <p class="aantal">' . $product['aantal'] . '</p>
                     ');
-    } ?>
+    }
+
+    if (isLoggedIn()) {
+        $user = $_SESSION['activeUser'];
+    } else {
+        $user = "";
+    }
+
+    function autoFillIn($string) {
+        if (isLoggedIn()) {
+            $userData = $_SESSION['activeUser'];
+            if ($userData[0][$string] == NULL) {
+                print ("");
+            } else {
+                print ($userData[0][$string]);
+            }
+        } else {
+            print ("");
+        }
+    }
+
+    ?>
         </table>
     </div>
 
@@ -106,15 +127,30 @@ $mollie->setApiKey("test_fJJbkmF9gjs3JsrzaNapaAF68dVv9C");
     <br><br>
 
     <p class="solid1"></p>
+    <?php
+    if(isLoggedIn()) {
+        echo '
+    <div id="klant gegevens">
+        <h1>Kies je gebruikelijke adres</h1>
+        <div id="adresCard">
+        <p id="knownAddress">', print ($user[0]['DeliveryAddressLine1']),'</p>
+        <p id="knownPostalCode">', print ($user[0]['DeliveryPostalCode']),'</p>
+        <input type="submit" name="knop" value="Naar betalen" required style="width: 40%; align-items: center; justify-content: center;">
+        </div>
+    </div>
+        ';
+    }
+    ?>
 
     <div id="KlantGegegevens">
     <h1>Klantgegevens</h1><br>
 
-    <input type="email" name="email" id="mail" placeholder="E-mailadres" required style="width: 60%; margin-left: 50px; margin-bottom: 20px"><br>
-    <input type="text" name="voornaam" id="vnaam" placeholder="Voornaam" required style="width: 29.5%; margin-left: 50px; margin-bottom: 20px">
-    <input type="text" name="achternaam" id="anaam" placeholder="Achternaam" required style="width: 29.5%; margin-left: 10px; margin-bottom: 20px">
+<!--    //uitzoeken hoe je voornaam en achternaam kan splicen en daarnaast ook adres kan splicen-->
+    <input type="email" name="email" id="mail" placeholder="E-mailadres" value="<?php autoFillIn('Email');?>" required style="width: 60%; margin-left: 50px; margin-bottom: 20px"><br>
+    <input type="text" name="voornaam" id="vnaam" placeholder="Voornaam" value="<?php autoFillIn('CustomerName');?>" required style="width: 29.5%; margin-left: 50px; margin-bottom: 20px">
+    <input type="text" name="achternaam" id="anaam" placeholder="Achternaam" value="<?php autoFillIn('CustomerName');?>" required style="width: 29.5%; margin-left: 10px; margin-bottom: 20px">
     <input type="text" name="bedrijfsnaam" id="bnaam" placeholder="Bedrijfsnaam (Optioneel)" style="width: 60%; margin-left: 50px; margin-bottom: 20px"><br>
-    <input type="text" name="telnummer"  id="telnummer" placeholder="Telefoonnummer" required style="width: 60%; margin-left: 50px; margin-bottom: 20px"><br>
+    <input type="text" name="telnummer"  id="telnummer" placeholder="Telefoonnummer" value="<?php autoFillIn('PhoneNumber');?>" required style="width: 60%; margin-left: 50px; margin-bottom: 20px"><br>
     </div>
     <br>
 
@@ -123,9 +159,9 @@ $mollie->setApiKey("test_fJJbkmF9gjs3JsrzaNapaAF68dVv9C");
     <div id="Besteladres">
     <h1>Besteladres</h1><br>
 
-    <input type="text" name="adres" id="adres" placeholder="Adres" required style="width: 21.5%; margin-left: 50px; margin-bottom: 20px">
-    <input type="text" name="toevoeging" id="toevoeging" placeholder="Toevoeging (optioneel)" style="width: 15%; margin-left: 10px; margin-bottom: 20px">
-        <input type="text" name="postcode" id="pcode" placeholder="Postcode" required style="width: 21.5%; margin-left: 10px; margin-bottom: 20px">
+    <input type="text" name="adres" id="adres" placeholder="Adres" value="<?php autoFillIn('DeliveryAddressLine1');?>" required style="width: 21.5%; margin-left: 50px; margin-bottom: 20px">
+    <input type="text" name="toevoeging" id="toevoeging" placeholder="Toevoeging (optioneel)" value="<?php autoFillIn('DeliveryAddressLine1');?>" style="width: 15%; margin-left: 10px; margin-bottom: 20px">
+        <input type="text" name="postcode" id="pcode" placeholder="Postcode" value="<?php autoFillIn('DeliveryPostalCode');?>" required style="width: 21.5%; margin-left: 10px; margin-bottom: 20px">
 <br>
         <select required style="width: 60%; margin-left: 50px; margin-bottom: 20px">
         <option value="">Selecteer een land</option>
@@ -149,11 +185,19 @@ if(isset($_POST['knop'])){
 
     //$pattern = "/^[a-z]+$/i";
 
-    $_SESSION['klant']['naam'] = ucfirst(strtolower($_POST['voornaam'])) . " " . ucfirst(strtolower($_POST['achternaam']));
-    $_SESSION['klant']['adres'] = $_POST['adres'] . $_POST['toevoeging'];
-    $_SESSION['klant']['postcode'] = $_POST['postcode'];
-    $_SESSION['klant']['email'] = $_POST['email'];
-    $_SESSION['klant']['telnummer'] = $_POST['telnummer'];
+    if (!isLoggedIn()) {
+        $_SESSION['klant']['naam'] = ucfirst(strtolower($_POST['voornaam'])) . " " . ucfirst(strtolower($_POST['achternaam']));
+        $_SESSION['klant']['adres'] = $_POST['adres'] ." ". $_POST['toevoeging'];
+        $_SESSION['klant']['postcode'] = $_POST['postcode'];
+        $_SESSION['klant']['email'] = $_POST['email'];
+        $_SESSION['klant']['telnummer'] = $_POST['telnummer'];
+//    } else {
+//        $_SESSION['klant']['naam'] = $_SESSION['CustomerName'];
+//        $_SESSION['klant']['adres'] =
+//        $_SESSION['klant']['postcode'] = $_POST['postcode'];
+//        $_SESSION['klant']['email'] = $_POST['email'];
+//        $_SESSION['klant']['telnummer'] = $_POST['telnummer'];
+    }
 
      $totPrijs = $_SESSION['totaalprijs'];
      $orderNum = "Order ".random_int(1, 400);
@@ -297,6 +341,13 @@ if(isset($_SESSION['payment_id'])) {
         margin-top: 100px;
         width: 15%;
         padding: 10px;
+    }
+
+    #adresCard {
+        margin-left: 50px;
+        background-color: #2C2F33;
+        width: 20%;
+        border-radius: 10px;
     }
 
     input[type=radio] {
