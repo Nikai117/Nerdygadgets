@@ -2,15 +2,28 @@
 include __DIR__ . "/header.php";
 ?>
 <div id="wishlist">
-
     <div id="verlanglijst-namen">
         <ul>
-            <li><a class="selected">Mijn verlanglijstje</a></li>
+            <li><a class="selected" href="lijst.php">Mijn verlanglijstje</a></li>
+            <li><a class="unselected" href="lijst.php?list=test">Test</a></li>
         </ul>
     </div>
 
     <form method="post">
     <div id="producten">
+        <?php
+        for($x = 0; $x < 3; $x++) {?>
+            <div class="product">
+                <div class="product-info">
+                    <h4>Product</h4><br>
+                    <h5>Lorem ipsum nogwattes</h5>
+                </div>
+                <div class="product-check">
+                    <input type="checkbox" class="product-keuze" value="PLACEHOLDER">
+                </div>
+            </div>
+        <?php }
+        ?>
     </div>    
 
     <div id="submit-knop">
@@ -57,6 +70,24 @@ include __DIR__ . "/header.php";
         position: absolute;
         border-left: 1px solid;
     }
+    .product {
+        border: 1px solid;
+        padding-left: 2%;
+        padding-bottom: 2%;
+        position: relative;
+        display: flex;
+    }
+    .product-info {
+        width: 70%;
+    }
+    .product-check {
+        padding-left: 15%;
+        padding-top: 3%;
+    }
+    .product-keuze {
+        width: 16px;
+        margin: auto;
+    }
     #submit-knop {
         position: absolute;
         background-color: white;
@@ -65,6 +96,17 @@ include __DIR__ . "/header.php";
         width: 100%;
     }
     .selected {
+        color: white;
+        text-decoration: underline;
+    }
+    .selected:hover {
+        color: lightgray;
+    }
+    .unselected {
+        color: white;
+    }
+    .unselected:hover {
+        color: lightgray;
         text-decoration: underline;
     }
     input[type="submit"] {

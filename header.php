@@ -68,6 +68,10 @@ $databaseConnection = connectToDatabase();
 
         <ul id="ul-class-navigation">
             <li>
+                <a href="lijst.php">
+                    <img alt="Verlanglijstje" src="Public/Img/Hart.png" width="23" height="20">
+                </a>
+            <li>
                 <a href="winkelmand.php">
                     <img alt="Winkelmandje" src="Public/Img/Winkelmandje.png" width="23" height="20">
                 </a>
