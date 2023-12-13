@@ -60,7 +60,7 @@ include __DIR__ . "/header.php";
         registerCustomer($_SESSION['account'], $databaseConnection);
         header("Location: login.php");
     } else {
-            print ("Email is al in gebruik");
+            generateErrorMessage("Email is al in gebruik");
         }
 }
 

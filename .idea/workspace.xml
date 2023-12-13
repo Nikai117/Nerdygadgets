@@ -4,8 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b5707d94-885a-46a4-8032-b546f08eb300" name="Changes" comment="Register error handling, Login fully functional and account logic">
+    <list default="true" id="b5707d94-885a-46a4-8032-b546f08eb300" name="Changes" comment="Added logic and changed styling">
+      <change afterPath="$PROJECT_DIR$/account.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/discord.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/discord.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Betaalgegevens.php" beforeDir="false" afterPath="$PROJECT_DIR$/Betaalgegevens.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/header.php" beforeDir="false" afterPath="$PROJECT_DIR$/header.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/login.php" beforeDir="false" afterPath="$PROJECT_DIR$/login.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/registratie.php" beforeDir="false" afterPath="$PROJECT_DIR$/registratie.php" afterDir="false" />
     </list>
@@ -26,6 +30,20 @@
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Nikai117&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="selectedUrlAndAccountId">
+      <UrlAndAccount>
+        <option name="accountId" value="80642769-20b5-471d-9f34-ff2b0f84c6cd" />
+        <option name="url" value="https://github.com/Nikai117/Nerdygadgets.git" />
+      </UrlAndAccount>
+    </option>
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -81,7 +99,9 @@
       <workItem from="1702326665521" duration="3765000" />
       <workItem from="1702376564112" duration="5660000" />
       <workItem from="1702399835484" duration="3498000" />
-      <workItem from="1702403398542" duration="1903000" />
+      <workItem from="1702403398542" duration="1999000" />
+      <workItem from="1702452285892" duration="5635000" />
+      <workItem from="1702460161306" duration="5166000" />
     </task>
     <task id="LOCAL-00001" summary="Created register">
       <option name="closed" value="true" />
@@ -107,7 +127,15 @@
       <option name="project" value="LOCAL" />
       <updated>1702404560511</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Added logic and changed styling">
+      <option name="closed" value="true" />
+      <created>1702405408305</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1702405408305</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -117,6 +145,7 @@
     <MESSAGE value="Created register" />
     <MESSAGE value="Login styling" />
     <MESSAGE value="Register error handling, Login fully functional and account logic" />
-    <option name="LAST_COMMIT_MESSAGE" value="Register error handling, Login fully functional and account logic" />
+    <MESSAGE value="Added logic and changed styling" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added logic and changed styling" />
   </component>
 </project>

@@ -40,7 +40,7 @@ include __DIR__ . "/header.php";
         $account = checkLogin($email, $password, $databaseConnection);
 
         if ($account == NULL) {
-            print ("verkeerde gegevens");
+            generateErrorMessage("Verkeerde inlog gegevens");
         } else {
             $userID = $account[0]['userID'];
 

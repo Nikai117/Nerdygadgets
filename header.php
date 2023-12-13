@@ -23,6 +23,10 @@ function removeRow($arr, $index)
     return $arr;
 }
 
+function generateErrorMessage($errorMessage) {
+    echo "<script>alert('Error: $errorMessage');</script>";
+}
+
 function isLoggedIn() {
     if ($_SESSION['activeUser'] == array()) {
         return false;
@@ -94,7 +98,7 @@ $databaseConnection = connectToDatabase();
             } else {
                 echo '
                 <li>
-                    <a>', $_SESSION['activeUser'][0]['CustomerName'],'</a>
+                    <a href="account.php" style="color: white">', $_SESSION['activeUser'][0]['CustomerName'],'</a>
                 </li>
                 <li>
                    <a href="logout.php" style="margin-right: 20px">| Log uit</a>
