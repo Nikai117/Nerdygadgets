@@ -9,6 +9,10 @@ $voorraad = getQuantity($_GET['id'], $databaseConnection);
 $QOH = $voorraad[0]["QOH"];//quantity on hand; voorraad
 // $QPO = $voorraad[0]["QPO"];//quantity per outer; hoeveelheid per doos die je gaat shippen
 ?>
+<div id="wishlist-alert">
+    Hi
+</div>
+
 <div id="CenteredContent">
     <?php
     if ($StockItem != null) {
@@ -93,7 +97,7 @@ $QOH = $voorraad[0]["QOH"];//quantity on hand; voorraad
                             <p class="notEnough">Niet genoeg units om te shippen!</p>
                         <?php } else {?>
 
-                        <form method="post" action="view.php?id=<?php print $_GET['id']; ?>">
+                        <form method="post" action="view.php?id=<?php print $_GET['id']; ?>" id="cart-button">
                             <input type="submit" value="Bestel nu!" name="product">
                         </form>
                         <?php }
@@ -117,6 +121,12 @@ $QOH = $voorraad[0]["QOH"];//quantity on hand; voorraad
                             }
                         }
                         ?>
+                        <!-- einde code -->
+
+                        <!-- code voor verlanglijst -->
+                        <button onclick="addToWishlist()">
+                            In verlanglijstje
+                        </button>
                         <!-- einde code -->
                     </div>
                 </div>
@@ -169,3 +179,17 @@ $QOH = $voorraad[0]["QOH"];//quantity on hand; voorraad
         ?><h2 id="ProductNotFound">Het opgevraagde product is niet gevonden.</h2><?php
     } ?>
 </div>
+
+<style>
+    #wishlist-alert {
+        position: absolute;
+        width: 50%;
+        height: 75%;
+        margin: auto;
+        left: 25%;
+        background-color: black;
+        color: white;
+        border: 2px solid;
+        box-shadow: 0 4px 8px 0 rgba(111, 65, 148, 2), 0 6px 20px 0 rgba(111, 65, 148, 1);
+    }
+</style>

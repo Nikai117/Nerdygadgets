@@ -1,83 +1,87 @@
 <?php
-session_start();
+include __DIR__ . "/header.php";
 ?>
-<button onclick="toggleOn()">Verlanglijst</button>
+<div id="wishlist">
 
-<div id="wishlist-overlay">
-    <div id="wishlist">
-
-        <div id="verlanglijst-namen">
-            <ul>
-                <li></li>
-            </ul>
-        </div>
-
-        <div id="producten">
-            <button onclick="toggleOff()">X</button>
-        </div>    
-
+    <div id="verlanglijst-namen">
+        <ul>
+            <li><a class="selected">Mijn verlanglijstje</a></li>
+        </ul>
     </div>
+
+    <form method="post">
+    <div id="producten">
+    </div>    
+
+    <div id="submit-knop">
+        <input type="submit" value="Voeg toe aan winkelmand!">
+    </div>
+    </form>
 </div>
 
-<script>
-    function toggleOn() {
-        document.getElementById("wishlist-overlay").style.display = "block";
-    }
-
-    function toggleOff() {
-        document.getElementById("wishlist-overlay").style.display = "none";
-    }
-</script>
-
 <style>
-    #wishlist-overlay {
-        position: fixed;
-        /*display: none;*/
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: rgba(0,0,0,0.5);
-    }
     #wishlist {
-        position: absolute;
         width: 50%;
         height: 75%;
         margin: auto;
-        top: 15%;
+        top: 22%;
         left: 25%;
         background-color: black;
         color: white;
         border: 2px solid;
         box-shadow: 0 4px 8px 0 rgba(111, 65, 148, 2), 0 6px 20px 0 rgba(111, 65, 148, 1);
+
+        position: fixed;
     }
     #verlanglijst-namen {
-        width: 25%;
-        height: 100%;
+        width: 20%;
+        height: 80%;
         overflow: auto;
         background-color: blue;
         float: left;
         border-right: 1px solid;
+        position: absolute;
+    }
+    #verlanglijst-namen ul {
+        list-style-type: none;
+    }
+    #verlanglijst-namen a:hover {
+        cursor: pointer;
     }
     #producten {
-        width: 74%;
-        height: 100%;
+        width: 79%;
+        height: 80%;
         overflow: auto;
         background-color: red;
-        float: right;
-        position: relative;
+        left: 21%;
+        position: absolute;
         border-left: 1px solid;
     }
-    #producten button {
+    #submit-knop {
         position: absolute;
-        top: 0;
-        right: 0;
-        background-color: #c9c9c9;
+        background-color: white;
+        top: 80%;
+        height: 20%;
+        width: 100%;
     }
-    #producten button:hover{
+    .selected {
+        text-decoration: underline;
+    }
+    input[type="submit"] {
+        display: block;
+        margin: 0 auto;
+        margin-bottom: 20px;
+        width: 30%;
+        background-color: Blue;
+        color: #fff;
+        padding: 10px;
+        border: none;
+        border-radius: 4px;
         cursor: pointer;
-        background-color: #b8b8b8;
+        margin-top: 5%;
+    }
+
+    input[type="submit"]:hover {
+        background-color: darkblue;
     }
 </style>
