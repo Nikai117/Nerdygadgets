@@ -191,5 +191,6 @@ $QOH = $voorraad[0]["QOH"];//quantity on hand; voorraad
         color: white;
         border: 2px solid;
         box-shadow: 0 4px 8px 0 rgba(111, 65, 148, 2), 0 6px 20px 0 rgba(111, 65, 148, 1);
+        z-index: 2000;
     }
 </style>

@@ -1,28 +1,47 @@
 <?php
 include __DIR__ . "/header.php";
+
+$userID = 234;
+if(!isset($_GET['list'])) {
+    header("Location: lijst.php?list=Standaard");
+    exit();
+} else {
+    $list = $_GET['list'];
+}
+
+$lijstNamen = getWishlistNames($userID, $databaseConnection);
+$producten = getWishlistContent($userID, $_GET['list'], $databaseConnection);
 ?>
 <div id="wishlist">
     <div id="verlanglijst-namen">
-        <ul>
-            <li><a class="selected" href="lijst.php">Mijn verlanglijstje</a></li>
-            <li><a class="unselected" href="lijst.php?list=test">Test</a></li>
-        </ul>
+        <ul><?php
+            foreach($lijstNamen as $namen) {
+                if($namen["WishlistName"] == $list) {
+                    $class = 'class="selected"';
+                } else {
+                    $class = 'class="unselected"';
+                }
+
+                print('<li><a '.$class.' href="lijst.php?list='.$namen["WishlistName"].'">'.$namen["WishlistName"].'</a></li>');
+            }
+        ?></ul>
     </div>
 
-    <form method="post">
+    <form method="post" action="lijst.php?list=<?php echo $_GET['list'];?>">
     <div id="producten">
         <?php
-        for($x = 0; $x < 3; $x++) {?>
+        $x = 1;
+        foreach($producten as $product) { echo '
             <div class="product">
                 <div class="product-info">
-                    <h4>Product</h4><br>
+                    <h4>'.$product['StockItemID'].'</h4><br>
                     <h5>Lorem ipsum nogwattes</h5>
                 </div>
                 <div class="product-check">
-                    <input type="checkbox" class="product-keuze" value="PLACEHOLDER">
+                    <input type="checkbox" class="product-keuze" name="product'.$x.'" value="'.$product['StockItemID'].'">
                 </div>
             </div>
-        <?php }
+            ';$x++;}
         ?>
     </div>    
 

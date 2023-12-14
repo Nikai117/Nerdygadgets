@@ -332,3 +332,42 @@ function getDeliveryDate($email, $databaseConnection) {
 
     return $R;
 }
+
+function getWishlistNames($userID, $databaseConnection) {
+    
+    $Query = "
+            SELECT WishlistName   
+            FROM wishlist
+            WHERE userID = ?;";
+
+        $Statement = mysqli_prepare($databaseConnection, $Query);
+        mysqli_stmt_bind_param($Statement, "i", $userID);
+        mysqli_stmt_execute($Statement);
+    
+        $R = mysqli_stmt_get_result($Statement);
+        $R = mysqli_fetch_all($R, MYSQLI_ASSOC);
+    
+        return $R;
+}
+
+function getWishlistContent($userID, $lijstNaam, $databaseConnection) {
+    
+    $Query = "
+            SELECT StockItemID
+            FROM wishlist_content
+            WHERE userID = ?
+            AND WishlistID IN
+                (SELECT WishlistID
+                FROM wishlist
+                WHERE userID = ?
+                AND WishlistName = ?);";
+
+        $Statement = mysqli_prepare($databaseConnection, $Query);
+        mysqli_stmt_bind_param($Statement, "iis", $userID, $userID, $lijstNaam);
+        mysqli_stmt_execute($Statement);
+    
+        $R = mysqli_stmt_get_result($Statement);
+        $R = mysqli_fetch_all($R, MYSQLI_ASSOC);
+    
+        return $R;
+}
