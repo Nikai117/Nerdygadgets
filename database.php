@@ -317,7 +317,7 @@ function addCustomer($klantArray, $databaseConnection)
 function checkLogin($email, $password, $databaseConnection) {
 
     $Query = "
-        SELECT userID
+        SELECT *
         FROM accounts
         WHERE email = ? AND password = ?;
     ";
@@ -361,6 +361,22 @@ function getCustomerID($email, $databaseConnection)
     mysqli_stmt_execute($Statement);
     $R = mysqli_stmt_get_result($Statement);
     $R = mysqli_fetch_all($R, MYSQLI_ASSOC)[0]["CustomerID"];
+
+    return $R;
+}
+
+function getAccountByEmail($email, $databaseConnection) {
+    $Query = "
+        SELECT *
+        FROM accounts
+        WHERE email = ?;
+    ";
+
+    $statement = mysqli_prepare($databaseConnection, $Query);
+    mysqli_stmt_bind_param($statement, "s", $email);
+    mysqli_stmt_execute($statement);
+    $R = mysqli_stmt_get_result($statement);
+    $R = mysqli_fetch_all($R, MYSQLI_ASSOC);
 
     return $R;
 }
@@ -419,6 +435,41 @@ function getOrderId($email, $databaseConnection)
 
     return $R;
 
+}
+
+function getOrderDetails($email, $databaseConnection) {
+    $customerID = getCustomerID($email, $databaseConnection);
+
+    $Query = " 
+       SELECT *
+       From orders
+       WHERE CustomerID = ?
+       ORDER BY OrderID DESC";
+
+    $Statement = mysqli_prepare($databaseConnection, $Query);
+    mysqli_stmt_bind_param($Statement, "i", $customerID);
+    mysqli_stmt_execute($Statement);
+    $R = mysqli_stmt_get_result($Statement);
+    $R = mysqli_fetch_all($R, MYSQLI_ASSOC);
+
+    return $R;
+}
+
+function getOrderLineDetails($orderID, $databaseConnection) {
+
+    $Query = " 
+       SELECT *
+       From orderlines
+       WHERE orderID = ?
+       ";
+
+    $Statement = mysqli_prepare($databaseConnection, $Query);
+    mysqli_stmt_bind_param($Statement, "i", $orderID);
+    mysqli_stmt_execute($Statement);
+    $R = mysqli_stmt_get_result($Statement);
+    $R = mysqli_fetch_all($R, MYSQLI_ASSOC);
+
+    return $R;
 }
 
 function addOrderLine($email, $databaseConnection, $product)

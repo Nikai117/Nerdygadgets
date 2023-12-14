@@ -37,9 +37,9 @@ include __DIR__ . "/header.php";
         $email = $_POST['email'];
         $password = $_POST['password'];
 
-        $account = checkLogin($email, $password, $databaseConnection);
+        $account = getAccountByEmail($email, $databaseConnection);
 
-        if ($account == NULL) {
+        if ($account == NULL OR !password_verify($password, $account[0]['password'])) {
             generateErrorMessage("Verkeerde inlog gegevens");
         } else {
             $userID = $account[0]['userID'];
