@@ -8,9 +8,36 @@ $StockItemImage = getStockItemImage($_GET['id'], $databaseConnection);
 $voorraad = getQuantity($_GET['id'], $databaseConnection);
 $QOH = $voorraad[0]["QOH"];//quantity on hand; voorraad
 // $QPO = $voorraad[0]["QPO"];//quantity per outer; hoeveelheid per doos die je gaat shippen
+
+$userID = 234;//nog aanpassen met Nikai
+$lijstNamen = getWishlistNames($userID, $databaseConnection);
 ?>
-<div id="wishlist-alert">
-    Hi
+<div id="alert-overlay">
+    <div id="wishlist-alert">
+        <div id="alert-header">
+            <?php
+            echo '<h5 style="float:left;padding-left:5px;">Voeg het product toe aan een verlanglijstje</h5>';
+            ?>
+            <button type="button" onclick="closeAlert()">X</button>
+        </div>
+        <div id="alert-body">
+            <?php
+            foreach($lijstNamen as $namen) {
+                #stuur php variabele naar javascript mbv data-name
+                print('
+                    <div class="wishlist" data-name="'.$namen["WishlistName"].'">
+                        '.$namen["WishlistName"].'      
+                        <button class="add-to-wishlist" type="button" onclick="insertToWishlist(this)">+</button>
+                    </div>
+                ');
+            }
+            ?>
+        </div>
+        <div id="alert-footer">
+            <button type="button" id="continue-button" onclick="closeAlert()">Verder met winkelen?</button>
+            <button type="button" id="cart-button" onclick="openCart()">Winkelmand openen</button>
+        </div>
+    </div>
 </div>
 
 <div id="CenteredContent">
@@ -124,7 +151,7 @@ $QOH = $voorraad[0]["QOH"];//quantity on hand; voorraad
                         <!-- einde code -->
 
                         <!-- code voor verlanglijst -->
-                        <button onclick="addToWishlist()">
+                        <button type="button" onclick="addToWishlist()" id="addToWishlist-button">
                             In verlanglijstje
                         </button>
                         <!-- einde code -->
@@ -180,17 +207,130 @@ $QOH = $voorraad[0]["QOH"];//quantity on hand; voorraad
     } ?>
 </div>
 
+<!-- script met functies voor client-side operaties -->
+<script>
+    function addToWishlist() {
+        document.getElementById("alert-overlay").style.display = "block";
+    }
+    function closeAlert() {
+        document.getElementById("alert-overlay").style.display = "none";
+    }
+    function openCart() {
+        window.location.href = 'winkelmand.php';
+    }
+</script>
+
+<!-- script voor het sturen van php variabelen dmv ajax -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+function insertToWishlist(button) {
+    var wishlistName = button.parentElement.dataset.name; //data van de div
+    var StockItemID = '<?php echo $_GET["id"]; ?>';
+    
+    $.ajax({
+        url: 'lijst_insert.php',
+        type: 'POST',
+        data: { wishlistName: wishlistName, StockItemID: StockItemID},
+        success: function(response) {
+            console.log(response);
+        },
+        error: function(xhr, status, error) {
+            console.error('Error:', error);
+        }
+    });
+}
+</script>
+
 <style>
+    #addToWishlist-button {
+        border: none;
+        outline: none;
+        margin-top: 5px;
+    }
+    #alert-overlay {
+        position: fixed;
+        /*display: none;*/
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0,0,0,0.5);
+        z-index: 1999;
+    }
     #wishlist-alert {
+        /*display: none;*/
         position: absolute;
-        width: 50%;
-        height: 75%;
+        width: 30%;
+        height: 65%;
         margin: auto;
-        left: 25%;
+        left: 35%;
+        top: 5%;
         background-color: black;
         color: white;
         border: 2px solid;
         box-shadow: 0 4px 8px 0 rgba(111, 65, 148, 2), 0 6px 20px 0 rgba(111, 65, 148, 1);
         z-index: 2000;
+    }
+    #alert-header {
+        height: 15%;
+        width: 100%;
+        position: absolute;
+        background-color: red;
+        top: 0;
+    }
+    #alert-header button {
+        border: none;
+        outline: none;
+        background-color: blue;
+        color: #fff;
+        float: right;
+    }
+    #alert-header button:hover {
+        background-color: darkblue;
+    }
+    #alert-body {
+        height: 70%;
+        width: 100%;
+        position: absolute;
+        background-color: blue;
+        top: 15%;
+        overflow: auto;
+    }
+    #alert-body .wishlist {
+        background-color: black;
+        border: 1px solid;
+        height: 20%;
+    }
+    #alert-body .add-to-wishlist {
+        border: none;
+        outline: none;
+    }
+    #alert-body .add-to-wishlist:hover {
+        background-color: lightgray;
+    }
+    #alert-footer{
+        height: 15%;
+        width: 100%;
+        position: absolute;
+        top: 85%;
+    }
+    #alert-footer button {
+        width: 20%;
+        margin-left: 20%;
+        margin-top: 2%;
+        border: none;
+        outline: none;
+    }
+    #alert-footer #continue-button {
+        background-color: Blue;
+        color: #fff;
+    }
+    #alert-footer #continue-button:hover {
+        background-color: darkblue;
+    }
+    #alert-footer #cart-button:hover {
+        background-color: lightgray;
     }
 </style>

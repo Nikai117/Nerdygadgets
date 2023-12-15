@@ -30,6 +30,7 @@ $producten = getWishlistContent($userID, $_GET['list'], $databaseConnection);
     <form method="post" action="lijst.php?list=<?php echo $_GET['list'];?>">
     <div id="producten">
         <?php
+        if(count($producten) > 0) {
         $x = 1;
         foreach($producten as $product) { echo '
             <div class="product">
@@ -42,6 +43,9 @@ $producten = getWishlistContent($userID, $_GET['list'], $databaseConnection);
                 </div>
             </div>
             ';$x++;}
+        } else {
+            echo '<h3>Dit lijstje is leeg. Meer <a href="browse.php">toevoegen</a>?';
+        }
         ?>
     </div>    
 

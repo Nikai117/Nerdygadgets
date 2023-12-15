@@ -68,7 +68,7 @@ $databaseConnection = connectToDatabase();
 
         <ul id="ul-class-navigation">
             <li>
-                <a href="lijst.php">
+                <a href="lijst.php?list=Standaard">
                     <img alt="Verlanglijstje" src="Public/Img/Hart.png" width="23" height="20">
                 </a>
             <li>

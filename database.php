@@ -338,7 +338,8 @@ function getWishlistNames($userID, $databaseConnection) {
     $Query = "
             SELECT WishlistName   
             FROM wishlist
-            WHERE userID = ?;";
+            WHERE userID = ?
+            ORDER BY WishlistID;";
 
         $Statement = mysqli_prepare($databaseConnection, $Query);
         mysqli_stmt_bind_param($Statement, "i", $userID);
@@ -347,6 +348,23 @@ function getWishlistNames($userID, $databaseConnection) {
         $R = mysqli_stmt_get_result($Statement);
         $R = mysqli_fetch_all($R, MYSQLI_ASSOC);
     
+        return $R;
+}
+
+function getWishlistID($lijstNaam, $databaseConnection) {
+
+    $Query = "
+            SELECT WishlistID   
+            FROM wishlist
+            WHERE WishlistName = ?";
+
+        $Statement = mysqli_prepare($databaseConnection, $Query);
+        mysqli_stmt_bind_param($Statement, "s", $lijstNaam);
+        mysqli_stmt_execute($Statement);
+
+        $R = mysqli_stmt_get_result($Statement);
+        $R = mysqli_fetch_all($R, MYSQLI_ASSOC)[0]["WishlistID"];
+
         return $R;
 }
 
@@ -370,4 +388,26 @@ function getWishlistContent($userID, $lijstNaam, $databaseConnection) {
         $R = mysqli_fetch_all($R, MYSQLI_ASSOC);
     
         return $R;
+}
+
+function insertToWishlist($userID, $lijstNaam, $itemID, $databaseConnection) {
+    try {
+    $lijstID = getWishlistID($lijstNaam, $databaseConnection);
+    if($lijstID !== null ) {
+            $Query = "
+            INSERT INTO wishlist_content
+            VALUES (?, ?, ?)";
+
+        $Statement = mysqli_prepare($databaseConnection, $Query);
+        mysqli_stmt_bind_param($Statement, "iii", $userID, $lijstID, $itemID);
+        mysqli_stmt_execute($Statement);
+
+        return true;
+    } else {
+        return false;
+    }
+    } catch (Exception $e) {
+        //returns false als inserten niet gelukt is
+        return false;
+    }
 }
