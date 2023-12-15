@@ -8,6 +8,12 @@ if(!isset($_SESSION['winkelmand'])) {
 if(!isset($_SESSION['klant'])) {
     $_SESSION['klant'] = array();
 }
+if (!isset($_SESSION['account'])) {
+    $_SESSION['account'] = array();
+}
+if (!isset($_SESSION['activeUser'])) {
+    $_SESSION['activeUser'] = array();
+}
 
 if(!isset($_SESSION['verlanglijst'])) {
     $_SESSION['verlanglijst'] = array();
@@ -20,6 +26,19 @@ function removeRow($arr, $index)
 
     return $arr;
 }
+
+function generateErrorMessage($errorMessage) {
+    echo "<script>alert('Error: $errorMessage');</script>";
+}
+
+function isLoggedIn() {
+    if ($_SESSION['activeUser'] == array()) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
 $databaseConnection = connectToDatabase();
 ?>
 <!DOCTYPE html>
@@ -67,6 +86,30 @@ $databaseConnection = connectToDatabase();
 <!-- code voor US3: zoeken -->
 
         <ul id="ul-class-navigation">
+            <?php
+            if ($_SESSION['activeUser'] == array()){
+                echo ' <li>
+                <a href="registratie.php">
+                    Registreer
+                </a>
+            </li>
+            |
+            <li>
+                <a href="login.php">
+                    Login
+                </a>
+            </li>';
+            } else {
+                echo '
+                <li>
+                    <a href="account.php" style="color: white">', $_SESSION['activeUser'][0]['CustomerName'],'</a>
+                </li>
+                <li>
+                   <a href="logout.php" style="margin-right: 20px">| Log uit</a>
+                </li>
+                ';
+            }
+            ?>
             <li>
                 <a href="lijst.php?list=Standaard">
                     <img alt="Verlanglijstje" src="Public/Img/Hart.png" width="23" height="20">

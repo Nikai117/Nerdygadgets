@@ -19,7 +19,26 @@
     <execution />
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Nikai117&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="selectedUrlAndAccountId">
+      <UrlAndAccount>
+        <option name="accountId" value="80642769-20b5-471d-9f34-ff2b0f84c6cd" />
+        <option name="url" value="https://github.com/Nikai117/Nerdygadgets.git" />
+      </UrlAndAccount>
+    </option>
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -54,7 +73,7 @@
     "settings.editor.selected.configurable": "reference.webide.settings.project.settings.php",
     "vue.rearranger.settings.migration": "true"
   }
-}]]></component>
+}</component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -67,11 +86,20 @@
       <workItem from="1701199486834" duration="7199000" />
       <workItem from="1701248883046" duration="2066000" />
       <workItem from="1701289269161" duration="9676000" />
-      <workItem from="1702559312175" duration="1954000" />
     </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Created register" />
+    <MESSAGE value="Login styling" />
+    <MESSAGE value="Register error handling, Login fully functional and account logic" />
+    <MESSAGE value="Added logic and changed styling" />
+    <MESSAGE value="Account page and further error handling" />
+    <MESSAGE value="Register logic, login hashing, account page" />
+    <option name="LAST_COMMIT_MESSAGE" value="Register logic, login hashing, account page" />
   </component>
 </project>
