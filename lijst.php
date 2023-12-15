@@ -1,59 +1,89 @@
 <?php
 include __DIR__ . "/header.php";
 
-$userID = $_SESSION['activeUser'][0]['userID'];
-if(!isset($_GET['list'])) {
-    header("Location: lijst.php?list=Standaard");
-    exit();
+if($_SESSION['activeUser'] == NULL) {
+    echo '<h1 style="text-align: center"><a href="login.php">Log in</a> om verlanglijstjes te gebruiken!</h1>
+            <h2 style="text-align: center">Of <a href="registratie.php">registeer</a></h2>';
 } else {
-    $list = $_GET['list'];
-}
+    $userID = $_SESSION['activeUser'][0]['userID'];
+    if(!isset($_GET['list'])) {
+        header("Location: lijst.php?list=Standaard");
+        exit();
+    } else {
+        $list = $_GET['list'];
+    }
 
-$lijstNamen = getWishlistNames($userID, $databaseConnection);
-$producten = getWishlistContent($userID, $_GET['list'], $databaseConnection);
-?>
-<div id="wishlist">
-    <div id="verlanglijst-namen">
-        <ul><?php
-            foreach($lijstNamen as $namen) {
-                if($namen["WishlistName"] == $list) {
-                    $class = 'class="selected"';
-                } else {
-                    $class = 'class="unselected"';
+    $lijstNamen = getWishlistNames($userID, $databaseConnection);
+    $producten = getWishlistContent($userID, $_GET['list'], $databaseConnection);
+    ?>
+    <div id="wishlist">
+        <div id="verlanglijst-namen">
+            <ul><?php
+                foreach($lijstNamen as $namen) {
+                    if($namen["WishlistName"] == $list) {
+                        $class = 'class="selected"';
+                    } else {
+                        $class = 'class="unselected"';
+                    }
+
+                    print('<li><a '.$class.' href="lijst.php?list='.$namen["WishlistName"].'">'.$namen["WishlistName"].'</a></li>');
                 }
+            ?></ul>
+        </div>
 
-                print('<li><a '.$class.' href="lijst.php?list='.$namen["WishlistName"].'">'.$namen["WishlistName"].'</a></li>');
+        <form method="post" action="lijst.php?list=<?php echo $_GET['list'];?>">
+        <div id="producten">
+            <?php
+            if(count($producten) > 0) {
+            $x = 1;
+            foreach($producten as $product) { echo '
+                <div class="product">
+                    <div class="product-info">
+                        <h4>'.$product['StockItemID'].'</h4><br>
+                        <h5>Lorem ipsum nogwattes</h5>
+                    </div>
+                    <div class="product-check">
+                        <input type="checkbox" class="product-keuze" name="product'.$x.'" value="'.$product['StockItemID'].'">
+                    </div>
+                </div>
+                ';$x++;}
+            } else {
+                echo '<h3>Dit lijstje is leeg. Meer <a href="browse.php">toevoegen</a>?';
             }
-        ?></ul>
+            ?>
+        </div>    
+
+        <div id="submit-knop">
+            <input type="submit" value="Voeg toe aan winkelmand!">
+        </div>
+        </form>
     </div>
 
-    <form method="post" action="lijst.php?list=<?php echo $_GET['list'];?>">
-    <div id="producten">
-        <?php
-        if(count($producten) > 0) {
-        $x = 1;
-        foreach($producten as $product) { echo '
-            <div class="product">
-                <div class="product-info">
-                    <h4>'.$product['StockItemID'].'</h4><br>
-                    <h5>Lorem ipsum nogwattes</h5>
-                </div>
-                <div class="product-check">
-                    <input type="checkbox" class="product-keuze" name="product'.$x.'" value="'.$product['StockItemID'].'">
-                </div>
-            </div>
-            ';$x++;}
-        } else {
-            echo '<h3>Dit lijstje is leeg. Meer <a href="browse.php">toevoegen</a>?';
+    <?php
+    if($_POST != NULL) {
+        foreach($_POST as $product) {
+            $new = addToCart($product, $databaseConnection);
+
+            $voorraad = getQuantity($product, $databaseConnection);
+            $QOH = $voorraad[0]["QOH"];
+
+            // $new is 2-dimensionaal, dus gebruik foreach voordat je een product toevoegt
+            foreach($new as $row) {
+                if(!isset($_SESSION['winkelmand'][$row["StockItemID"]])) {// als het item nog niet in de winkelmand zit
+                    $_SESSION['winkelmand'][$row["StockItemID"]] = $row;
+                    $_SESSION['winkelmand'][$row["StockItemID"]]['aantal'] = 1;
+                } else {
+                    if($_SESSION['winkelmand'][$row["StockItemID"]]['aantal'] < $QOH) {
+                        $_SESSION['winkelmand'][$row["StockItemID"]]['aantal']++;       
+                    } else {
+                        print('<p class="bestelling"><b><i>Mislukt! Niet genoeg in voorraad.</i></b></p>');
+                    }
+                }
+            }
         }
-        ?>
-    </div>    
-
-    <div id="submit-knop">
-        <input type="submit" value="Voeg toe aan winkelmand!">
-    </div>
-    </form>
-</div>
+    }
+}
+?>
 
 <style>
     #wishlist {

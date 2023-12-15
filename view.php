@@ -9,8 +9,6 @@ $voorraad = getQuantity($_GET['id'], $databaseConnection);
 $QOH = $voorraad[0]["QOH"];//quantity on hand; voorraad
 // $QPO = $voorraad[0]["QPO"];//quantity per outer; hoeveelheid per doos die je gaat shippen
 
-$userID = $_SESSION['activeUser'][0]['userID'];
-$lijstNamen = getWishlistNames($userID, $databaseConnection);
 ?>
 <div id="alert-overlay">
     <div id="wishlist-alert">
@@ -22,6 +20,11 @@ $lijstNamen = getWishlistNames($userID, $databaseConnection);
         </div>
         <div id="alert-body">
             <?php
+            if($_SESSION['activeUser'] == NULL) {
+                echo '<h2><a href="login.php">Log in</a> om verlanglijstjes te gebruiken!</h2>';
+            } else {        
+                $userID = $_SESSION['activeUser'][0]['userID'];
+                $lijstNamen = getWishlistNames($userID, $databaseConnection);
             $x = 1;
             foreach($lijstNamen as $namen) {
                 if(existsInWishlist($userID, $namen['WishlistName'], $_GET['id'], $databaseConnection) == $_GET['id'])
@@ -37,6 +40,7 @@ $lijstNamen = getWishlistNames($userID, $databaseConnection);
                     </div>
                 ');$x++;
             }
+        }
             ?>
         </div>
         <div id="alert-footer">
@@ -256,7 +260,7 @@ function insertToWishlist(button) {
     }
     #alert-overlay {
         position: fixed;
-        /*display: none;*/
+        display: none;
         width: 100%;
         height: 100%;
         top: 0;
@@ -267,7 +271,6 @@ function insertToWishlist(button) {
         z-index: 1999;
     }
     #wishlist-alert {
-        /*display: none;*/
         position: absolute;
         width: 30%;
         height: 65%;
