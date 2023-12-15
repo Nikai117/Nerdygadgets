@@ -9,7 +9,7 @@ $voorraad = getQuantity($_GET['id'], $databaseConnection);
 $QOH = $voorraad[0]["QOH"];//quantity on hand; voorraad
 // $QPO = $voorraad[0]["QPO"];//quantity per outer; hoeveelheid per doos die je gaat shippen
 
-$userID = 234;//nog aanpassen met Nikai
+$userID = $_SESSION['activeUser'][0]['userID'];
 $lijstNamen = getWishlistNames($userID, $databaseConnection);
 ?>
 <div id="alert-overlay">
@@ -22,14 +22,20 @@ $lijstNamen = getWishlistNames($userID, $databaseConnection);
         </div>
         <div id="alert-body">
             <?php
+            $x = 1;
             foreach($lijstNamen as $namen) {
+                if(existsInWishlist($userID, $namen['WishlistName'], $_GET['id'], $databaseConnection) == $_GET['id'])
+                    $button = '<button class="add-to-wishlist" type="button" onclick="insertToWishlist(this)" style="background-color:lime;">✔</button>'; 
+                else   
+                    $button = '<button class="add-to-wishlist" type="button" onclick="insertToWishlist(this)" style="background-color:blue;">+</button>';
+                
                 #stuur php variabele naar javascript mbv data-name
                 print('
                     <div class="wishlist" data-name="'.$namen["WishlistName"].'">
                         '.$namen["WishlistName"].'      
-                        <button class="add-to-wishlist" type="button" onclick="insertToWishlist(this)">+</button>
+                        '.$button.'
                     </div>
-                ');
+                ');$x++;
             }
             ?>
         </div>
@@ -233,6 +239,7 @@ function insertToWishlist(button) {
         data: { wishlistName: wishlistName, StockItemID: StockItemID},
         success: function(response) {
             console.log(response);
+            location.href = window.location.href;//pagina "herladen" zodat het plusje naar een vinkje verandert
         },
         error: function(xhr, status, error) {
             console.error('Error:', error);
@@ -306,9 +313,10 @@ function insertToWishlist(button) {
     #alert-body .add-to-wishlist {
         border: none;
         outline: none;
+        color: #fff;
     }
     #alert-body .add-to-wishlist:hover {
-        background-color: lightgray;
+        filter: brightness(80%);
     }
     #alert-footer{
         height: 15%;

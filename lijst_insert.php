@@ -4,7 +4,7 @@ include "database.php";
 
 $databaseConnection = connectToDatabase();
 
-$userID = 234;
+$userID = $_SESSION['activeUser'][0]['userID'];
 
 //als je handmatig dit url intypt, word je gestuurd naar home
 if(!isset($_POST['wishlistName'], $_POST['StockItemID'])) {

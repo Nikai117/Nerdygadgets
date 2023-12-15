@@ -579,6 +579,32 @@ function getWishlistContent($userID, $lijstNaam, $databaseConnection) {
         return $R;
 }
 
+function existsInWishlist($userID, $lijstNaam, $StockItemID, $databaseConnection){
+
+        $Query = "
+        SELECT StockItemID
+        FROM wishlist_content
+        WHERE userID = ?
+        AND StockItemID = ?
+        AND WishlistID IN
+            (SELECT WishlistID
+            FROM wishlist
+            WHERE userID = ?
+            AND WishlistName = ?);";
+
+    $Statement = mysqli_prepare($databaseConnection, $Query);
+    mysqli_stmt_bind_param($Statement, "iiis", $userID, $StockItemID, $userID, $lijstNaam);
+    mysqli_stmt_execute($Statement);
+
+    $R = mysqli_stmt_get_result($Statement);
+    $R = mysqli_fetch_all($R, MYSQLI_ASSOC);
+
+    if(isset($R[0]['StockItemID']))
+        return $R[0]['StockItemID'];
+    else
+        return null;
+}
+
 function insertToWishlist($userID, $lijstNaam, $itemID, $databaseConnection) {
     try {
     $lijstID = getWishlistID($lijstNaam, $databaseConnection);

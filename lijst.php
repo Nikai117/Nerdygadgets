@@ -1,7 +1,7 @@
 <?php
 include __DIR__ . "/header.php";
 
-$userID = 234;
+$userID = $_SESSION['activeUser'][0]['userID'];
 if(!isset($_GET['list'])) {
     header("Location: lijst.php?list=Standaard");
     exit();
