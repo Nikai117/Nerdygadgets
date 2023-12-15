@@ -11,90 +11,89 @@ $activeUser = $_SESSION['activeUser'][0];
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background-color: #f4f4f4;
+            background-color: #1e1e1e; /* Dark background color */
+            color: #fff; /* Light text color */
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
         }
 
-        .account-container {
+        .container {
             display: flex;
-            flex-direction: column;
             justify-content: space-around;
-            flex-wrap: wrap;
+            align-items: flex-start;
+        }
+
+        .account-container,
+        .order-container {
+            background-color: #292929; /* Darker gray background */
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+            margin: 20px;
+            padding: 20px;
             width: 30%;
         }
 
         .card {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            margin: 20px;
-            padding: 20px;
-            width: 300px;
-            text-align: center;
+            text-align: left;
+            margin-bottom: 20px;
+            background-color: #292929;
         }
 
         .card h2 {
-            color: #333;
+            color: #4fa3d1; /* Light blue heading color */
+            border-bottom: 2px solid #4fa3d1; /* Light blue underline */
+            padding-bottom: 10px;
+            margin-bottom: 10px;
         }
 
         .card p {
-            color: #666;
+            color: #ccc; /* Light gray text color */
+            margin: 10px 0;
         }
 
         .order-container {
             max-width: 600px;
-            margin: 50px auto;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            overflow: hidden;
+            margin: 50px 20px;
         }
 
         .order {
+            background-color: #333; /* Dark background for orders */
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
             padding: 20px;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .order:last-child {
-            border-bottom: none;
+            margin-bottom: 20px;
         }
 
         .order h2 {
+            color: #ddd; /* Light heading color */
             margin-bottom: 10px;
-            color: #333;
-        }
-
-        .order p {
-            margin: 0;
-            color: #666;
         }
 
         .delivery-date {
             font-weight: bold;
-            color: #3498db;
+            color: #6e64b4; /* Light green delivery date */
         }
 
-        .products {
-            margin-top: 10px;
+        .products p {
+            margin: 8px 0;
         }
 
         .price {
-            margin-top: 10px;
             font-size: 1.2em;
-            color: #27ae60;
+            color: #6dbd63; /* Light green price color */
         }
+
     </style>
 </head>
 <body>
 <?php
     $orders = getOrderDetails($_SESSION['activeUser'][0]['Email'], $databaseConnection)
 ?>
-
+<div class="container">
 <div class="account-container">
     <div class="card">
         <h2>Klantgegevens</h2>
@@ -108,32 +107,31 @@ $activeUser = $_SESSION['activeUser'][0];
         <p>Postcode: <?php print ($activeUser['DeliveryPostalCode'])?></p>
     </div>
 </div>
-<div class="order-container">
     <?php
-    foreach ($orders as $order) {
-       $orderLines =  getOrderLineDetails($order['OrderID'], $databaseConnection);
-    echo '
+    if ($orders == array()) {
+        print ("");
+    } else {
+        foreach ($orders as $order) {
+            $orderLines = getOrderLineDetails($order['OrderID'], $databaseConnection);
+            echo '
+<div class="order-container">
     <div class="order">
-        <h2>Order #12345</h2>
-        <p class="delivery-date">Verwachte lever datum: ',$order['ExpectedDeliveryDate'],'</p>
+        <h2>Order ', $order['OrderID'], '</h2>
+        <p class="delivery-date">Verwachte lever datum: ', $order['ExpectedDeliveryDate'], '</p>
+        <div class="products">
         ';
-        foreach ($orderLines as $orderLine) {
-            echo '<div class="products">
-            <p><strong>Products:</strong> ',$orderLine['Description'],'</p>
+            foreach ($orderLines as $orderLine) {
+                echo '
+            <p> ', $orderLine['Description'], '</p>';
+            }
+            echo '
         </div>
-        <p class="price">Total Price: $150.00</p>
-    </div>';
+        </div>
+        ';
         }
     }
     ?>
-    <div class="order">
-        <h2>Order #67890</h2>
-        <p class="delivery-date">Expected Delivery Date: February 15, 2023</p>
-        <div class="products">
-            <p><strong>Products:</strong> Product X, Product Y</p>
-        </div>
-        <p class="price">Total Price: $75.50</p>
-    </div>
+</div>
 </div>
 
 

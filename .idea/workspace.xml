@@ -4,13 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b5707d94-885a-46a4-8032-b546f08eb300" name="Changes" comment="Account page and further error handling">
+    <list default="true" id="b5707d94-885a-46a4-8032-b546f08eb300" name="Changes" comment="Register logic, login hashing, account page">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Betaalgegevens.php" beforeDir="false" afterPath="$PROJECT_DIR$/Betaalgegevens.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/account.php" beforeDir="false" afterPath="$PROJECT_DIR$/account.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database.php" beforeDir="false" afterPath="$PROJECT_DIR$/database.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/login.php" beforeDir="false" afterPath="$PROJECT_DIR$/login.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/registratie.php" beforeDir="false" afterPath="$PROJECT_DIR$/registratie.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test.php" beforeDir="false" afterPath="$PROJECT_DIR$/test.php" afterDir="false" />
     </list>
     <list id="11e29af2-402d-40ec-9693-3273b5e76702" name="Changes by nikai" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -105,7 +102,10 @@
       <workItem from="1702547292392" duration="9000" />
       <workItem from="1702547622226" duration="1581000" />
       <workItem from="1702553436334" duration="2749000" />
-      <workItem from="1702557187132" duration="6403000" />
+      <workItem from="1702557187132" duration="6449000" />
+      <workItem from="1702576709750" duration="1188000" />
+      <workItem from="1702634714627" duration="555000" />
+      <workItem from="1702648918847" duration="4491000" />
     </task>
     <task id="LOCAL-00001" summary="Created register">
       <option name="closed" value="true" />
@@ -147,7 +147,15 @@
       <option name="project" value="LOCAL" />
       <updated>1702465430912</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Register logic, login hashing, account page">
+      <option name="closed" value="true" />
+      <created>1702563782244</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1702563782244</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -159,6 +167,7 @@
     <MESSAGE value="Register error handling, Login fully functional and account logic" />
     <MESSAGE value="Added logic and changed styling" />
     <MESSAGE value="Account page and further error handling" />
-    <option name="LAST_COMMIT_MESSAGE" value="Account page and further error handling" />
+    <MESSAGE value="Register logic, login hashing, account page" />
+    <option name="LAST_COMMIT_MESSAGE" value="Register logic, login hashing, account page" />
   </component>
 </project>
