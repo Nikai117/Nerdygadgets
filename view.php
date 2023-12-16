@@ -14,7 +14,7 @@ $QOH = $voorraad[0]["QOH"];//quantity on hand; voorraad
     <div id="wishlist-alert">
         <div id="alert-header">
             <?php
-            echo '<h5 style="float:left;padding-left:5px;">Voeg het product toe aan een verlanglijstje</h5>';
+            echo '<h5 style="float:left;padding:5% 10%;">Voeg het product toe aan een verlanglijstje</h5>';
             ?>
             <button type="button" onclick="closeAlert()">X</button>
         </div>
@@ -28,14 +28,14 @@ $QOH = $voorraad[0]["QOH"];//quantity on hand; voorraad
             $x = 1;
             foreach($lijstNamen as $namen) {
                 if(existsInWishlist($userID, $namen['WishlistName'], $_GET['id'], $databaseConnection) == $_GET['id'])
-                    $button = '<button class="add-to-wishlist" type="button" onclick="insertToWishlist(this)" style="background-color:lime;">✔</button>'; 
+                    $button = '<button class="in-wishlist" type="button"" style="background-color:lime;color:lime;">✔</button>'; 
                 else   
-                    $button = '<button class="add-to-wishlist" type="button" onclick="insertToWishlist(this)" style="background-color:blue;">+</button>';
+                    $button = '<button class="add-to-wishlist" type="button" onclick="insertToWishlist(this)" style="background-color:blue">+</button>';
                 
                 #stuur php variabele naar javascript mbv data-name
                 print('
                     <div class="wishlist" data-name="'.$namen["WishlistName"].'">
-                        '.$namen["WishlistName"].'      
+                        <h5>'.$namen["WishlistName"].'</h5>      
                         '.$button.'
                     </div>
                 ');$x++;
@@ -135,7 +135,7 @@ $QOH = $voorraad[0]["QOH"];//quantity on hand; voorraad
                         <?php } else {?>
 
                         <form method="post" action="view.php?id=<?php print $_GET['id']; ?>" id="cart-button">
-                            <input type="submit" value="Bestel nu!" name="product">
+                            <input type="submit" value="Bestel nu!" name="product" id="addToCart-button">
                         </form>
                         <?php }
                         if(isset($_POST['product'])) {
@@ -238,12 +238,15 @@ function insertToWishlist(button) {
     var StockItemID = '<?php echo $_GET["id"]; ?>';
     
     $.ajax({
-        url: 'lijst_insert.php',
+        url: 'lijst_toevoegen.php',
         type: 'POST',
         data: { wishlistName: wishlistName, StockItemID: StockItemID},
         success: function(response) {
             console.log(response);
-            location.href = window.location.href;//pagina "herladen" zodat het plusje naar een vinkje verandert
+            //verander de kleur van de buton
+            button.style.cssText = '';
+            button.textContent = '✔';
+            button.classList.add('in-wishlist');
         },
         error: function(xhr, status, error) {
             console.error('Error:', error);
@@ -253,10 +256,31 @@ function insertToWishlist(button) {
 </script>
 
 <style>
+    .in-wishlist {
+        border: none;
+        outline: none;
+        background-color: lime;
+        float: right;
+        cursor: default;
+    }
+    #addToCart-button {
+        background-color: blue;
+        border: none;
+        outline: none;
+        color: #fff;
+    }
+    #addToCart-button:hover {
+        filter: brightness(80%);
+    }
     #addToWishlist-button {
         border: none;
         outline: none;
         margin-top: 5px;
+        background-color: blue;
+        color: #fff;
+    }
+    #addToWishlist-button:hover {
+        filter: brightness(80%);
     }
     #alert-overlay {
         position: fixed;
@@ -276,10 +300,10 @@ function insertToWishlist(button) {
         height: 65%;
         margin: auto;
         left: 35%;
-        top: 5%;
-        background-color: black;
+        top: 5%; 
+        background-color: rgb(35, 35, 47, 0.97);
         color: white;
-        border: 2px solid;
+        border: 4px solid darkblue;
         box-shadow: 0 4px 8px 0 rgba(111, 65, 148, 2), 0 6px 20px 0 rgba(111, 65, 148, 1);
         z-index: 2000;
     }
@@ -287,15 +311,14 @@ function insertToWishlist(button) {
         height: 15%;
         width: 100%;
         position: absolute;
-        background-color: red;
         top: 0;
     }
     #alert-header button {
         border: none;
         outline: none;
-        background-color: blue;
         color: #fff;
         float: right;
+        background-color: blue;
     }
     #alert-header button:hover {
         background-color: darkblue;
@@ -304,28 +327,35 @@ function insertToWishlist(button) {
         height: 70%;
         width: 100%;
         position: absolute;
-        background-color: blue;
         top: 15%;
         overflow: auto;
     }
+    #alert-body h5 {
+        float: left;
+    }
     #alert-body .wishlist {
-        background-color: black;
-        border: 1px solid;
+        border-top: 4px solid darkblue;
         height: 20%;
+        width: 90%;
+        margin-left: 5%;
+        padding: 5px 15px;
     }
     #alert-body .add-to-wishlist {
         border: none;
         outline: none;
         color: #fff;
+        float: right;
     }
     #alert-body .add-to-wishlist:hover {
         filter: brightness(80%);
     }
     #alert-footer{
         height: 15%;
-        width: 100%;
+        width: 90%;
         position: absolute;
         top: 85%;
+        left: 5%;
+        border-top: 4px solid darkblue;
     }
     #alert-footer button {
         width: 20%;
@@ -333,6 +363,7 @@ function insertToWishlist(button) {
         margin-top: 2%;
         border: none;
         outline: none;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5), 0 6px 20px 0 rgba(0, 0, 0, 0.5);
     }
     #alert-footer #continue-button {
         background-color: Blue;
@@ -341,7 +372,10 @@ function insertToWishlist(button) {
     #alert-footer #continue-button:hover {
         background-color: darkblue;
     }
-    #alert-footer #cart-button:hover {
+    #alert-footer #cart-button {
         background-color: lightgray;
+    }
+    #alert-footer #cart-button:hover {      
+        filter: brightness(80%);
     }
 </style>

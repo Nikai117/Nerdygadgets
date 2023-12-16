@@ -8,6 +8,7 @@ $databaseConnection = connectToDatabase();
 if(!isset($_POST['wishlistName'], $_POST['StockItemID'])) {
     header("Location: index.php");
 } else {
+    //data wordt pas hier gestuurd als de klant is ingelogd
     $userID = $_SESSION['activeUser'][0]['userID'];
     $insertSucceeded = insertToWishlist($userID, $_POST['wishlistName'], $_POST['StockItemID'], $databaseConnection);
 

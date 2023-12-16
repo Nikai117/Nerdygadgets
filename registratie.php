@@ -35,8 +35,8 @@ include __DIR__ . "/header.php";
     <label for="address">Adres:</label>
     <input type="text" id="address" name="address" required>
 
-    <label for="toevoeging">Toevoeging:</label>
-    <input type="text" id="toevoeging" name="toevoeging" required>
+    <label for="toevoeging">Huisnummer:</label>
+    <input type="number" id="toevoeging" name="toevoeging" required>
 
     <label for="postalcode">Postcode:</label>
     <input type="text" id="postalcode" name="postalcode" required>

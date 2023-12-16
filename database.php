@@ -1,4 +1,3 @@
-<!-- dit bestand bevat alle code die verbinding maakt met de database -->
 <?php
 
 function connectToDatabase()
@@ -557,6 +556,24 @@ function getWishlistID($lijstNaam, $databaseConnection) {
         return $R;
 }
 
+function getMaxWishlistID($userID, $databaseConnection) {
+    
+    $Query = "
+            SELECT userID, MAX(WishlistID) as maxID
+            FROM wishlist 
+            WHERE userID = ? 
+            GROUP BY userID;";
+
+        $Statement = mysqli_prepare($databaseConnection, $Query);
+        mysqli_stmt_bind_param($Statement, "i", $userID);
+        mysqli_stmt_execute($Statement);
+
+        $R = mysqli_stmt_get_result($Statement);
+        $R = mysqli_fetch_all($R, MYSQLI_ASSOC)[0]["maxID"];
+
+        return $R;            
+}
+
 function getWishlistContent($userID, $lijstNaam, $databaseConnection) {
     
     $Query = "
@@ -615,6 +632,31 @@ function insertToWishlist($userID, $lijstNaam, $itemID, $databaseConnection) {
 
         $Statement = mysqli_prepare($databaseConnection, $Query);
         mysqli_stmt_bind_param($Statement, "iii", $userID, $lijstID, $itemID);
+        mysqli_stmt_execute($Statement);
+
+        return true;
+    } else {
+        return false;
+    }
+    } catch (Exception $e) {
+        //returns false als inserten niet gelukt is
+        return false;
+    }
+}
+
+function createWishlist($userID, $lijstNaam, $databaseConnection) {
+    try {
+    $lijstID = getMaxWishlistID($userID, $databaseConnection);
+    if($lijstID !== null ) {
+        //verhoog het ID om te inserten; soort van incrementen gebeurt hier
+        $lijstID += 1;
+
+            $Query = "
+            INSERT INTO wishlist
+            VALUES (?, ?, ?)";
+
+        $Statement = mysqli_prepare($databaseConnection, $Query);
+        mysqli_stmt_bind_param($Statement, "iis", $userID, $lijstID, $lijstNaam);
         mysqli_stmt_execute($Statement);
 
         return true;
