@@ -105,13 +105,13 @@ if($_SESSION['activeUser'] == NULL) {
                         </div>
                     </div>
                     ';$x++;}
-                }
                 ?>
             </div>    
 
             <div id="submit-knop">
                 <input type="submit" value="Voeg toe aan winkelmand!">
             </div>
+            <?php }?>
         </form>
     </div>
 
