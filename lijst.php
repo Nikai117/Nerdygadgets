@@ -1,6 +1,7 @@
 <?php
 include __DIR__ . "/header.php";
 
+//klant moet ingelogd zijn
 if($_SESSION['activeUser'] == NULL) {
     echo '<h1 style="text-align: center"><a href="login.php">Log in</a> om verlanglijstjes te gebruiken!</h1>
             <h2 style="text-align: center">Of <a href="registratie.php">registeer</a></h2>';
@@ -11,12 +12,27 @@ if($_SESSION['activeUser'] == NULL) {
         exit();
     } else {
         $list = $_GET['list'];
+        $listExists = false;
+
+        $lijstNamen = getWishlistNames($userID, $databaseConnection);
+
+        //kijken of de waarde van list bestaat
+        foreach($lijstNamen as $naam) {
+            if($naam["WishlistName"] == $list) {
+                $listExists = true;
+            }
+        }
+        
+        if(!$listExists) {
+            header("Location: lijst.php?list=Standaard");
+            exit();
+        }
     }
 
-    $lijstNamen = getWishlistNames($userID, $databaseConnection);
     $producten = getWishlistContent($userID, $_GET['list'], $databaseConnection);
     ?>
 
+    <!-- overlay div voor nieuwe lijstnaam formulier -->
     <div id="name-form-overlay">
         <div id="name-form-alert">
             <div id="alert-header">
@@ -53,31 +69,49 @@ if($_SESSION['activeUser'] == NULL) {
             </ul>
         </div>
 
-        <form method="post" action="lijst.php?list=<?php echo $_GET['list'];?>">
-        <div id="producten">
-            <?php
-            if(count($producten) > 0) {
-            $x = 1;
-            foreach($producten as $product) { echo '
-                <div class="product">
-                    <div class="product-info">
-                        <h4>'.$product['StockItemID'].'</h4><br>
-                        <h5>Lorem ipsum nogwattes</h5>
-                    </div>
-                    <div class="product-check">
-                        <input type="checkbox" class="product-keuze" name="product'.$x.'" value="'.$product['StockItemID'].'">
-                    </div>
-                </div>
-                ';$x++;}
-            } else {
-                echo '<h3>Dit lijstje is leeg. Meer <a href="browse.php">toevoegen</a>?';
-            }
-            ?>
-        </div>    
+        <form method="post" action="lijst.php?list=<?php echo $_GET['list'];?>" id="product-checkboxes">
+            <div id="producten">
+                <div id="producten-header">
+                <?php
+                if($_GET['list'] != "Standaard") {
+                    echo '<button type="button" onclick="deleteWishlist()" id="delete-list">Verwijder lijst</button>';
+                }?>
+                <?php
+                if(count($producten) < 1) {
+                    echo '<h3 style="padding-top:5px;">Dit lijstje is leeg. Meer <a href="browse.php">toevoegen</a>?';
+                } else {
+                    echo '<button type="button" onclick="checkAll(event)" id="select-all">Selecteer allemaal</button>
+                </div>';
+                $x = 1;//hulp variabele zodat elke name uniek kan zijn
+                foreach($producten as $product) { 
+                    $StockItem = getStockItem($product['StockItemID'], $databaseConnection);
+                    $StockItemImage = getStockItemImage($product['StockItemID'], $databaseConnection);
+                    $BackupImage = getBackupImage($product['StockItemID'], $databaseConnection);
 
-        <div id="submit-knop">
-            <input type="submit" value="Voeg toe aan winkelmand!">
-        </div>
+                    if ($StockItemImage != NULL) {
+                        $image = '<img src="Public/StockItemIMG/' . $StockItemImage[0]['ImagePath'] . '" class="itemimage"></a>';
+                    } else { 
+                        $image = '<img src="Public/StockGroupIMG/' . $BackupImage['ImagePath'] . '" class="itemimage"></a>';
+                    }
+                            
+                    echo '
+                    <div class="product">
+                        <div class="product-info" data-name="'.$product['StockItemID'].'">
+                            <h4>'.$image.'</h4><br>
+                            <h5 style="float:left"><a href="view.php?id='.$product['StockItemID'].'">'.$StockItem['StockItemName'].'</a> |<h6 style="float:left;margin-left:5px;padding-top:5px;"onclick="removeFromWishlist(this)" class="remove-product"> Verwijder product</h6></h5>
+                        </div>
+                        <div class="product-check">
+                            <input type="checkbox" class="product-keuze" name="product'.$x.'" value="'.$product['StockItemID'].'">
+                        </div>
+                    </div>
+                    ';$x++;}
+                }
+                ?>
+            </div>    
+
+            <div id="submit-knop">
+                <input type="submit" value="Voeg toe aan winkelmand!">
+            </div>
         </form>
     </div>
 
@@ -115,10 +149,20 @@ if($_SESSION['activeUser'] == NULL) {
     function closeNameForm() {
         window.location.href = window.location.href;
     }
-</script>
+    function checkAll(event) {
+        event.preventDefault();//als de boxes gecheckt werden, dan werden deze automatisch gesubmit
+        
+        var form = document.getElementById("product-checkboxes");
+        var checkboxes = form.querySelectorAll('input[type="checkbox"]');
 
+        checkboxes.forEach(function(checkbox) {
+            checkbox.checked = true;
+        });
+    }
+</script>
 <!-- script voor sturen van data naar de database -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- script voor verlanglijst aanmaken in de database -->
 <script>
     var nameForm = document.getElementById("name-form");
 
@@ -127,11 +171,13 @@ if($_SESSION['activeUser'] == NULL) {
 
         var listName = document.getElementById("list-name");
         var listNameValue = listName.value;
+        var operation = "maken_lijst";
 
+        //ajax request om de variabele(n) van hierboven te sturen naar lijst_operaties.php
         $.ajax({
-            url: 'lijst_maken.php',
+            url: 'lijst_operaties.php',
             type: 'POST',
-            data: { newListName: listNameValue},
+            data: { newListName: listNameValue, operation: operation},
             success: function(response) {
 
                 try {
@@ -154,7 +200,55 @@ if($_SESSION['activeUser'] == NULL) {
         });
     });             
 
+</script>
+<!-- script voor verlanglijst verwijderen uit de database -->
+<script>
+    function deleteWishlist() {
+        try {
+            var wishlistName = '<?php echo $_GET['list'];?>';
+            var operation = "verwijderen_lijst";
 
+            $.ajax({
+                url: 'lijst_operaties.php',
+                type: 'POST',
+                data: { wishlistName: wishlistName, operation: operation},
+                success: function(response) {
+                    console.log(response);
+                    window.location.href = window.location.href;
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    }
+</script>
+<!-- script voor product verwijderen uit verlanglijst -->
+<script>
+    function removeFromWishlist(obj) {
+        try {
+            var StockItemID = obj.closest('.product-info').dataset.name;
+            var wishlistName = '<?php echo $_GET['list'];?>';
+            var operation = "verwijderen_product";
+
+            $.ajax({
+                url: 'lijst_operaties.php',
+                type: 'POST',
+                data: { wishlistName: wishlistName, StockItemID: StockItemID, operation: operation},
+                success: function(response) {
+                    console.log(response);
+                    window.location.href = window.location.href;
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    }
 </script>
 
 <!-- stijl voor de overlay div van de naam formulier -->
@@ -238,48 +332,84 @@ if($_SESSION['activeUser'] == NULL) {
 
 <!-- stijl voor de verlanglijstjes-->
 <style>
+    .itemimage {
+        width: 80px;
+        height: 80px;
+        margin-top: 3%;
+        margin-bottom: -3%;
+    }
     #wishlist {
         width: 50%;
         height: 75%;
         margin: auto;
         top: 22%;
         left: 25%;
-        background-color: black;
+        background-color: rgb(35, 35, 47, 0.97);
         color: white;
-        border: 2px solid;
+        border: 4px solid darkblue;
         box-shadow: 0 4px 8px 0 rgba(111, 65, 148, 2), 0 6px 20px 0 rgba(111, 65, 148, 1);
         position: fixed;
     }
     #verlanglijst-namen {
         width: 20%;
-        height: 80%;
+        height: 75%;
         overflow: auto;
-        background-color: blue;
-        float: left;
-        border-right: 1px solid;
+        border-right: 4px solid darkblue;
         position: absolute;
+        top: 2%;
+        padding-top: 10px;
     }
     #verlanglijst-namen ul {
         list-style-type: none;
+        margin-left: -5%;
     }
     #verlanglijst-namen a:hover {
         cursor: pointer;
+        color: lightgray;
+    }
+    #producten-header {
+        height: 10%;
+        padding-top: 2%;
+        padding-left: 2%;
+    }
+    #producten-header button {
+        border: none;
+        outline: none;
+        color: #fff;
+    }
+    #producten-header #delete-list {
+        background-color: darkred;
+    } 
+    #producten-header #select-all {
+        background-color: green;
+        float: right;
+        margin-right: 5%;
+    }
+    #producten-header button:hover {
+        filter: brightness(80%);
     }
     #producten {
         width: 79%;
         height: 80%;
         overflow: auto;
-        background-color: red;
         left: 21%;
         position: absolute;
-        border-left: 1px solid;
+    }
+    .remove-product {
+        color: magenta;
+    }
+    .remove-product:hover {
+        cursor: pointer;
+        filter: brightness(80%);
     }
     .product {
-        border: 1px solid;
+        border-top: 4px solid darkblue;
         padding-left: 2%;
         padding-bottom: 2%;
         position: relative;
         display: flex;
+        width: 95%;
+        margin-left: 2%;
     }
     .product-info {
         width: 70%;
@@ -294,10 +424,11 @@ if($_SESSION['activeUser'] == NULL) {
     }
     #submit-knop {
         position: absolute;
-        background-color: white;
-        top: 80%;
-        height: 20%;
-        width: 100%;
+        border-top: 4px solid darkblue;
+        top: 85%;
+        height: 15%;
+        width: 90%;
+        left: 5%;
     }
     .selected {
         color: white;
@@ -314,16 +445,13 @@ if($_SESSION['activeUser'] == NULL) {
     }
     input[type="submit"] {
         display: block;
-        margin: 0 auto;
-        margin-bottom: 20px;
+        margin: auto;
         width: 30%;
         background-color: Blue;
         color: #fff;
-        padding: 10px;
         border: none;
-        border-radius: 4px;
         cursor: pointer;
-        margin-top: 5%;
+        margin-top: 3%;
     }
 
     input[type="submit"]:hover {

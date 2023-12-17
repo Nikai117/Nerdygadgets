@@ -10,6 +10,25 @@ $QOH = $voorraad[0]["QOH"];//quantity on hand; voorraad
 // $QPO = $voorraad[0]["QPO"];//quantity per outer; hoeveelheid per doos die je gaat shippen
 
 ?>
+<!-- overlay div voor nieuwe lijstnaam formulier -->
+<div id="name-form-overlay">
+    <div id="name-form-alert">
+        <div id="name-alert-header">
+            <h5>Maak een nieuwe lijstje aan</h5>
+        </div>
+        
+        <div id="name-alert-body">
+            <form action="" id="name-form">
+                <label for="list-name">Naam:</label>
+                <input type="text" id="list-name" placeholder="Voer een naam in..." required>
+                <input type="submit" id="submit-button" value="Verstuur naam">      
+                <input type="submit" id="cancel-button" value="Annuleer" onclick="closeNameForm()">
+            </form>     
+        </div>
+    </div>
+</div>
+
+<!-- overlay div voor het kiezen van de lijst(en) waaraan de klant een product wilt toevoegen -->
 <div id="alert-overlay">
     <div id="wishlist-alert">
         <div id="alert-header">
@@ -33,13 +52,17 @@ $QOH = $voorraad[0]["QOH"];//quantity on hand; voorraad
                     $button = '<button class="add-to-wishlist" type="button" onclick="insertToWishlist(this)" style="background-color:blue">+</button>';
                 
                 #stuur php variabele naar javascript mbv data-name
-                print('
+                echo '
                     <div class="wishlist" data-name="'.$namen["WishlistName"].'">
                         <h5>'.$namen["WishlistName"].'</h5>      
                         '.$button.'
                     </div>
-                ');$x++;
+                ';$x++;
             }
+            echo '
+            <div class="wishlist">
+                <h5 id="open-name-form" onclick="openNameForm()">(Maak nieuwe lijst)</h5>
+            </div>';
         }
             ?>
         </div>
@@ -228,33 +251,160 @@ $QOH = $voorraad[0]["QOH"];//quantity on hand; voorraad
     function openCart() {
         window.location.href = 'winkelmand.php';
     }
+    function openNameForm() {
+        document.getElementById("name-form-overlay").style.display = "block";
+    }
+    function closeNameForm() {
+        window.location.href = window.location.href;
+    }
 </script>
-
 <!-- script voor het sturen van php variabelen dmv ajax -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-function insertToWishlist(button) {
-    var wishlistName = button.parentElement.dataset.name; //data van de div
-    var StockItemID = '<?php echo $_GET["id"]; ?>';
-    
-    $.ajax({
-        url: 'lijst_toevoegen.php',
-        type: 'POST',
-        data: { wishlistName: wishlistName, StockItemID: StockItemID},
-        success: function(response) {
-            console.log(response);
-            //verander de kleur van de buton
-            button.style.cssText = '';
-            button.textContent = '✔';
-            button.classList.add('in-wishlist');
-        },
-        error: function(xhr, status, error) {
-            console.error('Error:', error);
-        }
-    });
-}
+    function insertToWishlist(button) {
+        var wishlistName = button.parentElement.dataset.name; //data van de div
+        var StockItemID = '<?php echo $_GET["id"]; ?>';
+        var operation = "toevoegen_product";
+        
+        //ajax request om de variabele(n) van hierboven te sturen naar lijst_operaties.php
+        $.ajax({
+            url: 'lijst_operaties.php',
+            type: 'POST',
+            data: { wishlistName: wishlistName, StockItemID: StockItemID, operation: operation},
+            success: function(response) {
+                console.log(response);
+                //verander de kleur van de button
+                button.style.cssText = '';
+                button.textContent = '✔';
+                button.classList.add('in-wishlist');
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+    }
+</script>
+<!-- script voor verlanglijst aanmaken in de database -->
+<script>
+    var nameForm = document.getElementById("name-form");
+
+    //wanneer naam verstuurd wordt, handle de input hieronder
+    nameForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        var listName = document.getElementById("list-name");
+        var listNameValue = listName.value;
+        var operation = "maken_lijst";
+
+        //ajax request om de variabele(n) van hierboven te sturen naar lijst_operaties.php
+        $.ajax({
+            url: 'lijst_operaties.php',
+            type: 'POST',
+            data: { newListName: listNameValue, operation: operation},
+            success: function(response) {
+                try {
+                    //maak een javascript object van de json-string
+                    const responseObj = JSON.parse(response);
+                    //kijk of het aanmaken geslaagd was
+                    if (responseObj.success === true) {                                     
+                        closeNameForm();
+                    } else {
+                        //vermeldt dat het aanmaken niet geslaagd is
+                        const h5Element = document.querySelector('#name-alert-header h5');
+                        h5Element.textContent = responseObj.message;
+                    }
+                } catch (error) {
+                    console.error('Error parsing JSON:', error);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+    });             
+
 </script>
 
+<!-- stijl voor de overlay div van de naam formulier -->
+<style>
+    #name-form-overlay {
+        position: fixed;
+        display: none;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0,0,0,0.5);
+        z-index: 2999;
+    }
+    #name-form-alert {
+        position: absolute;
+        width: 30%;
+        height: 30%;
+        margin: auto;
+        left: 35%;
+        top: 15%;
+        background-color: rgb(35, 35, 47, 0.97);
+        color: white;
+        border: 4px solid darkblue;
+        box-shadow: 0 4px 8px 0 rgba(111, 65, 148, 2), 0 6px 20px 0 rgba(111, 65, 148, 1);
+        z-index: 3000;
+    }
+    #name-alert-header {
+        height: 30%;
+        width: 100%;
+        position: absolute;
+        top: 0;
+        text-align: center;
+        padding-top: 5%;
+    }
+    #name-alert-body {
+        height: 70%;
+        width: 100%;
+        position: absolute;
+        top: 30%;
+        overflow: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    #name-alert-body {
+        border-top: 4px solid darkblue;
+        padding: 5px;
+        width: 90%;
+        margin-left: 5%;
+    }
+    #name-alert-body #cancel-button, #name-alert-body #submit-button {
+        width: 30%;
+        border: none;
+        outline: none;
+        color: #fff;
+    }
+    #name-alert-body #submit-button {
+        background-color: Blue;
+        float: left;
+        margin-top: 5%;
+    }
+    #name-alert-body #submit-button:hover {
+        filter: brightness(85%);
+    }
+    #name-alert-body #cancel-button {
+        background-color: gray;
+        margin-top: 5%;
+        float: right;
+    }
+    #name-alert-body #cancel-button:hover {
+        filter: brightness(80%);
+    }
+    #list-name {
+        width: 80%;
+        
+    }
+</style>
+
+<!-- stijl voor de overlay div van verlanglijstjes kiezen -->
 <style>
     .in-wishlist {
         border: none;
@@ -333,6 +483,10 @@ function insertToWishlist(button) {
     #alert-body h5 {
         float: left;
     }
+    #alert-body #open-name-form:hover {
+        cursor: pointer;
+        filter: brightness(90%);
+    }
     #alert-body .wishlist {
         border-top: 4px solid darkblue;
         height: 20%;
@@ -373,7 +527,8 @@ function insertToWishlist(button) {
         background-color: darkblue;
     }
     #alert-footer #cart-button {
-        background-color: lightgray;
+        background-color: gray;
+        color: #fff;
     }
     #alert-footer #cart-button:hover {      
         filter: brightness(80%);

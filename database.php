@@ -521,6 +521,9 @@ function getDeliveryDate($email, $databaseConnection)
     return $R;
 }
 
+#############################################
+#           queries wishlist                #
+#############################################
 function getWishlistNames($userID, $databaseConnection) {
     
     $Query = "
@@ -644,6 +647,29 @@ function insertToWishlist($userID, $lijstNaam, $itemID, $databaseConnection) {
     }
 }
 
+function removeFromWishlist($userID, $lijstNaam, $StockItemID, $databaseConnection) {
+    try {
+            $Query = "
+                DELETE FROM wishlist_content
+                WHERE userID = ?
+                AND StockItemID = ?
+                AND WishlistID IN
+                    (SELECT WishlistID
+                    FROM wishlist
+                    WHERE userID = ?
+                    AND WishlistName = ?);";
+
+            $Statement = mysqli_prepare($databaseConnection, $Query);
+            mysqli_stmt_bind_param($Statement, "iiis", $userID, $StockItemID, $userID, $lijstNaam);
+            mysqli_stmt_execute($Statement);
+
+            return true;
+        } catch (Exception $e) {
+            //returns false als verwijderen niet gelukt is
+            return false;
+        }
+}
+
 function createWishlist($userID, $lijstNaam, $databaseConnection) {
     try {
     $lijstID = getMaxWishlistID($userID, $databaseConnection);
@@ -665,6 +691,24 @@ function createWishlist($userID, $lijstNaam, $databaseConnection) {
     }
     } catch (Exception $e) {
         //returns false als inserten niet gelukt is
+        return false;
+    }
+}
+
+function deleteWishlist($userID, $lijstNaam, $databaseConnection) {
+    try {
+        $Query = "
+            DELETE FROM wishlist
+            WHERE userID = ?
+            AND WishlistName = ?;";
+
+        $Statement = mysqli_prepare($databaseConnection, $Query);
+        mysqli_stmt_bind_param($Statement, "is", $userID, $lijstNaam);
+        mysqli_stmt_execute($Statement);
+
+        return true;
+    } catch (Exception $e) {
+        //returns false als verwijderen niet gelukt is
         return false;
     }
 }
