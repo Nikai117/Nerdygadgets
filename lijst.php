@@ -302,9 +302,8 @@ if($_SESSION['activeUser'] == NULL) {
         width: 90%;
         margin-left: 5%;
     }
-    #alert-body button, #alert-body #submit-button {
+    #alert-body #submit-button, #alert-body #submit-button {
         width: 30%;
-        margin-top: 2%;
         border: none;
         outline: none;
     }
@@ -320,6 +319,7 @@ if($_SESSION['activeUser'] == NULL) {
     #alert-body #cancel-button {
         background-color: gray;
         float: right;
+        margin-top: 5%;
     }
     #alert-body #cancel-button:hover {
         filter: brightness(80%);
