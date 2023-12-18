@@ -89,6 +89,7 @@ $mollie->setApiKey("test_fJJbkmF9gjs3JsrzaNapaAF68dVv9C");
                     ');
         }
 
+        //Hier moet nog een andere manier komen van splitten
         function splitValueBySpace($string)
         {
             return explode(' ', $string);

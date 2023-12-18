@@ -107,6 +107,7 @@ $activeUser = $_SESSION['activeUser'][0];
         <p>Postcode: <?php print ($activeUser['DeliveryPostalCode'])?></p>
     </div>
 </div>
+    <div class="order-container">
     <?php
     if ($orders == array()) {
         print ("");
@@ -114,7 +115,6 @@ $activeUser = $_SESSION['activeUser'][0];
         foreach ($orders as $order) {
             $orderLines = getOrderLineDetails($order['OrderID'], $databaseConnection);
             echo '
-<div class="order-container">
     <div class="order">
         <h2>Order ', $order['OrderID'], '</h2>
         <p class="delivery-date">Verwachte lever datum: ', $order['ExpectedDeliveryDate'], '</p>
