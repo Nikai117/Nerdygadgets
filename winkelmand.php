@@ -102,14 +102,19 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
             print("Verzendkosten: $verzendkostenText<br><br>");
             print("Servicekosten: $serviceKostenText<br><br>");
 
-            if(isset($_SESSION['korting'])) {
-                $productKorting = $_SESSION['korting']['percentage'] / 100;//korting gaat bijv van % naar decimaal; 10% korting => 1 - 0.1
-                $prijsAftrek = number_format(round($productTotaal * $productKorting, 2), 2, '.', '');
+            $kortingText = "";
+            if(isset($_SESSION['korting']) && $_SESSION['korting'] != NULL) {
+                if(isset($_SESSION['korting']['percentage'])) {
+                    $productKorting = $_SESSION['korting']['percentage'] / 100;//korting gaat bijv van % naar decimaal; 10% korting => 1 - 0.1
+                    $prijsAftrek = number_format(round($productTotaal * $productKorting, 2), 2, '.', '');
 
-                $kortingText = "Korting: - €$prijsAftrek";
+                    $kortingText = "Korting: - €$prijsAftrek";
+                } else {
+                    $prijsAftrek = 0;
+                }
+                
             } else {
                 $productKorting = 0;//1 => 100%
-                $kortingText = "";
                 $prijsAftrek = 0;
             }
             print($kortingText."<br>");
@@ -117,11 +122,19 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
                 <br>
             <p class="solid3"></p>
 
+        <?php
+            if(isset($_SESSION['korting']['ongeldig']) && $_SESSION['korting']['ongeldig'] != NULL) {
+                if($_SESSION['korting']['ongeldig']) {
+                    echo '<h5 style="color:darkred;">CODE NIET GELDIG!!!!</h5>';
+                }
+            }
+        ?>
+
             <!--KORTINGSCODE-->
 
-        <form action="" id="kortingscode-invoeren">
+        <form action="verwerk_kortingscode.php" id="kortingscode-invoeren" method="post">
         <br>
-            <input type="text" id="kortingscode" placeholder="Kortingscode" style="width: 68%" value="" required>
+            <input type="text" id="kortingscode" name="kortingscode" placeholder="Kortingscode" style="width: 68%" value="" required>
             <input type="submit" value="Invoeren" style="background-color: Purple; padding: 10px;float: right">
         </form>
 
@@ -194,48 +207,14 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
         }
     </script>
 
-
-
 <?php }
+//kortingscode refreshen
+if(isset($_SESSION['korting']) && $_SESSION['korting'] != NULL) {
+    $_SESSION['korting'] = array();
+}
 ?>
 
-<!-- script voor kortingscode sturen voor database select query -->
-<script>
-    var nameForm = document.getElementById("kortingscode-invoeren");
 
-    nameForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-
-        var kortingsCode = document.getElementById("kortingscode");
-        var kortingsCodeWaarde = kortingsCode.value;
-
-        //ajax request om de variabele(n) van hierboven te sturen naar lijst_operaties.php
-        $.ajax({
-            url: 'verwerk_kortingscode.php',
-            type: 'POST',
-            data: { kortingsCode: kortingsCodeWaarde},
-            success: function(response) {
-                console.log(response);
-                try {
-                    const responseObj = JSON.parse(response);
-
-                    if (responseObj.success === true) {
-                        alert("Code bestaat!");
-                    } else {
-                        //vermeldt dat het aanmaken niet geslaagd is
-                        alert("Code bestaat niet!");
-                    }
-                } catch (error) {
-                    console.error('Error parsing JSON:', error);
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error('Error:', error);
-            }
-        });
-    });
-
-</script>
 
 
 <!-- plaats alles wat niet PHP is voorlopig onderaan-->

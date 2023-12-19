@@ -337,7 +337,7 @@ function discountCodeCheck($code, $databaseConnection) {
     $date = date_default_timezone_get();
 
     $Query = "
-            SELECT * 
+            SELECT code, korting_percentage 
             FROM kortingscodes 
             WHERE code = ? 
             AND actief = 1 
@@ -348,7 +348,7 @@ function discountCodeCheck($code, $databaseConnection) {
     mysqli_stmt_execute($Statement);
 
     $R = mysqli_stmt_get_result($Statement);
-    $R = mysqli_fetch_all($R, MYSQLI_ASSOC)[0];
+    $R = mysqli_fetch_all($R, MYSQLI_ASSOC);
 
     return $R;
 }

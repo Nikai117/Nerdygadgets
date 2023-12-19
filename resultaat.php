@@ -20,24 +20,6 @@ include __DIR__ . "/header.php";
     <?php if(isset($_SESSION['winkelmand'])) {
      foreach ($_SESSION['winkelmand'] as $key => $product) {
 
-        // $StockItemImage = getStockItemImage($product['StockItemID'], $databaseConnection);
-        // $BackupImage = getBackupImage($product['StockItemID'], $databaseConnection);
-
-        // if ($StockItemImage != NULL) {
-        //     $image = '<img src="Public/StockItemIMG/' . $StockItemImage[0]['ImagePath'] . '" class="itemimage"></a>';
-        // } else { 
-        //     $image = '<img src="Public/StockGroupIMG/' . $BackupImage['ImagePath'] . '" class="itemimage"></a>';
-        // }
-
-        // print ('<tr class="product"><td>
-        //     <div id="productCard">
-        //         <div id="image_card">
-        //             <h5>' . $product['StockItemName'] . ' | Artikelnummer: ' . $product['StockItemID'] . '</h5>'. $image . '
-        //         </div>
-        //         <p class="prijs">€' . number_format(round($product['SellPrice'], 2), 2, '.', '') . '</p>
-        //         <p class="aantal">' . $product['aantal'] . '</p>
-        //     ');
-
         print('<div>
                     <h5>' . $product['StockItemName'] . ' | Artikelnummer: ' . $product['StockItemID'] .' | €' . number_format(round($product['SellPrice'], 2), 2, '.', '') . ' x '. $product['aantal'] . '</h5><br>
                 </div>');

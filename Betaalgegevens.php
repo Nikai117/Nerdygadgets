@@ -22,9 +22,17 @@ $mollie->setApiKey("test_fJJbkmF9gjs3JsrzaNapaAF68dVv9C");
                 $verzendkostenText = "gratis";
             }
 
+            $kortingText = "";
+            if(isset($_SESSION['prijsaftrek'])) {
+                if($_SESSION['prijsaftrek'] > 0) {
+                    $kortingText = "Korting: - €".$_SESSION['prijsaftrek']."";
+                }
+            }
+
             print("Productkosten: €" . $_SESSION['producttotaal'] . "<br>");
             print("Verzendkosten: $verzendkostenText<br>");
             print("Servicekosten: €".$_SESSION['servicekosten']."<br>");
+            print($kortingText."<br>");
 
             $productUnits = 0;
             foreach ($_SESSION['winkelmand'] as $product) {
