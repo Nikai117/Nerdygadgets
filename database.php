@@ -1,4 +1,3 @@
-<!-- dit bestand bevat alle code die verbinding maakt met de database -->
 <?php
 
 function connectToDatabase() {
@@ -329,6 +328,27 @@ function getDeliveryDate($email, $databaseConnection) {
 
     $R = mysqli_stmt_get_result($Statement);
     $R = mysqli_fetch_all($R, MYSQLI_ASSOC)[0]["ExpectedDeliveryDate"];
+
+    return $R;
+}
+
+function discountCodeCheck($code, $databaseConnection) {
+    date_default_timezone_set('Europe/Amsterdam');
+    $date = date_default_timezone_get();
+
+    $Query = "
+            SELECT * 
+            FROM kortingscodes 
+            WHERE code = ? 
+            AND actief = 1 
+            AND geldig_tot >= ?";
+
+    $Statement = mysqli_prepare($databaseConnection, $Query);
+    mysqli_stmt_bind_param($Statement, "ss", $code, $date);
+    mysqli_stmt_execute($Statement);
+
+    $R = mysqli_stmt_get_result($Statement);
+    $R = mysqli_fetch_all($R, MYSQLI_ASSOC)[0];
 
     return $R;
 }

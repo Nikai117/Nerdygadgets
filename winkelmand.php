@@ -98,14 +98,46 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
             //zodat afgeronde getallen altijd 2 decimalen hebben (9.6 => 9.60)
             $productTotaal = number_format(round($productTotaal, 2), 2, '.', '');
 
-            print("Productkosten: €" . $productTotaal . "<br>");
-            print("Verzendkosten: $verzendkostenText<br>");
-            print("<p style='color: black'>Servicekosten: $serviceKostenText</p><br>");
+            print("Productkosten: €" . $productTotaal . "<br><br>");
+            print("Verzendkosten: $verzendkostenText<br><br>");
+            print("Servicekosten: $serviceKostenText<br><br>");
 
+            if(isset($_SESSION['korting'])) {
+                $productKorting = $_SESSION['korting']['percentage'] / 100;//korting gaat bijv van % naar decimaal; 10% korting => 1 - 0.1
+                $prijsAftrek = number_format(round($productTotaal * $productKorting, 2), 2, '.', '');
+
+                $kortingText = "Korting: - €$prijsAftrek";
+            } else {
+                $productKorting = 0;//1 => 100%
+                $kortingText = "";
+                $prijsAftrek = 0;
+            }
+            print($kortingText."<br>");
+?>
+                <br>
+            <p class="solid3"></p>
+
+            <!--KORTINGSCODE-->
+
+        <form action="" id="kortingscode-invoeren">
+        <br>
+            <input type="text" id="kortingscode" name="kortingscode" placeholder="Kortingscode" style="width: 68%" value="">
+            <input type="submit" name='Invoeren' value="Invoeren" required style="background-color: Purple; padding: 10px;float: right">
+        </form>
+
+        <br><br><br>
+
+        <p class="solid3"></p>
+
+            <?php
             //Check of er producten limiet wordt overschreden
             if ($productUnits <= 500) {
-                print ("<p style='color: darkolivegreen; font-weight: bold'>Totaal bedrag: €" . number_format(($productTotaal + $verzendkosten + $serviceKosten), 2) . "</p>");
-                $_SESSION['totaalprijs'] = number_format(($productTotaal + $verzendkosten + $serviceKosten), 2);
+                print ("<p style='color: darkolivegreen; font-weight: bold'>Totaal bedrag: €" . number_format(($productTotaal + $verzendkosten + $serviceKosten - $prijsAftrek), 2) . "</p>");
+                $_SESSION['totaalprijs'] = number_format(($productTotaal + $verzendkosten + $serviceKosten - $prijsAftrek), 2);
+                $_SESSION['producttotaal'] = $productTotaal;
+                $_SESSION['verzendkosten'] = $verzendkosten;
+                $_SESSION['servicekosten'] = $serviceKosten;
+                $_SESSION['prijsaftrek'] = $prijsAftrek;
             } else
                 print ("Verzenden niet mogelijk door te hoog aantal producten, bel service desk a.u.b.");
             print ("<br><i>Inclusief BTW</i>");
@@ -166,6 +198,43 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
 
 <?php }
 ?>
+
+<!-- script voor kortingscode sturen voor database select query -->
+<script>
+    var nameForm = document.getElementById("kortingscode-invoeren");
+
+    nameForm.addEventListener("submit", (e) => {
+        var kortingsCode = document.getElementById("kortingscode");
+        var kortingsCodeWaarde = kortingsCode.value;
+
+        //ajax request om de variabele(n) van hierboven te sturen naar lijst_operaties.php
+        $.ajax({
+            url: 'verwerk_kortingscode.php',
+            type: 'POST',
+            data: { kortingsCode: kortingsCodeWaarde},
+            success: function(response) {
+                console.log(response);
+                try {
+                    const responseObj = JSON.parse(response);
+
+                    if (responseObj.success === true) {
+                        alert("Code bestaat!");
+                    } else {
+                        //vermeldt dat het aanmaken niet geslaagd is
+                        alert("Code bestaat niet!");
+                    }
+                } catch (error) {
+                    console.error('Error parsing JSON:', error);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+    });
+
+</script>
+
 
 <!-- plaats alles wat niet PHP is voorlopig onderaan-->
 <style>
@@ -273,16 +342,46 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
         background-color: #d6d6d6;
     }
 
+    /*#prijs {*/
+    /*    float: right;*/
+    /*    border-radius: 10px;*/
+    /*    background-color: whitesmoke;*/
+    /*    color: black;*/
+    /*    width: 18%;*/
+    /*    text-align: left;*/
+    /*    padding-left: 10px;*/
+    /*    margin-right: 5%;*/
+    /*    margin-top: 10px;*/
+    /*}*/
+
     #prijs {
         float: right;
         border-radius: 10px;
-        background-color: whitesmoke;
-        color: black;
-        width: 18%;
+        background-color: #2C2F33;
+        color: white;
+        width: 27%;
         text-align: left;
-        padding-left: 10px;
-        margin-right: 5%;
-        margin-top: 10px;
+        margin-right: 3%;
+        padding: 20px;
+    }
+
+    p.solid3 {
+        border-style: solid;
+        width: 100%;
+        color: purple;
+    }
+
+    input[type="submit"] {
+        display: block;
+        margin: 0 auto;
+        margin-bottom: 20px;
+        width: 30%;
+        background-color: Blue;
+        color: #fff;
+        padding: 10px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
     }
 
     input[type=number]::-webkit-inner-spin-button, 
