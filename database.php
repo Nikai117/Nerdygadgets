@@ -521,9 +521,24 @@ function getDeliveryDate($email, $databaseConnection)
     return $R;
 }
 
-#############################################
-#           queries wishlist                #
-#############################################
+
+function addStocksaleItem($databaseConnection) {
+
+    $Query = "
+    SELECT si.StockItemID, si.StockItemName, si.MarketingComments, sih.QuantityOnHand
+    FROM stockitems si
+    JOIN stockitemholdings sih ON si.StockItemID = sih.StockItemID
+    WHERE sih.QuantityOnHand > 200000";
+
+    $Statement = mysqli_prepare($databaseConnection, $Query);
+    mysqli_stmt_execute($Statement);
+
+    $result = mysqli_stmt_get_result($Statement);
+    $result = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+    return $result;
+}
+
 function getWishlistNames($userID, $databaseConnection) {
     
     $Query = "
