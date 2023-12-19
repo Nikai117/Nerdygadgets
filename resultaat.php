@@ -92,7 +92,7 @@ else {header("location: winkelmand.php");}
         window.location.href = 'index.php';
     }
     function redirectToPayment() {
-        window.location.href = 'Betaalgegevens.php';
+        window.location.href = 'betaalgegevens.php';
     }
 </script>
 
