@@ -121,25 +121,35 @@ if($_SESSION['activeUser'] == NULL) {
 
     <?php
     if($_POST != NULL) {
-        foreach($_POST as $product) {
-            $new = addToCart($product, $databaseConnection);
+        try {
+            foreach($_POST as $product) {
+                $new = addToCart($product, $databaseConnection);
 
-            $voorraad = getQuantity($product, $databaseConnection);
-            $QOH = $voorraad[0]["QOH"];
+                $voorraad = getQuantity($product, $databaseConnection);
+                $QOH = $voorraad[0]["QOH"];
 
-            // $new is 2-dimensionaal, dus gebruik foreach voordat je een product toevoegt
-            foreach($new as $row) {
-                if(!isset($_SESSION['winkelmand'][$row["StockItemID"]])) {// als het item nog niet in de winkelmand zit
-                    $_SESSION['winkelmand'][$row["StockItemID"]] = $row;
-                    $_SESSION['winkelmand'][$row["StockItemID"]]['aantal'] = 1;
-                } else {
-                    if($_SESSION['winkelmand'][$row["StockItemID"]]['aantal'] < $QOH) {
-                        $_SESSION['winkelmand'][$row["StockItemID"]]['aantal']++;       
+                // $new is 2-dimensionaal, dus gebruik foreach voordat je een product toevoegt
+                foreach($new as $row) {
+                    if(!isset($_SESSION['winkelmand'][$row["StockItemID"]])) {// als het item nog niet in de winkelmand zit
+                        $_SESSION['winkelmand'][$row["StockItemID"]] = $row;
+                        $_SESSION['winkelmand'][$row["StockItemID"]]['aantal'] = 1;
                     } else {
-                        print('<p class="bestelling"><b><i>Mislukt! Niet genoeg in voorraad.</i></b></p>');
+                        if($_SESSION['winkelmand'][$row["StockItemID"]]['aantal'] < $QOH) {
+                            $_SESSION['winkelmand'][$row["StockItemID"]]['aantal']++;       
+                        } else {
+                            print('<p class="bestelling"><b><i>Mislukt! Niet genoeg in voorraad.</i></b></p>');
+                        }
                     }
                 }
             }
+
+            echo '<script type="text/javascript">
+                alert("Toevoegen gelukt!");
+                </script>';
+        } catch (Exception $e) {
+            echo '<script type="text/javascript">
+            alert("Toevoegen niet gelukt!");
+            </script>';
         }
     }
 }
@@ -346,13 +356,14 @@ if($_SESSION['activeUser'] == NULL) {
         width: 50%;
         height: 75%;
         margin: auto;
-        top: 22%;
+        top: 23%;
         left: 25%;
         background-color: rgb(35, 35, 47, 0.97);
         color: white;
         border: 4px solid darkblue;
         box-shadow: 0 4px 8px 0 rgba(111, 65, 148, 2), 0 6px 20px 0 rgba(111, 65, 148, 1);
         position: fixed;
+        z-index: 1998;
     }
     #verlanglijst-namen {
         width: 20%;
