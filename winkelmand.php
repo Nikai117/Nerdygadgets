@@ -72,7 +72,7 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
                 $productTotaal += $product['SellPrice'] * $product['aantal'];
                 $productUnits = $productUnits + $product['aantal'];
             }
-
+            
             //verzendkosten berekenen
             if ($productTotaal <= 300) {
                 //gebruik je voor berekeningen
@@ -106,6 +106,9 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
             if ($productUnits <= 500) {
                 print ("<p style='color: darkolivegreen; font-weight: bold'>Totaal bedrag: €" . number_format(($productTotaal + $verzendkosten + $serviceKosten), 2) . "</p>");
                 $_SESSION['totaalprijs'] = number_format(($productTotaal + $verzendkosten + $serviceKosten), 2);
+                $_SESSION['producttotaal'] = $productTotaal;
+                $_SESSION['verzendkosten'] = $verzendkosten;
+                $_SESSION['servicekosten'] = $serviceKosten;
             } else
                 print ("Verzenden niet mogelijk door te hoog aantal producten, bel service desk a.u.b.");
             print ("<br><i>Inclusief BTW</i>");

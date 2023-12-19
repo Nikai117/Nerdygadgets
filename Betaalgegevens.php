@@ -10,53 +10,28 @@ $mollie->setApiKey("test_fJJbkmF9gjs3JsrzaNapaAF68dVv9C");
 <div id="prijs">
     <?php
     //checkt het totaalbedrag
-    if (isset($_SESSION['winkelmand'])) {
+    if (isset($_SESSION['winkelmand']) && isset($_SESSION['producttotaal'], $_SESSION['verzendkosten'], $_SESSION['servicekosten'])) {
         if ($_SESSION['winkelmand'] == NULL) {
             header("Location: winkelmand.php");
         }
-        $productTotaal = 0;
-        $productUnits = 0;
-
-        foreach ($_SESSION['winkelmand'] as $product) {
-            $productTotaal += $product['SellPrice'] * $product['aantal'];
-            $productUnits = $productUnits + $product['aantal'];
-        }
-
-        //verzendkosten berekenen
-        if ($productTotaal <= 300) {
-            //gebruik je voor berekeningen
-            $verzendkosten = number_format(35.50, 2);
-            //gebruik je voor tekst en UI
-            $verzendkostenText = "€" . $verzendkosten;
+        if ($_SESSION['producttotaal'] <= 300) {
+            $verzendkostenText = "€" . $_SESSION['verzendkosten'];
         } else {
-            $verzendkosten = 0;
             $verzendkostenText = "gratis";
         }
 
-        //service kosten berekenen
-        if ($productUnits <= 5) {
-            //gebruik je voor berekeningen
-            $serviceKosten = number_format(22.50, 2);
-            //gebruik je voor tekst en UI
-        } else {
-            $serviceKostenBerekening = 22.50 + (2.50 * $productUnits);
-            $serviceKosten = number_format($serviceKostenBerekening, 2);
-        }
-        $serviceKostenText = "€" . $serviceKosten;
-
-        //zodat afgeronde getallen altijd 2 decimalen hebben (9.6 => 9.60)
-        $productTotaal = number_format(round($productTotaal, 2), 2, '.', '');
-
-        print("Productkosten: €" . $productTotaal . "<br>");
+        print("Productkosten: €" . $_SESSION['producttotaal'] . "<br>");
         print("Verzendkosten: $verzendkostenText<br>");
-        print("Servicekosten: $serviceKostenText<br>");
+        print("Servicekosten: €".$_SESSION['servicekosten']."<br>");
+
+        $productUnits = 0;
+        foreach ($_SESSION['winkelmand'] as $product) {
+            $productUnits = $productUnits + $product['aantal'];
+        }
 
         //Check of er producten limiet wordt overschreden
         if ($productUnits <= 500) {
-            print ("<p style='color: darkolivegreen; font-weight: bold'>Totaal bedrag: €" . number_format(($productTotaal + $verzendkosten + $serviceKosten), 2) . "</p>");
-            $_SESSION['totaalprijs'] = number_format(($productTotaal + $verzendkosten + $serviceKosten), 2);
-            $_SESSION['producttotaal'] = $productTotaal;
-            $_SESSION['verzendkosten'] = $verzendkosten;
+            print ("<p style='color: darkolivegreen; font-weight: bold'>Totaal bedrag: €" . number_format(($_SESSION['producttotaal'] + $_SESSION['verzendkosten'] + $_SESSION['servicekosten']), 2) . "</p>");
         } else
             print ("Verzenden niet mogelijk door te hoog aantal producten");
         print ("<br><i>Inclusief BTW (21%)</i>");
