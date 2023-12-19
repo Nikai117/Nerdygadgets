@@ -16,16 +16,20 @@ if($_SESSION['activeUser'] == NULL) {
 
         $lijstNamen = getWishlistNames($userID, $databaseConnection);
 
-        //kijken of de waarde van list bestaat
-        foreach($lijstNamen as $naam) {
-            if($naam["WishlistName"] == $list) {
-                $listExists = true;
+        if(count($lijstNamen) > 0) {
+            //kijken of de waarde van list bestaat
+            foreach($lijstNamen as $naam) {
+                if($naam["WishlistName"] == $list) {
+                    $listExists = true;
+                }
             }
-        }
-        
-        if(!$listExists) {
-            header("Location: lijst.php?list=Standaard");
-            exit();
+            
+            if(!$listExists) {
+                header("Location: lijst.php?list=Standaard");
+                exit();
+            }
+        } else {
+            header("Location: index.php");
         }
     }
 
