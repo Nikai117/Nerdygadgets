@@ -121,8 +121,8 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
 
         <form action="" id="kortingscode-invoeren">
         <br>
-            <input type="text" id="kortingscode" name="kortingscode" placeholder="Kortingscode" style="width: 68%" value="">
-            <input type="submit" name='Invoeren' value="Invoeren" required style="background-color: Purple; padding: 10px;float: right">
+            <input type="text" id="kortingscode" placeholder="Kortingscode" style="width: 68%" value="" required>
+            <input type="submit" value="Invoeren" style="background-color: Purple; padding: 10px;float: right">
         </form>
 
         <br><br><br>
@@ -204,6 +204,8 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
     var nameForm = document.getElementById("kortingscode-invoeren");
 
     nameForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+
         var kortingsCode = document.getElementById("kortingscode");
         var kortingsCodeWaarde = kortingsCode.value;
 
