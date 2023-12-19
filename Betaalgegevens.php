@@ -11,7 +11,7 @@ $mollie->setApiKey("test_fJJbkmF9gjs3JsrzaNapaAF68dVv9C");
     <?php
     //checkt het totaalbedrag
     if (isset($_SESSION['winkelmand'])) {
-        if($_SESSION['winkelmand'] == NULL) {
+        if ($_SESSION['winkelmand'] == NULL) {
             header("Location: winkelmand.php");
         }
         $productTotaal = 0;
@@ -53,137 +53,195 @@ $mollie->setApiKey("test_fJJbkmF9gjs3JsrzaNapaAF68dVv9C");
 
         //Check of er producten limiet wordt overschreden
         if ($productUnits <= 500) {
-            print ("<p style='color: darkolivegreen; font-weight: bold'>Totaal bedrag: €" . number_format(($productTotaal + $verzendkosten), 2) . "</p>");
+            print ("<p style='color: darkolivegreen; font-weight: bold'>Totaal bedrag: €" . number_format(($productTotaal + $verzendkosten + $serviceKosten), 2) . "</p>");
             $_SESSION['totaalprijs'] = number_format(($productTotaal + $verzendkosten + $serviceKosten), 2);
             $_SESSION['producttotaal'] = $productTotaal;
             $_SESSION['verzendkosten'] = $verzendkosten;
         } else
-            print ("Verzenden niet mogelijk door te hoog aantal producten, bel service desk a.u.b.");
-        print ("<br><i>Inclusief BTW</i>");
+            print ("Verzenden niet mogelijk door te hoog aantal producten");
+        print ("<br><i>Inclusief BTW (21%)</i>");
     } ?>
 </div>
 
 <div id="lijst">
-        <table id="winkelmand">
-            <!-- maak tabelvakje aan per product -->
-            <?php foreach ($_SESSION['winkelmand'] as $key => $product) {
+    <table id="winkelmand">
+        <!-- maak tabelvakje aan per product -->
+        <?php foreach ($_SESSION['winkelmand'] as $key => $product) {
 
-    $StockItemImage = getStockItemImage($product['StockItemID'], $databaseConnection);
-    $BackupImage = getBackupImage($product['StockItemID'], $databaseConnection);
+            $StockItemImage = getStockItemImage($product['StockItemID'], $databaseConnection);
+            $BackupImage = getBackupImage($product['StockItemID'], $databaseConnection);
 
-    if ($StockItemImage != NULL) {
-        $image = '<img src="Public/StockItemIMG/' . $StockItemImage[0]['ImagePath'] . '" class="itemimage" style="width: 20%; height: 30%"></a>';
-    } else {
-        $image = '<img src="Public/StockGroupIMG/' . $BackupImage['ImagePath'] . '" class="itemimage"></a>';
-    }
+            if ($StockItemImage != NULL) {
+                $image = '<img src="Public/StockItemIMG/' . $StockItemImage[0]['ImagePath'] . '" class="itemimage" style="width: 20%; height: 30%"></a>';
+            } else {
+                $image = '<img src="Public/StockGroupIMG/' . $BackupImage['ImagePath'] . '" class="itemimage"></a>';
+            }
 
-    print ('<tr class="product"><td>
+            print ('<tr class="product"><td>
                     <div id="productCard">
                         <div id="image_card">
                         <a href="view.php?id=' . $product['StockItemID'] . '">
-                            <h5>' . $product['StockItemName'] . '</h5>'. $image . '
+                            <h5>' . $product['StockItemName'] . '</h5>' . $image . '
                         </a>
                         </div>
                         <p class="prijs">€' . number_format(round($product['SellPrice'], 2), 2, '.', '') . '</p>
                         <p class="aantal">' . $product['aantal'] . '</p>
                     ');
-    } ?>
-        </table>
-    </div>
+        }
+
+        //Hier moet nog een andere manier komen van splitten
+        function splitValueBySpace($string)
+        {
+            return explode(' ', $string);
+        }
+
+        if (isLoggedIn()) {
+            $user = $_SESSION['activeUser'];
+            $activeUserFullName = splitValueBySpace($user[0]['CustomerName']);
+            $activeUserFirstName = $activeUserFullName[0];
+            $activeUserLastName = $activeUserFullName[1];
+
+            $activeUserFullAdres = splitValueBySpace($user[0]['DeliveryAddressLine1']);
+            $activeUserAdres = $activeUserFullAdres[0];
+            $activeUserAdresAdd = $activeUserFullAdres[1];
+
+        } else {
+            $user = "";
+            $activeUserFirstName = "";
+            $activeUserLastName = "";
+            $activeUserAdres = "";
+            $activeUserAdresAdd = "";
+        }
+
+        //Vult automatisch velden in als je ingelogd bent en als je niet ingelogd bent een lege string
+        function autoFillIn($string)
+        {
+            if (isLoggedIn()) {
+                $userData = $_SESSION['activeUser'];
+                if ($userData[0][$string] == NULL) {
+                    print ("");
+                } else {
+                    print ($userData[0][$string]);
+                }
+            } else {
+                print ("");
+            }
+        }
+
+        ?>
+    </table>
+</div>
 
 <form method="post">
     <div id="VerzendMethode">
         <p><span style="font-weight:bold;">Verzendmethode:</span></p>
-        <input type="radio" id="postnl" name="verzenden" value="postnl" required>
-        <label>PostNL</label>
+        <input type="radio" id="postnl" name="verzenden" value="postnl" required checked>
+        <label for="postnl">PostNL</label>
         <input type="radio" id="dhl" name="verzenden" value="dhl" required>
-        <label>DHL</label>
+        <label for="dhl">DHL</label>
         <input type="radio" id="dpd" name="verzenden" value="dpd" required>
-        <label>DPD</label>
+        <label for="dpd">DPD</label>
         <input type="radio" id="ups" name="verzenden" value="ups" required>
-        <label>UPS</label>
+        <label for="ups">UPS</label>
     </div>
     <br><br>
 
     <p class="solid1"></p>
 
     <div id="KlantGegegevens">
-    <h1>Klantgegevens</h1><br>
+        <h1>Klantgegevens</h1><br>
+        <?php
+        //If you are logged in, you are not required to fill in personal information
+        if (!isLoggedIn()) {
+            echo '
+    <input type = "email" name = "email" id = "mail" placeholder = "E-mailadres" value = "', autoFillIn('Email'), '" required style = "width: 60%; margin-left: 50px; margin-bottom: 20px" ><br >
+    <input type = "text" name = "voornaam" id = "vnaam" placeholder = "Voornaam" value = "', $activeUserFirstName, '" required style = "width: 29.5%; margin-left: 50px; margin-bottom: 20px" >
+    <input type = "text" name = "achternaam" id = "anaam" placeholder = "Achternaam" value = " ', $activeUserLastName, '" required style = "width: 29.5%; margin-left: 10px; margin-bottom: 20px" >
+    <input type = "text" name = "bedrijfsnaam" id = "bnaam" placeholder = "Bedrijfsnaam (Optioneel)" style = "width: 60%; margin-left: 50px; margin-bottom: 20px" ><br >
+    <input type = "text" name = "telnummer"  id = "telnummer" placeholder = "Telefoonnummer" value = "', autoFillIn('PhoneNumber'), '" required style = "width: 60%; margin-left: 50px; margin-bottom: 20px" ><br >
+    </div >
+    ';
+        } else {
+            echo '
+        <input type = "email" name = "email" id = "mail" placeholder = "E-mailadres" value = "', autoFillIn('Email'), '" required style = "width: 60%; margin-left: 50px; margin-bottom: 20px" readonly><br >
+    <input type = "text" name = "voornaam" id = "vnaam" placeholder = "Voornaam" value = "', $activeUserFirstName, '" required style = "width: 29.5%; margin-left: 50px; margin-bottom: 20px"  readonly>
+    <input type = "text" name = "achternaam" id = "anaam" placeholder = "Achternaam" value = " ', $activeUserLastName, '" required style = "width: 29.5%; margin-left: 10px; margin-bottom: 20px"  readonly>
+    <input type = "text" name = "bedrijfsnaam" id = "bnaam" placeholder = "Bedrijfsnaam (Optioneel)" style = "width: 60%; margin-left: 50px; margin-bottom: 20px" readonly><br >
+    <input type = "text" name = "telnummer"  id = "telnummer" placeholder = "Telefoonnummer" value = "', autoFillIn('PhoneNumber'), '" required style = "width: 60%; margin-left: 50px; margin-bottom: 20px" readonly><br >
+    </div >
+     ';
+        }
+        ?>
+        <br>
 
-    <input type="email" name="email" id="mail" placeholder="E-mailadres" required style="width: 60%; margin-left: 50px; margin-bottom: 20px"><br>
-    <input type="text" name="voornaam" id="vnaam" placeholder="Voornaam" required style="width: 29.5%; margin-left: 50px; margin-bottom: 20px">
-    <input type="text" name="achternaam" id="anaam" placeholder="Achternaam" required style="width: 29.5%; margin-left: 10px; margin-bottom: 20px">
-    <input type="text" name="bedrijfsnaam" id="bnaam" placeholder="Bedrijfsnaam (Optioneel)" style="width: 60%; margin-left: 50px; margin-bottom: 20px"><br>
-    <input type="text" name="telnummer"  id="telnummer" placeholder="Telefoonnummer" required style="width: 60%; margin-left: 50px; margin-bottom: 20px"><br>
-    </div>
-    <br>
+        <p class="solid2"></p>
 
-    <p class="solid2"></p>
+        <div id="Besteladres">
+            <h1>Besteladres</h1><br>
 
-    <div id="Besteladres">
-    <h1>Besteladres</h1><br>
+            <input type="text" name="adres" id="adres" placeholder="Adres" value="<?php print ($activeUserAdres); ?>"
+                   required style="width: 21.5%; margin-left: 50px; margin-bottom: 20px">
+            <input type="text" name="toevoeging" id="toevoeging" placeholder="Toevoeging (optioneel)"
+                   value="<?php print ($activeUserAdresAdd); ?>"
+                   style="width: 15%; margin-left: 10px; margin-bottom: 20px">
+            <input type="text" name="postcode" id="pcode" placeholder="Postcode"
+                   value="<?php autoFillIn('DeliveryPostalCode'); ?>" required
+                   style="width: 21.5%; margin-left: 10px; margin-bottom: 20px">
+            <br>
+            <select required style="width: 60%; margin-left: 50px; margin-bottom: 20px">
+                <option>Nederland</option>
+                <option>België</option>
+                <option>Duitsland</option>
+                <option>Frankrijk</option>
+                <option>Luxemburg</option>
+                <option>Oostenrijk</option>
+            </select>
 
-    <input type="text" name="adres" id="adres" placeholder="Adres" required style="width: 21.5%; margin-left: 50px; margin-bottom: 20px">
-    <input type="text" name="toevoeging" id="toevoeging" placeholder="Toevoeging (optioneel)" style="width: 15%; margin-left: 10px; margin-bottom: 20px">
-        <input type="text" name="postcode" id="pcode" placeholder="Postcode" required style="width: 21.5%; margin-left: 10px; margin-bottom: 20px">
-<br>
-        <select required style="width: 60%; margin-left: 50px; margin-bottom: 20px">
-        <option value="">Selecteer een land</option>
-        <option>België</option>
-        <option>Duitsland</option>
-        <option>Frankrijk</option>
-        <option>Luxemburg</option>
-        <option>Nederland</option>
-        <option>Oostenrijk</option>
-      </select>
+            <br><br>
 
-   <br><br>
-
-    <input type="submit" name='knop' value="Verder naar betalen" required style="width: 30%; align-items: center; justify-content: center; margin-left: 30%">
-    </div>
+            <input type="submit" name='knop' value="Verder naar betalen" required
+                   style="width: 30%; align-items: center; justify-content: center; margin-left: 30%">
+        </div>
 </form>
 
 <?php
-if(isset($_POST['knop'])){
+if (isset($_POST['knop'])) {
     print("U wordt nu doorverwezen naar de betaalpagina");
-
-    //$pattern = "/^[a-z]+$/i";
-
     $_SESSION['klant']['naam'] = ucfirst(strtolower($_POST['voornaam'])) . " " . ucfirst(strtolower($_POST['achternaam']));
-    $_SESSION['klant']['adres'] = $_POST['adres'] . $_POST['toevoeging'];
+    $_SESSION['klant']['adres'] = $_POST['adres'] . " " . $_POST['toevoeging'];
     $_SESSION['klant']['postcode'] = $_POST['postcode'];
     $_SESSION['klant']['email'] = $_POST['email'];
     $_SESSION['klant']['telnummer'] = $_POST['telnummer'];
 
-     $totPrijs = $_SESSION['totaalprijs'];
-     $orderNum = "Order ".random_int(1, 400);
-     try {
-         $payment = $mollie->payments->create([
-             "amount" => [
-                 "currency" => "EUR",
-                 "value" => $totPrijs // You must send the correct number of decimals, thus we enforce the use of strings
-             ],
-             "description" => $orderNum,
-             "redirectUrl" => "http://localhost/nerdygadgets/betaalgegevens.php",
-             "metadata" => [
-                 "order_id" => "12345",
-             ],
-         ]);
-         header("Location: " . $payment->getCheckoutUrl());
-         $_SESSION['payment_id'] = $payment->id;
+    $totPrijs = $_SESSION['totaalprijs'];
+    $orderNum = "Order " . random_int(1, 400);
+    try {
+        $payment = $mollie->payments->create([
+            "amount" => [
+                "currency" => "EUR",
+                "value" => $totPrijs // You must send the correct number of decimals, thus we enforce the use of strings
+            ],
+            "description" => $orderNum,
+            "redirectUrl" => "http://localhost/nerdygadgets/betaalgegevens.php",
+            "metadata" => [
+                "order_id" => "12345",
+            ],
+        ]);
+        header("Location: " . $payment->getCheckoutUrl());
+        $_SESSION['payment_id'] = $payment->id;
 
-         ob_end_flush();
-         exit();
-     } catch ( Exception $exception) {
-         print ($exception);
-     }
+        ob_end_flush();
+        exit();
+    } catch (Exception $exception) {
+        print ($exception);
+    }
 }
 
-if(isset($_SESSION['payment_id'])) {
+if (isset($_SESSION['payment_id'])) {
     $paymentId = $_SESSION['payment_id'];
     $payment = $mollie->payments->get($paymentId);
 
-    switch($payment->status) {
+    switch ($payment->status) {
         case "open":
             header("Location: " . $payment->getCheckoutUrl());
             break;
@@ -288,15 +346,39 @@ if(isset($_SESSION['payment_id'])) {
     }
 
     #VerzendMethode {
-        float: right;
-        display: block;
-        background-color: #2C2F33;
-        border-radius: 5px;
-        margin-right: 150px;
-        margin-bottom: 20px;
-        margin-top: 100px;
-        width: 15%;
+        margin-top: 20px;
+        margin-left: 5%;
+    }
+
+    #VerzendMethode p {
+        font-weight: bold;
+    }
+
+    #VerzendMethode input[type="radio"] {
+        display: none;
+    }
+
+    #VerzendMethode label {
+        display: inline-block;
         padding: 10px;
+        margin: 5px;
+        font-size: 14px;
+        cursor: pointer;
+        background-color: #3498db;
+        color: #fff;
+        border-radius: 4px;
+        width: 100px;
+        text-align: center;
+        transition: background-color 0.3s ease;
+    }
+
+    #VerzendMethode input[type="radio"]:checked + label {
+        background-color: #000000;
+    }
+
+    /* Optional: Hover effect */
+    #VerzendMethode label:hover {
+        background-color: #2075c0;
     }
 
     input[type=radio] {
@@ -349,9 +431,9 @@ if(isset($_SESSION['payment_id'])) {
     input[type="text"],
     input[type="email"],
     select {
-    /*    width: 60%;*/
-    /*    padding: 8px;*/
-    /*    margin-bottom: 10px;*/
+        /*    width: 60%;*/
+        /*    padding: 8px;*/
+        /*    margin-bottom: 10px;*/
         border: 1px solid #ccc;
         border-radius: 4px;
     }
