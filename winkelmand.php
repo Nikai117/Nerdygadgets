@@ -5,7 +5,7 @@ session_reset();
 if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
     print('<h1 style="text-align: center">Yarr, de winkelmand is leeg</h1>
             <h2 style="text-align: center"><a class="redirect" href="browse.php"> Op zoek naar producten?</a></h2>');
-} else {
+} else {print_r($_SESSION['winkelmand']);
     if ($_POST != NULL) {//actionTarget kan zijn meegegeven, maar mag niet NULL zijn
 
         //declareert de key van het product waarop de actie zal worden uitgevoerd
