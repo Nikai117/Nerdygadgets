@@ -54,7 +54,10 @@ if (isset($_POST['submitButton'])) {
         generateErrorMessage("Vul een geldig telefoonnummer in");
     } elseif (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
         generateErrorMessage("Vul een geldig email in");
-    } else {
+    } elseif (!preg_match('/^[1-9][0-9]{3}[A-Z]{2}$/', $_POST['postalcode'])) {
+        // Invalid Dutch postal code format, display an error message
+        generateErrorMessage("Vul een geldig postcode in (Zoals 1234AA).");
+    }else {
         if (isNameUnique(ucfirst(strtolower($_POST['name'])) . " " . ucfirst(strtolower($_POST['surname'])), $databaseConnection)) {
             if (getCustomerByEmail($_POST['email'], $databaseConnection) == array()) {
                 $_SESSION['account']['email'] = $_POST['email'];
