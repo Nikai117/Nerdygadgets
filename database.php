@@ -313,6 +313,26 @@ function addCustomer($klantArray, $databaseConnection)
     }
 }
 
+function isNameUnique($name, $databaseConnection) {
+
+    $Query = "
+    SELECT *
+    FROM customers
+    WHERE CustomerName = ?;
+    ";
+
+    $statement = mysqli_prepare($databaseConnection, $Query);
+    mysqli_stmt_bind_param($statement, "s", $name);
+    mysqli_stmt_execute($statement);
+    $result = mysqli_stmt_get_result($statement);
+    $result = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+    if ($result == array()) {
+        return true;
+    } else {
+        return false;
+    }
+}
 function checkLogin($email, $password, $databaseConnection) {
 
     $Query = "
@@ -521,9 +541,6 @@ function getDeliveryDate($email, $databaseConnection)
     return $R;
 }
 
-#############################################
-#           queries wishlist                #
-#############################################
 function getWishlistNames($userID, $databaseConnection) {
     
     $Query = "
