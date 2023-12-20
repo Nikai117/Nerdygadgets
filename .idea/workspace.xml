@@ -7,6 +7,12 @@
     <list default="true" id="28b213c5-e821-4726-9063-391bb5df6ad3" name="Changes" comment="Fixed payment ID error">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Betaalgegevens.php" beforeDir="false" afterPath="$PROJECT_DIR$/Betaalgegevens.php" afterDir="false" />
+<<<<<<< Updated upstream
+=======
+      <change beforePath="$PROJECT_DIR$/Stocksales.php" beforeDir="false" afterPath="$PROJECT_DIR$/Stocksales.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/registratie.php" beforeDir="false" afterPath="$PROJECT_DIR$/registratie.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/winkelmand.php" beforeDir="false" afterPath="$PROJECT_DIR$/winkelmand.php" afterDir="false" />
+>>>>>>> Stashed changes
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,15 +23,20 @@
     <pharConfigPath>$PROJECT_DIR$/mollie-api-php/composer.json</pharConfigPath>
     <execution />
   </component>
+<<<<<<< Updated upstream
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="PhpDebugGeneral" listening_started="true" />
   <component name="PhpWorkspaceProjectConfiguration" interpreter_name="PHP">
+=======
+  <component name="PhpWorkspaceProjectConfiguration">
+>>>>>>> Stashed changes
     <include_path>
       <path value="$PROJECT_DIR$/mollie-api-php/vendor/composer" />
     </include_path>
   </component>
+<<<<<<< Updated upstream
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 3
 }</component>
@@ -44,6 +55,12 @@
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+=======
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "git-widget-placeholder": "Stocksale",
+    "node.js.selected.package.tslint": "(autodetect)"
+>>>>>>> Stashed changes
   }
 }</component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />

@@ -154,9 +154,9 @@ $mollie->setApiKey("test_fJJbkmF9gjs3JsrzaNapaAF68dVv9C");
         <div id="Besteladres">
             <h1>Besteladres</h1><br>
 
-            <input type="text" name="adres" id="adres" placeholder="Adres" value="<?php print ($activeUserAdres); ?>"
+            <input type="text" name="adres" id="adres" placeholder="Straatnaam" value="<?php print ($activeUserAdres); ?>"
                    required style="width: 21.5%; margin-left: 50px; margin-bottom: 20px">
-            <input type="text" name="toevoeging" id="toevoeging" placeholder="Toevoeging (optioneel)"
+            <input type="text" name="toevoeging" id="toevoeging" placeholder="Huisnummer"
                    value="<?php print ($activeUserAdresAdd); ?>"
                    style="width: 15%; margin-left: 10px; margin-bottom: 20px">
             <input type="text" name="postcode" id="pcode" placeholder="Postcode"
