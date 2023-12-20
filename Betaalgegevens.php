@@ -7,9 +7,10 @@ $mollie = new \Mollie\Api\MollieApiClient();
 $mollie->setApiKey("test_fJJbkmF9gjs3JsrzaNapaAF68dVv9C");
 ?>
 
-<br><h2>Winkelwagen</h2>
+<br><h2>Winkelmand</h2>
 
     <div id="prijs">
+        <h3>Overzicht</h3><br>
         <?php
         //checkt het totaalbedrag
         if (isset($_SESSION['winkelmand']) && isset($_SESSION['producttotaal'], $_SESSION['verzendkosten'], $_SESSION['servicekosten'])) {
@@ -29,16 +30,19 @@ $mollie->setApiKey("test_fJJbkmF9gjs3JsrzaNapaAF68dVv9C");
                 }
             }
 
-            print("Productkosten: €" . $_SESSION['producttotaal'] . "<br>");
-            print("Verzendkosten: $verzendkostenText<br>");
-            print("Servicekosten: €".$_SESSION['servicekosten']."<br>");
+            print("Productkosten: €" . $_SESSION['producttotaal'] . "<br><br>");
+            print("Verzendkosten: $verzendkostenText<br><br>");
+            print("Servicekosten: €".$_SESSION['servicekosten']."<br><br>");
             print($kortingText."<br>");
 
             $productUnits = 0;
             foreach ($_SESSION['winkelmand'] as $product) {
                 $productUnits = $productUnits + $product['aantal'];
             }
+?>
+            <p class="solid3"></p>
 
+            <?php
             //Check of er producten limiet wordt overschreden
             if ($productUnits <= 500) {
                 print ("<p style='color: darkolivegreen; font-weight: bold'>Totaal bedrag: €" . number_format(($_SESSION['producttotaal'] + $_SESSION['verzendkosten'] + $_SESSION['servicekosten'] - $_SESSION['prijsaftrek']), 2) . "</p>");
@@ -57,7 +61,7 @@ $mollie->setApiKey("test_fJJbkmF9gjs3JsrzaNapaAF68dVv9C");
             $BackupImage = getBackupImage($product['StockItemID'], $databaseConnection);
 
             if ($StockItemImage != NULL) {
-                $image = '<img src="Public/StockItemIMG/' . $StockItemImage[0]['ImagePath'] . '" class="itemimage" style="width: 20%; height: 30%"></a>';
+                $image = '<img src="Public/StockItemIMG/' . $StockItemImage[0]['ImagePath'] . '" class="itemimage"></a>';
             } else {
                 $image = '<img src="Public/StockGroupIMG/' . $BackupImage['ImagePath'] . '" class="itemimage"></a>';
             }

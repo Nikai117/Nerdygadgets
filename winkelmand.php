@@ -61,7 +61,10 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
     ?>
     </div>
 
+    <br><h2>Winkelmand</h2>
+
     <div id="prijs">
+        <h3>Overzicht</h3><br>
         <?php
         //checkt het totaalbedrag
         if (isset($_SESSION['winkelmand'])) {
@@ -135,10 +138,10 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
         <form action="verwerk_kortingscode.php" id="kortingscode-invoeren" method="post">
         <br>
             <input type="text" id="kortingscode" name="kortingscode" placeholder="Kortingscode" style="width: 68%" value="" required>
-            <input type="submit" value="Invoeren" style="background-color: Purple; padding: 10px;float: right">
+            <input type="submit" value="Invoeren" style="background-color: Purple; padding: 10px; float: right">
         </form>
 
-        <br><br><br>
+        <br><br>
 
         <p class="solid3"></p>
 
@@ -153,11 +156,11 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
                 $_SESSION['prijsaftrek'] = $prijsAftrek;
             } else
                 print ("Verzenden niet mogelijk door te hoog aantal producten, bel service desk a.u.b.");
-            print ("<br><i>Inclusief BTW</i>");
+            print ("<i>Inclusief BTW</i>");
         } ?>
 
-        <br>
-            <button type="button" onclick="redirectToPayment()">Betalen</button>
+        <br><br>
+            <button type="button" style="background-color: purple; display: block; margin: 0 auto; color: #fff; padding: 10px; border: none; border-radius: 4px; cursor: pointer; margin-bottom: 5px; width: 95%" onclick="redirectToPayment()">Betalen</button>
     </div>
 
     <div id="lijst">
@@ -363,6 +366,13 @@ if(isset($_SESSION['korting']) && $_SESSION['korting'] != NULL) {
         border: none;
         border-radius: 4px;
         cursor: pointer;
+    }
+
+    h2 {
+        /*color: #333;*/
+        font-size: 50px;
+        margin-left: 60px;
+        margin-bottom: 30px;
     }
 
     input[type=number]::-webkit-inner-spin-button, 
