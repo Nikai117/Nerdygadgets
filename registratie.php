@@ -32,14 +32,14 @@ include __DIR__ . "/header.php";
     <input type="tel" id="phone" name="phone" required>
 
     <div id="gebruikersAdres">
-    <label for="address">Adres:</label>
-    <input type="text" id="address" name="address" required>
+        <label for="address">Adres:</label>
+        <input type="text" id="address" name="address" required>
 
-    <label for="toevoeging">Huisnummer:</label>
-    <input type="number" id="toevoeging" name="toevoeging" required>
+        <label for="toevoeging">Huisnummer:</label>
+        <input type="number" id="toevoeging" name="toevoeging" required>
 
-    <label for="postalcode">Postcode:</label>
-    <input type="text" id="postalcode" name="postalcode" required>
+        <label for="postalcode">Postcode:</label>
+        <input type="text" id="postalcode" name="postalcode" required>
     </div>
 
     <input type="submit" name="submitButton" id="submitButton">
@@ -47,22 +47,34 @@ include __DIR__ . "/header.php";
 
 </body>
 <?php
-    if (isset($_POST['submitButton'])) {
-        if (getCustomerByEmail($_POST['email'], $databaseConnection) == array()) {
-        $_SESSION['account']['email'] = $_POST['email'];
-        $_SESSION['account']['password'] = password_hash($_POST['password'], PASSWORD_BCRYPT);
-        $_SESSION['account']['name'] = ucfirst(strtolower($_POST['name'])) . " " . ucfirst(strtolower($_POST['surname']));
-        $_SESSION['account']['company'] = $_POST['company'];
-        $_SESSION['account']['phone'] = $_POST['phone'];
-        $_SESSION['account']['address'] = $_POST['address'] . " " . $_POST['toevoeging'];
-        $_SESSION['account']['toevoeging'] = $_POST['toevoeging'];
-        $_SESSION['account']['postalcode'] = $_POST['postalcode'];
-
-        registerCustomer($_SESSION['account'], $databaseConnection);
-        header("Location: login.php");
+if (isset($_POST['submitButton'])) {
+    if (!ctype_alpha(str_replace(' ', '', $_POST['address']))) {
+        generateErrorMessage("Vul een geldig adres in");
+    } elseif (!ctype_digit($_POST['phone'])) {
+        generateErrorMessage("Vul een geldig telefoonnummer in");
+    } elseif (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+        generateErrorMessage("Vul een geldig email in");
     } else {
-            generateErrorMessage("Email is al in gebruik");
+        if (isNameUnique(ucfirst(strtolower($_POST['name'])) . " " . ucfirst(strtolower($_POST['surname'])), $databaseConnection)) {
+            if (getCustomerByEmail($_POST['email'], $databaseConnection) == array()) {
+                $_SESSION['account']['email'] = $_POST['email'];
+                $_SESSION['account']['password'] = password_hash($_POST['password'], PASSWORD_BCRYPT);
+                $_SESSION['account']['name'] = ucfirst(strtolower($_POST['name'])) . " " . ucfirst(strtolower($_POST['surname']));
+                $_SESSION['account']['company'] = $_POST['company'];
+                $_SESSION['account']['phone'] = $_POST['phone'];
+                $_SESSION['account']['address'] = $_POST['address'] . " " . $_POST['toevoeging'];
+                $_SESSION['account']['toevoeging'] = $_POST['toevoeging'];
+                $_SESSION['account']['postalcode'] = $_POST['postalcode'];
+
+                registerCustomer($_SESSION['account'], $databaseConnection);
+                header("Location: login.php");
+            } else {
+                generateErrorMessage("Email is al in gebruik");
+            }
+        } else {
+            generateErrorMessage("Account met deze naam bestaat al");
         }
+    }
 }
 ob_end_flush()
 ?>
