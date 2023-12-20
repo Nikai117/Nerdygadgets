@@ -61,7 +61,10 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
     ?>
     </div>
 
+    <br><h2>Winkelmand</h2>
+
     <div id="prijs">
+        <h3>Overzicht</h3><br>
         <?php
         //checkt het totaalbedrag
         if (isset($_SESSION['winkelmand'])) {
@@ -98,24 +101,66 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
             //zodat afgeronde getallen altijd 2 decimalen hebben (9.6 => 9.60)
             $productTotaal = number_format(round($productTotaal, 2), 2, '.', '');
 
-            print("Productkosten: €" . $productTotaal . "<br>");
-            print("Verzendkosten: $verzendkostenText<br>");
-            print("<p style='color: black'>Servicekosten: $serviceKostenText</p><br>");
+            print("Productkosten: €" . $productTotaal . "<br><br>");
+            print("Verzendkosten: $verzendkostenText<br><br>");
+            print("Servicekosten: $serviceKostenText<br><br>");
 
+            $kortingText = "";
+            if(isset($_SESSION['korting']) && $_SESSION['korting'] != NULL) {
+                if(isset($_SESSION['korting']['percentage'])) {
+                    $productKorting = $_SESSION['korting']['percentage'] / 100;//korting gaat bijv van % naar decimaal; 10% korting => 1 - 0.1
+                    $prijsAftrek = number_format(round($productTotaal * $productKorting, 2), 2, '.', '');
+
+                    $kortingText = "Korting: - €$prijsAftrek";
+                } else {
+                    $prijsAftrek = 0;
+                }
+                
+            } else {
+                $productKorting = 0;//1 => 100%
+                $prijsAftrek = 0;
+            }
+            print($kortingText."<br>");
+?>
+                <br>
+            <p class="solid3"></p>
+
+        <?php
+            if(isset($_SESSION['korting']['ongeldig']) && $_SESSION['korting']['ongeldig'] != NULL) {
+                if($_SESSION['korting']['ongeldig']) {
+                    echo '<h5 style="color:darkred;">CODE NIET GELDIG!!!!</h5>';
+                }
+            }
+        ?>
+
+            <!--KORTINGSCODE-->
+
+        <form action="verwerk_kortingscode.php" id="kortingscode-invoeren" method="post">
+        <br>
+            <input type="text" id="kortingscode" name="kortingscode" placeholder="Kortingscode" style="width: 68%" value="" required>
+            <input type="submit" value="Invoeren" style="background-color: Purple; padding: 10px; float: right">
+        </form>
+
+        <br><br>
+
+        <p class="solid3"></p>
+
+            <?php
             //Check of er producten limiet wordt overschreden
             if ($productUnits <= 500) {
-                print ("<p style='color: darkolivegreen; font-weight: bold'>Totaal bedrag: €" . number_format(($productTotaal + $verzendkosten + $serviceKosten), 2) . "</p>");
-                $_SESSION['totaalprijs'] = number_format(($productTotaal + $verzendkosten + $serviceKosten), 2);
+                print ("<p style='color: darkolivegreen; font-weight: bold'>Totaal bedrag: €" . number_format(($productTotaal + $verzendkosten + $serviceKosten - $prijsAftrek), 2) . "</p>");
+                $_SESSION['totaalprijs'] = number_format(($productTotaal + $verzendkosten + $serviceKosten - $prijsAftrek), 2);
                 $_SESSION['producttotaal'] = $productTotaal;
                 $_SESSION['verzendkosten'] = $verzendkosten;
                 $_SESSION['servicekosten'] = $serviceKosten;
+                $_SESSION['prijsaftrek'] = $prijsAftrek;
             } else
                 print ("Verzenden niet mogelijk door te hoog aantal producten, bel service desk a.u.b.");
-            print ("<br><i>Inclusief BTW</i>");
+            print ("<i>Inclusief BTW</i>");
         } ?>
 
-        <br>
-            <button type="button" onclick="redirectToPayment()">Betalen</button>
+        <br><br>
+            <button type="button" style="background-color: purple; display: block; margin: 0 auto; color: #fff; padding: 10px; border: none; border-radius: 4px; cursor: pointer; margin-bottom: 5px; width: 95%" onclick="redirectToPayment()">Betalen</button>
     </div>
 
     <div id="lijst">
@@ -165,10 +210,15 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
         }
     </script>
 
-
-
 <?php }
+//kortingscode refreshen
+if(isset($_SESSION['korting']) && $_SESSION['korting'] != NULL) {
+    $_SESSION['korting'] = array();
+}
 ?>
+
+
+
 
 <!-- plaats alles wat niet PHP is voorlopig onderaan-->
 <style>
@@ -276,16 +326,53 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
         background-color: #d6d6d6;
     }
 
+    /*#prijs {*/
+    /*    float: right;*/
+    /*    border-radius: 10px;*/
+    /*    background-color: whitesmoke;*/
+    /*    color: black;*/
+    /*    width: 18%;*/
+    /*    text-align: left;*/
+    /*    padding-left: 10px;*/
+    /*    margin-right: 5%;*/
+    /*    margin-top: 10px;*/
+    /*}*/
+
     #prijs {
         float: right;
         border-radius: 10px;
-        background-color: whitesmoke;
-        color: black;
-        width: 18%;
+        background-color: #2C2F33;
+        color: white;
+        width: 27%;
         text-align: left;
-        padding-left: 10px;
-        margin-right: 5%;
-        margin-top: 10px;
+        margin-right: 3%;
+        padding: 20px;
+    }
+
+    p.solid3 {
+        border-style: solid;
+        width: 100%;
+        color: purple;
+    }
+
+    input[type="submit"] {
+        display: block;
+        margin: 0 auto;
+        margin-bottom: 20px;
+        width: 30%;
+        background-color: Blue;
+        color: #fff;
+        padding: 10px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    h2 {
+        /*color: #333;*/
+        font-size: 50px;
+        margin-left: 60px;
+        margin-bottom: 30px;
     }
 
     input[type=number]::-webkit-inner-spin-button, 

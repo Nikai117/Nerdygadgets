@@ -84,6 +84,16 @@ $databaseConnection = connectToDatabase();
                 <li>
                     <a href="categories.php" class="HrefDecoration">Alle categorieën</a>
                 </li>
+
+
+
+                <!-- Add a button for Stocksales -->
+                <li>
+                    <a href="Stocksales.php" class="HrefDecoration">Voorraad opruiming</a>
+                </li>
+
+
+
             </ul>
         </div>
 <!-- code voor US3: zoeken -->
@@ -125,7 +135,14 @@ $databaseConnection = connectToDatabase();
             <li>
                 <a href="browse.php" class="HrefDecoration"><i class="fas fa-search search"></i> Zoeken</a>
             </li>
+
+
+
+
+
         </ul>
+
+
 
 <!-- einde code voor US3 zoeken -->
     </div>

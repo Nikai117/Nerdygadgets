@@ -25,7 +25,7 @@ include __DIR__ . "/header.php";
     <label for="surname">Achternaam:</label>
     <input type="text" id="surname" name="surname" required>
 
-    <label for="company">Bedrijf:</label>
+    <label for="company">*Bedrijf:</label>
     <input type="text" id="company" name="company">
 
     <label for="phone">Telefoonnummer:</label>
