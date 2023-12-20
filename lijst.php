@@ -122,6 +122,10 @@ if($_SESSION['activeUser'] == NULL) {
     <?php
     if($_POST != NULL) {
         try {
+            //als er 1 of meer producten met 0 in voorraad zijn, wordt $leeg true
+            $leeg = false;
+            $toegevoegd = false;
+
             foreach($_POST as $product) {
                 $new = addToCart($product, $databaseConnection);
 
@@ -131,21 +135,37 @@ if($_SESSION['activeUser'] == NULL) {
                 // $new is 2-dimensionaal, dus gebruik foreach voordat je een product toevoegt
                 foreach($new as $row) {
                     if(!isset($_SESSION['winkelmand'][$row["StockItemID"]])) {// als het item nog niet in de winkelmand zit
-                        $_SESSION['winkelmand'][$row["StockItemID"]] = $row;
-                        $_SESSION['winkelmand'][$row["StockItemID"]]['aantal'] = 1;
+                        if($QOH  >  0) {
+                            $_SESSION['winkelmand'][$row["StockItemID"]] = $row;
+                            $_SESSION['winkelmand'][$row["StockItemID"]]['aantal'] = 1;
+                            $toegevoegd = true;
+                        } else {
+                            $leeg = true;
+                        }
                     } else {
                         if($_SESSION['winkelmand'][$row["StockItemID"]]['aantal'] < $QOH) {
-                            $_SESSION['winkelmand'][$row["StockItemID"]]['aantal']++;       
+                            $_SESSION['winkelmand'][$row["StockItemID"]]['aantal']++;  
+                            $toegevoegd = true;     
                         } else {
-                            print('<p class="bestelling"><b><i>Mislukt! Niet genoeg in voorraad.</i></b></p>');
+                            $leeg = true;
                         }
                     }
                 }
             }
 
-            echo '<script type="text/javascript">
-                alert("Toevoegen gelukt!");
+            if($toegevoegd && $leeg) {//paar wel, paar niet
+                echo '<script type="text/javascript">
+                    alert("Toevoegen deels gelukt!");
+                    </script>';
+            } else if($toegevoegd && !$leeg) {//allemaal wel
+                echo '<script type="text/javascript">
+                    alert("Toevoegen gelukt!");
+                    </script>';
+            } else if(!$toegevoegd && $leeg) {//allemaal niet
+                echo '<script type="text/javascript">
+                alert("Toevoegen niet gelukt!");
                 </script>';
+            }
         } catch (Exception $e) {
             echo '<script type="text/javascript">
             alert("Toevoegen niet gelukt!");
