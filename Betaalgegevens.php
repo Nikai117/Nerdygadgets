@@ -221,19 +221,19 @@ if ($_SESSION['payment_id'] != NULL) {
             header("Location: " . $payment->getCheckoutUrl());
             break;
         case "expired":
-            unset($_SESSION['payment_id']);
+            $_SESSION['payment_id'] = NULL;
             header("location: resultaat.php?order=expired");
             break;
         case "failed":
-            unset($_SESSION['payment_id']);
+            $_SESSION['payment_id'] = NULL;
             header("location: resultaat.php?order=failed");
             break;
         case "canceled":
-            unset($_SESSION['payment_id']);
+            $_SESSION['payment_id'] = NULL;
             header("location: resultaat.php?order=canceled");
             break;
         case "paid":
-            unset($_SESSION['payment_id']);
+            $_SESSION['payment_id'] = NULL;
 
             $email = addCustomer($_SESSION['klant'], $databaseConnection);
             addOrder($_SESSION['klant']['email'], $databaseConnection);
