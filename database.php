@@ -727,3 +727,24 @@ function deleteWishlist($userID, $lijstNaam, $databaseConnection) {
         return false;
     }
 }
+
+function discountCodeCheck($code, $databaseConnection) {
+    date_default_timezone_set('Europe/Amsterdam');
+    $date = date("Y-m-d H:i:s");
+
+    $Query = "
+            SELECT code, korting_percentage 
+            FROM kortingscodes 
+            WHERE BINARY code = ? 
+            AND actief = 1 
+            AND geldig_tot >= ?";
+
+    $Statement = mysqli_prepare($databaseConnection, $Query);
+    mysqli_stmt_bind_param($Statement, "ss", $code, $date);
+    mysqli_stmt_execute($Statement);
+
+    $R = mysqli_stmt_get_result($Statement);
+    $R = mysqli_fetch_all($R, MYSQLI_ASSOC);
+
+    return $R;
+}

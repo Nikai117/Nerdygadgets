@@ -18,6 +18,9 @@ if (!isset($_SESSION['activeUser'])) {
 if(!isset($_SESSION['verlanglijst'])) {
     $_SESSION['verlanglijst'] = array();
 }
+if (!isset($_SESSION['payment_id'])) {
+    $_SESSION['payment_id'] = NULL;
+}
 
 function removeRow($arr, $index)
 {

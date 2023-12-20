@@ -7,7 +7,7 @@ $stocksaleitem = addStocksaleItem($databaseConnection);
 
 <?php
 if ($stocksaleitem != NULL) {
-    echo '<h2 style="margin-left: 50px;">Afgeprijsde producten:</h2>';
+    echo '<h2 style="margin-left: 50px; color: green;">Afgeprijsde producten: Alles 10% korting!!!!!! </h2>';
     echo '<ul style="list-style: none;">'; // Add style to remove list-style
 
     foreach ($stocksaleitem as $row) {
