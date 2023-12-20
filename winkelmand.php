@@ -145,8 +145,8 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
             <?php
             //Check of er producten limiet wordt overschreden
             if ($productUnits <= 500) {
-                print ("<p style='color: darkolivegreen; font-weight: bold'>Totaal bedrag: €" . number_format(($productTotaal + $verzendkosten + $serviceKosten), 2) . "</p>");
-                $_SESSION['totaalprijs'] = number_format(($productTotaal + $verzendkosten + $serviceKosten), 2);
+                print ("<p style='color: darkolivegreen; font-weight: bold'>Totaal bedrag: €" . number_format(($productTotaal + $verzendkosten + $serviceKosten - $prijsAftrek), 2) . "</p>");
+                $_SESSION['totaalprijs'] = number_format(($productTotaal + $verzendkosten + $serviceKosten - $prijsAftrek), 2);
                 $_SESSION['producttotaal'] = $productTotaal;
                 $_SESSION['verzendkosten'] = $verzendkosten;
                 $_SESSION['servicekosten'] = $serviceKosten;
