@@ -1,0 +1,20 @@
+Index: test.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?php\r\ninclude __DIR__ . \"/header.php\";\r\nprint_r($_SESSION['activeUser']);\r\nif($_SESSION['activeUser'] == NULL) {\r\n    echo 'hoi';\r\n}
+===================================================================
+diff --git a/test.php b/test.php
+--- a/test.php	
++++ b/test.php	
+@@ -1,6 +1,7 @@
+ <?php
+ include __DIR__ . "/header.php";
+-print_r($_SESSION['activeUser']);
+-if($_SESSION['activeUser'] == NULL) {
+-    echo 'hoi';
++if (isNameUnique("Nikai Delfgou", $databaseConnection)) {
++    print ("true");
++} else {
++    print ("false");
+ }
+\ No newline at end of file
