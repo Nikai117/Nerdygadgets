@@ -715,7 +715,7 @@ function deleteWishlist($userID, $lijstNaam, $databaseConnection) {
 
 function discountCodeCheck($code, $databaseConnection) {
     date_default_timezone_set('Europe/Amsterdam');
-    $date = date_default_timezone_get();
+    $date = date("Y-m-d H:i:s");
 
     $Query = "
             SELECT code, korting_percentage 
