@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="28b213c5-e821-4726-9063-391bb5df6ad3" name="Changes" comment="Fixed name error and made forms monkey proof">
+    <list default="true" id="28b213c5-e821-4726-9063-391bb5df6ad3" name="Changes" comment="Made postalcode monkey proof">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/registratie.php" beforeDir="false" afterPath="$PROJECT_DIR$/registratie.php" afterDir="false" />
     </list>
@@ -58,7 +58,7 @@
       <updated>1702972204650</updated>
       <workItem from="1702972207023" duration="3930000" />
       <workItem from="1703075825513" duration="2491000" />
-      <workItem from="1703104682939" duration="1816000" />
+      <workItem from="1703104682939" duration="2159000" />
     </task>
     <task id="LOCAL-00001" summary="Fixed payment ID error">
       <option name="closed" value="true" />
@@ -92,7 +92,15 @@
       <option name="project" value="LOCAL" />
       <updated>1703106232296</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Made postalcode monkey proof">
+      <option name="closed" value="true" />
+      <created>1703106618595</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1703106618596</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -102,6 +110,7 @@
     <MESSAGE value="Styling of account page" />
     <MESSAGE value="Fixed payment ID error" />
     <MESSAGE value="Fixed name error and made forms monkey proof" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed name error and made forms monkey proof" />
+    <MESSAGE value="Made postalcode monkey proof" />
+    <option name="LAST_COMMIT_MESSAGE" value="Made postalcode monkey proof" />
   </component>
 </project>
