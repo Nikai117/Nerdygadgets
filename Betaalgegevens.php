@@ -212,7 +212,7 @@ if (isset($_POST['knop'])) {
     }
 }
 
-if (isset($_SESSION['payment_id'])) {
+if ($_SESSION['payment_id'] != NULL) {
     $paymentId = $_SESSION['payment_id'];
     $payment = $mollie->payments->get($paymentId);
 

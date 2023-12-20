@@ -4,15 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="28b213c5-e821-4726-9063-391bb5df6ad3" name="Changes" comment="Styling of account page">
-      <change beforePath="$PROJECT_DIR$/.idea/Nerdygadgets.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Nerdygadgets.iml" afterDir="false" />
+    <list default="true" id="28b213c5-e821-4726-9063-391bb5df6ad3" name="Changes" comment="Fixed payment ID error">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Betaalgegevens.php" beforeDir="false" afterPath="$PROJECT_DIR$/Betaalgegevens.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database.php" beforeDir="false" afterPath="$PROJECT_DIR$/database.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/header.php" beforeDir="false" afterPath="$PROJECT_DIR$/header.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/registratie.php" beforeDir="false" afterPath="$PROJECT_DIR$/registratie.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test.php" beforeDir="false" afterPath="$PROJECT_DIR$/test.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/winkelmand.php" beforeDir="false" afterPath="$PROJECT_DIR$/winkelmand.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,8 +56,17 @@
       <option name="presentableId" value="Default" />
       <updated>1702972204650</updated>
       <workItem from="1702972207023" duration="3930000" />
-      <workItem from="1703075825513" duration="1520000" />
+      <workItem from="1703075825513" duration="1798000" />
     </task>
+    <task id="LOCAL-00001" summary="Fixed payment ID error">
+      <option name="closed" value="true" />
+      <created>1703077573932</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1703077573932</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -70,6 +74,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Styling of account page" />
-    <option name="LAST_COMMIT_MESSAGE" value="Styling of account page" />
+    <MESSAGE value="Fixed payment ID error" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed payment ID error" />
   </component>
 </project>
