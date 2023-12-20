@@ -720,7 +720,7 @@ function discountCodeCheck($code, $databaseConnection) {
     $Query = "
             SELECT code, korting_percentage 
             FROM kortingscodes 
-            WHERE code = ? 
+            WHERE BINARY code = ? 
             AND actief = 1 
             AND geldig_tot >= ?";
 
