@@ -7,36 +7,50 @@ $mollie = new \Mollie\Api\MollieApiClient();
 $mollie->setApiKey("test_fJJbkmF9gjs3JsrzaNapaAF68dVv9C");
 ?>
 
-<div id="prijs">
-    <?php
-    //checkt het totaalbedrag
-    if (isset($_SESSION['winkelmand']) && isset($_SESSION['producttotaal'], $_SESSION['verzendkosten'], $_SESSION['servicekosten'])) {
-        if ($_SESSION['winkelmand'] == NULL) {
-            header("Location: winkelmand.php");
-        }
-        if ($_SESSION['producttotaal'] <= 300) {
-            $verzendkostenText = "€" . $_SESSION['verzendkosten'];
-        } else {
-            $verzendkostenText = "gratis";
-        }
+<br><h2>Winkelmand</h2>
 
-        print("Productkosten: €" . $_SESSION['producttotaal'] . "<br>");
-        print("Verzendkosten: $verzendkostenText<br>");
-        print("Servicekosten: €".$_SESSION['servicekosten']."<br>");
+    <div id="prijs">
+        <h3>Overzicht</h3><br>
+        <?php
+        //checkt het totaalbedrag
+        if (isset($_SESSION['winkelmand']) && isset($_SESSION['producttotaal'], $_SESSION['verzendkosten'], $_SESSION['servicekosten'])) {
+            if ($_SESSION['winkelmand'] == NULL) {
+                header("Location: winkelmand.php");
+            }
+            if ($_SESSION['producttotaal'] <= 300) {
+                $verzendkostenText = "€" . $_SESSION['verzendkosten'];
+            } else {
+                $verzendkostenText = "gratis";
+            }
 
-        $productUnits = 0;
-        foreach ($_SESSION['winkelmand'] as $product) {
-            $productUnits = $productUnits + $product['aantal'];
-        }
+            $kortingText = "";
+            if(isset($_SESSION['prijsaftrek'])) {
+                if($_SESSION['prijsaftrek'] > 0) {
+                    $kortingText = "Korting: - €".$_SESSION['prijsaftrek']."";
+                }
+            }
 
-        //Check of er producten limiet wordt overschreden
-        if ($productUnits <= 500) {
-            print ("<p style='color: darkolivegreen; font-weight: bold'>Totaal bedrag: €" . number_format(($_SESSION['producttotaal'] + $_SESSION['verzendkosten'] + $_SESSION['servicekosten']), 2) . "</p>");
-        } else
-            print ("Verzenden niet mogelijk door te hoog aantal producten");
-        print ("<br><i>Inclusief BTW (21%)</i>");
-    } ?>
-</div>
+            print("Productkosten: €" . $_SESSION['producttotaal'] . "<br><br>");
+            print("Verzendkosten: $verzendkostenText<br><br>");
+            print("Servicekosten: €".$_SESSION['servicekosten']."<br><br>");
+            print($kortingText."<br>");
+
+            $productUnits = 0;
+            foreach ($_SESSION['winkelmand'] as $product) {
+                $productUnits = $productUnits + $product['aantal'];
+            }
+?>
+            <p class="solid3"></p>
+
+            <?php
+            //Check of er producten limiet wordt overschreden
+            if ($productUnits <= 500) {
+                print ("<p style='color: darkolivegreen; font-weight: bold'>Totaal bedrag: €" . number_format(($_SESSION['producttotaal'] + $_SESSION['verzendkosten'] + $_SESSION['servicekosten'] - $_SESSION['prijsaftrek']), 2) . "</p>");
+            } else
+                print ("Verzenden niet mogelijk door te hoog aantal producten");
+            print ("<br><i>Inclusief BTW (21%)</i>");
+        } ?>
+    </div>
 
 <div id="lijst">
     <table id="winkelmand">
@@ -47,7 +61,7 @@ $mollie->setApiKey("test_fJJbkmF9gjs3JsrzaNapaAF68dVv9C");
             $BackupImage = getBackupImage($product['StockItemID'], $databaseConnection);
 
             if ($StockItemImage != NULL) {
-                $image = '<img src="Public/StockItemIMG/' . $StockItemImage[0]['ImagePath'] . '" class="itemimage" style="width: 20%; height: 30%"></a>';
+                $image = '<img src="Public/StockItemIMG/' . $StockItemImage[0]['ImagePath'] . '" class="itemimage"></a>';
             } else {
                 $image = '<img src="Public/StockGroupIMG/' . $BackupImage['ImagePath'] . '" class="itemimage"></a>';
             }
@@ -174,9 +188,8 @@ $mollie->setApiKey("test_fJJbkmF9gjs3JsrzaNapaAF68dVv9C");
 
             <br><br>
 
-            <input type="submit" name='knop' value="Verder naar betalen" required
-                   style="width: 30%; align-items: center; justify-content: center; margin-left: 30%">
-        </div>
+    <input type="submit" name='knop' value="Verder naar betalen" required style="width: 26.5%; align-items: center; justify-content: center;">
+    </div>
 </form>
 
 <?php
@@ -268,11 +281,16 @@ if ($_SESSION['payment_id'] != NULL) {
         border-radius: 10px;
         background-color: #2C2F33;
         color: white;
-        width: 18%;
+        width: 27%;
         text-align: left;
-        margin-right: 5%;
-        margin-top: 5px;
-        padding: 10px;
+        margin-right: 3%;
+        padding: 20px;
+    }
+
+    h3 {
+        /*color: #333;*/
+        font-size: 25px;
+        margin-bottom: 15px;
     }
 
     #winkelmand {
@@ -392,6 +410,12 @@ if ($_SESSION['payment_id'] != NULL) {
         color: purple;
     }
 
+    p.solid3 {
+        border-style: solid;
+        width: 100%;
+        color: purple;
+    }
+
     #Besteladres {
         margin-top: 20px;
 
@@ -401,6 +425,13 @@ if ($_SESSION['payment_id'] != NULL) {
         /*color: #333;*/
         font-size: larger;
         margin-left: 70px;
+    }
+
+    h2 {
+        /*color: #333;*/
+        font-size: 50px;
+        margin-left: 60px;
+        margin-bottom: 30px;
     }
 
     input[type="text"],
@@ -429,3 +460,4 @@ if ($_SESSION['payment_id'] != NULL) {
     input[type="submit"]:hover {
         background-color: darkblue;
     }
+    </style>
