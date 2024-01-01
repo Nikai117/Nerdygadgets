@@ -111,7 +111,7 @@ if (!isset($_SESSION['winkelmand']) || $_SESSION['winkelmand'] == NULL) {
                     $productKorting = $_SESSION['korting']['percentage'] / 100;//korting gaat bijv van % naar decimaal; 10% korting => 1 - 0.1
                     $prijsAftrek = number_format(round($productTotaal * $productKorting, 2), 2, '.', '');
 
-                    $kortingText = "Korting: - €$prijsAftrek";
+                    $kortingText = "Korting: - €$prijsAftrek (-".$_SESSION['korting']['percentage']."%)";
                 } else {
                     $prijsAftrek = 0;
                 }

@@ -25,14 +25,14 @@ include __DIR__ . "/header.php";
     <label for="surname">Achternaam:</label>
     <input type="text" id="surname" name="surname" required>
 
-    <label for="company">*Bedrijf:</label>
+    <label for="company">Bedrijf (optioneel):</label>
     <input type="text" id="company" name="company">
 
     <label for="phone">Telefoonnummer:</label>
     <input type="tel" id="phone" name="phone" required>
 
     <div id="gebruikersAdres">
-        <label for="address">Adres:</label>
+        <label for="address">Straatnaam:</label>
         <input type="text" id="address" name="address" required>
 
         <label for="toevoeging">Huisnummer:</label>
