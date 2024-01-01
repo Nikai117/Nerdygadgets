@@ -34,6 +34,13 @@ function generateErrorMessage($errorMessage) {
     echo "<script>alert('Error: $errorMessage');</script>";
 }
 
+function generateSuccesMessage($succesMessage, $location) {
+    echo "<script>
+    alert('Succes:$succesMessage');
+    window.location.href= '$location';
+    </script>";
+}
+
 function isLoggedIn() {
     if ($_SESSION['activeUser'] == array()) {
         return false;

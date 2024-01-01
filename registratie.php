@@ -47,6 +47,7 @@ include __DIR__ . "/header.php";
 
 </body>
 <?php
+
 if (isset($_POST['submitButton'])) {
     if (!ctype_alpha(str_replace(' ', '', $_POST['address']))) {
         generateErrorMessage("Vul een geldig adres in");
@@ -56,7 +57,7 @@ if (isset($_POST['submitButton'])) {
         generateErrorMessage("Vul een geldig email in");
     } elseif (!preg_match('/^[1-9][0-9]{3}[A-Z]{2}$/', $_POST['postalcode'])) {
         generateErrorMessage("Vul een geldig postcode in (Zoals 1234AA).");
-    }else {
+    } else {
         if (isNameUnique(ucfirst(strtolower($_POST['name'])) . " " . ucfirst(strtolower($_POST['surname'])), $databaseConnection)) {
             if (getCustomerByEmail($_POST['email'], $databaseConnection) == array()) {
                 $_SESSION['account']['email'] = $_POST['email'];
@@ -67,9 +68,8 @@ if (isset($_POST['submitButton'])) {
                 $_SESSION['account']['address'] = $_POST['address'] . " " . $_POST['toevoeging'];
                 $_SESSION['account']['toevoeging'] = $_POST['toevoeging'];
                 $_SESSION['account']['postalcode'] = $_POST['postalcode'];
-
                 registerCustomer($_SESSION['account'], $databaseConnection);
-                header("Location: login.php");
+                generateSuccesMessage("Account is aangemaakt", 'login.php');
             } else {
                 generateErrorMessage("Email is al in gebruik");
             }
