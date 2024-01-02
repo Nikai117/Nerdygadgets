@@ -199,7 +199,6 @@ function registerCustomer($accountArray, $databaseConnection)
         $Statement1 = mysqli_prepare($databaseConnection, $Query1);
         mysqli_stmt_bind_param($Statement1, "ss", $accountArray['email'], $accountArray['password']);
         mysqli_stmt_execute($Statement1);
-        
         $last_id = mysqli_insert_id($databaseConnection);
 
         $Query2 = "
@@ -541,7 +540,6 @@ function getDeliveryDate($email, $databaseConnection)
     return $R;
 }
 
-
 function addStocksaleItem($databaseConnection) {
 
     $Query = "
@@ -764,6 +762,40 @@ function discountCodeCheck($code, $databaseConnection) {
 
     $R = mysqli_stmt_get_result($Statement);
     $R = mysqli_fetch_all($R, MYSQLI_ASSOC);
+
+    return $R;
+}
+
+//temperatuur opvragen
+function getTemperature($Query, $databaseConnection){
+    $Query = "
+                SELECT Temperature 
+                FROM coldroomtemperatures
+                WHERE ColdRoomTemperatureID = 
+                      (SELECT MAX(ColdRoomTemperatureID)
+                       FROM coldroomtemperatures);
+";
+
+    $Statement = mysqli_prepare($databaseConnection, $Query);
+    mysqli_stmt_execute($Statement);
+    $R = mysqli_stmt_get_result($Statement);
+    $R = mysqli_fetch_all($R, MYSQLI_ASSOC)[0];
+    return $R;
+}
+
+//Kijken of iets gekoeld is
+function getIsChillerStock($id, $databaseConnection){
+    $Query = "
+               SELECT StockItemID
+               FROM stockitems
+               WHERE IsChillerStock=1"; //Verander de 1 naar een 0 om te bekijken, er is nog geen chillerstock
+
+
+    $Statement = mysqli_prepare($databaseConnection, $Query);
+    mysqli_stmt_execute($Statement);
+    $R = mysqli_stmt_get_result($Statement);
+    $R = mysqli_fetch_all($R, MYSQLI_ASSOC);
+
 
     return $R;
 }

@@ -5,6 +5,9 @@ include __DIR__ . "/header.php";
 $StockItem = getStockItem($_GET['id'], $databaseConnection);
 $StockItemImage = getStockItemImage($_GET['id'], $databaseConnection);
 
+$ChillerStock = getIsChillerStock($_GET['id'], $databaseConnection);
+$Temperature = getTemperature($_GET['id'], $databaseConnection);
+
 $voorraad = getQuantity($_GET['id'], $databaseConnection);
 $QOH = $voorraad[0]["QOH"];//quantity on hand; voorraad
 // $QPO = $voorraad[0]["QPO"];//quantity per outer; hoeveelheid per doos die je gaat shippen
@@ -16,14 +19,13 @@ $QOH = $voorraad[0]["QOH"];//quantity on hand; voorraad
         <div id="name-alert-header">
             <h5>Maak een nieuwe lijstje aan</h5>
         </div>
-        
         <div id="name-alert-body">
             <form action="" id="name-form">
                 <label for="list-name">Naam:</label>
                 <input type="text" id="list-name" placeholder="Voer een naam in..." required>
-                <input type="submit" id="submit-button" value="Verstuur naam">      
+                <input type="submit" id="submit-button" value="Verstuur naam">
                 <input type="submit" id="cancel-button" value="Annuleer" onclick="closeNameForm()">
-            </form>     
+            </form>
         </div>
     </div>
 </div>
@@ -41,16 +43,17 @@ $QOH = $voorraad[0]["QOH"];//quantity on hand; voorraad
             <?php
             if($_SESSION['activeUser'] == NULL) {
                 echo '<h2><a href="login.php">Log in</a> om verlanglijstjes te gebruiken!</h2>';
-            } else {        
+
+            } else {
                 $userID = $_SESSION['activeUser'][0]['userID'];
                 $lijstNamen = getWishlistNames($userID, $databaseConnection);
             $x = 1;
             foreach($lijstNamen as $namen) {
                 if(existsInWishlist($userID, $namen['WishlistName'], $_GET['id'], $databaseConnection) == $_GET['id'])
-                    $button = '<button class="in-wishlist" type="button"" style="background-color:lime;color:lime;">✔</button>'; 
-                else   
+                    $button = '<button class="in-wishlist" type="button"" style="background-color:lime;color:lime;">✔</button>';
+                else
                     $button = '<button class="add-to-wishlist" type="button" onclick="insertToWishlist(this)" style="background-color:blue">+</button>';
-                
+
                 #stuur php variabele naar javascript mbv data-name
                 echo '
                     <div class="wishlist" data-name="'.$namen["WishlistName"].'">
@@ -141,6 +144,7 @@ $QOH = $voorraad[0]["QOH"];//quantity on hand; voorraad
 
 
             <h1 class="StockItemID">Artikelnummer: <?php print $StockItem["StockItemID"]; ?></h1>
+            <h1 class="StockItemID">Temperatuur: <?php print $Temperature["Temperature"]; ?></h1>
             <h2 class="StockItemNameViewSize StockItemName">
                 <?php print $StockItem['StockItemName']; ?>
             </h2>
@@ -151,7 +155,7 @@ $QOH = $voorraad[0]["QOH"];//quantity on hand; voorraad
                         <p class="StockItemPriceText"><b><?php print sprintf("€ %.2f", $StockItem['SellPrice']); ?></b></p>
                         <h6> Inclusief BTW </h6>
                         <!-- code voor de knop om producten toe te voegen aan het winkelmandje-->
-                        <?php 
+                        <?php
                         //als er minder units in te voorraad zitten dan er nodig zijn om een doos te vullen
                         if($QOH < 1) {?>
                             <p class="notEnough">Niet genoeg units om te shippen!</p>
@@ -172,7 +176,7 @@ $QOH = $voorraad[0]["QOH"];//quantity on hand; voorraad
                                     print('<p class="bestelling"><b><i>Product toegevoegd aan <a href="winkelmand.php">winkelmand</a>!</i></b></p>');
                                 } else {
                                     if($_SESSION['winkelmand'][$row["StockItemID"]]['aantal'] < $QOH) {
-                                        $_SESSION['winkelmand'][$row["StockItemID"]]['aantal']++;       
+                                        $_SESSION['winkelmand'][$row["StockItemID"]]['aantal']++;
                                         print('<p class="bestelling"><b><i>Product toegevoegd aan <a href="winkelmand.php">winkelmand</a>!</i></b></p>');
                                     } else {
                                         print('<p class="bestelling"><b><i>Mislukt! Niet genoeg in voorraad.</i></b></p>');
@@ -265,7 +269,7 @@ $QOH = $voorraad[0]["QOH"];//quantity on hand; voorraad
         var wishlistName = button.parentElement.dataset.name; //data van de div
         var StockItemID = '<?php echo $_GET["id"]; ?>';
         var operation = "toevoegen_product";
-        
+
         //ajax request om de variabele(n) van hierboven te sturen naar lijst_operaties.php
         $.ajax({
             url: 'lijst_operaties.php',
@@ -306,7 +310,7 @@ $QOH = $voorraad[0]["QOH"];//quantity on hand; voorraad
                     //maak een javascript object van de json-string
                     const responseObj = JSON.parse(response);
                     //kijk of het aanmaken geslaagd was
-                    if (responseObj.success === true) {                                     
+                    if (responseObj.success === true) {
                         closeNameForm();
                     } else {
                         //vermeldt dat het aanmaken niet geslaagd is
@@ -321,7 +325,8 @@ $QOH = $voorraad[0]["QOH"];//quantity on hand; voorraad
                 console.error('Error:', error);
             }
         });
-    });             
+    });
+
 
 </script>
 
@@ -391,7 +396,7 @@ $QOH = $voorraad[0]["QOH"];//quantity on hand; voorraad
         filter: brightness(85%);
     }
     #name-alert-body #cancel-button {
-        background-color: gray;
+        background-color: rgb(128, 128, 128);
         margin-top: 5%;
         float: right;
     }
@@ -400,7 +405,6 @@ $QOH = $voorraad[0]["QOH"];//quantity on hand; voorraad
     }
     #list-name {
         width: 80%;
-        
     }
 </style>
 
@@ -450,7 +454,7 @@ $QOH = $voorraad[0]["QOH"];//quantity on hand; voorraad
         height: 65%;
         margin: auto;
         left: 35%;
-        top: 5%; 
+        top: 5%;
         background-color: rgb(35, 35, 47, 0.97);
         color: white;
         border: 4px solid darkblue;
@@ -527,10 +531,10 @@ $QOH = $voorraad[0]["QOH"];//quantity on hand; voorraad
         background-color: darkblue;
     }
     #alert-footer #cart-button {
-        background-color: gray;
+        background-color: rgb(128, 128, 128);
         color: #fff;
     }
-    #alert-footer #cart-button:hover {      
+    #alert-footer #cart-button:hover {
         filter: brightness(80%);
     }
 </style>
