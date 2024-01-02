@@ -199,7 +199,6 @@ function registerCustomer($accountArray, $databaseConnection)
         $Statement1 = mysqli_prepare($databaseConnection, $Query1);
         mysqli_stmt_bind_param($Statement1, "ss", $accountArray['email'], $accountArray['password']);
         mysqli_stmt_execute($Statement1);
-
         $last_id = mysqli_insert_id($databaseConnection);
 
         $Query2 = "
@@ -541,8 +540,6 @@ function getDeliveryDate($email, $databaseConnection)
     return $R;
 }
 
-<<<<<<< Updated upstream
-
 function addStocksaleItem($databaseConnection) {
 
     $Query = "
@@ -768,7 +765,7 @@ function discountCodeCheck($code, $databaseConnection) {
 
     return $R;
 }
-=======
+
 //temperatuur opvragen
 function getTemperature($Query, $databaseConnection){
     $Query = "

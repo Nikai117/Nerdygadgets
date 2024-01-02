@@ -4,11 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b5707d94-885a-46a4-8032-b546f08eb300" name="Changes" comment="">
+    <list default="true" id="28b213c5-e821-4726-9063-391bb5df6ad3" name="Changes" comment="Made postalcode monkey proof">
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_20_12_2023_14_04_[Changes]1/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_20_12_2023_14_04__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_20_12_2023_14_04__Changes_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_20_12_2023_14_04__Changes_1.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Betaalgegevens.php" beforeDir="false" afterPath="$PROJECT_DIR$/Betaalgegevens.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database.php" beforeDir="false" afterPath="$PROJECT_DIR$/database.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/header.php" beforeDir="false" afterPath="$PROJECT_DIR$/header.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/registratie.php" beforeDir="false" afterPath="$PROJECT_DIR$/registratie.php" afterDir="false" />
     </list>
-    <list id="11e29af2-402d-40ec-9693-3273b5e76702" name="Changes by nikai" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -16,13 +20,12 @@
   </component>
   <component name="ComposerSettings" synchronizationState="SYNCHRONIZE">
     <pharConfigPath>$PROJECT_DIR$/mollie-api-php/composer.json</pharConfigPath>
-    <execution />
+    <execution>
+      <phar pharPath="$PROJECT_DIR$/composer.phar" />
+    </execution>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-  </component>
-  <component name="MarkdownSettingsMigration">
-    <option name="stateVersion" value="1" />
   </component>
   <component name="PhpDebugGeneral" listening_started="true" />
   <component name="PhpWorkspaceProjectConfiguration" interpreter_name="PHP">
@@ -31,46 +34,91 @@
     </include_path>
   </component>
   <component name="ProjectColorInfo">{
-  &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 3
 }</component>
-  <component name="ProjectId" id="2Yo8etb7IhJEXEiCVOuebGqYtT5" />
+  <component name="ProjectId" id="2ZkhtxcVHMBvavnfjUEUFzsjJVr" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "codeWithMe.voiceChat.enabledByDefault": "false",
-    "git-widget-placeholder": "Styling",
-    "ignore.virus.scanning.warn.message": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "settings.editor.selected.configurable": "reference.webide.settings.project.settings.php",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="b5707d94-885a-46a4-8032-b546f08eb300" name="Changes" comment="" />
-      <created>1701180670920</created>
+      <changelist id="28b213c5-e821-4726-9063-391bb5df6ad3" name="Changes" comment="Styling of account page" />
+      <created>1702972204650</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1701180670920</updated>
-      <workItem from="1701180672051" duration="3679000" />
-      <workItem from="1701199486834" duration="7199000" />
-      <workItem from="1701248883046" duration="2066000" />
-      <workItem from="1701289269161" duration="9676000" />
+      <updated>1702972204650</updated>
+      <workItem from="1702972207023" duration="3930000" />
+      <workItem from="1703075825513" duration="2491000" />
+      <workItem from="1703104682939" duration="2159000" />
+      <workItem from="1703158778177" duration="1249000" />
+      <workItem from="1703879190644" duration="3255000" />
+      <workItem from="1704112609338" duration="4963000" />
     </task>
+    <task id="LOCAL-00001" summary="Fixed payment ID error">
+      <option name="closed" value="true" />
+      <created>1703077573932</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1703077573932</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Fixed payment ID error">
+      <option name="closed" value="true" />
+      <created>1703077790540</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1703077790541</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Fixed payment ID error">
+      <option name="closed" value="true" />
+      <created>1703078058346</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1703078058346</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Fixed name error and made forms monkey proof">
+      <option name="closed" value="true" />
+      <created>1703106232296</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1703106232296</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Made postalcode monkey proof">
+      <option name="closed" value="true" />
+      <created>1703106618595</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1703106618596</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Styling of account page" />
+    <MESSAGE value="Fixed payment ID error" />
+    <MESSAGE value="Fixed name error and made forms monkey proof" />
+    <MESSAGE value="Made postalcode monkey proof" />
+    <option name="LAST_COMMIT_MESSAGE" value="Made postalcode monkey proof" />
   </component>
 </project>

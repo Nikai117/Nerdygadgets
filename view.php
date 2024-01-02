@@ -19,7 +19,6 @@ $QOH = $voorraad[0]["QOH"];//quantity on hand; voorraad
         <div id="name-alert-header">
             <h5>Maak een nieuwe lijstje aan</h5>
         </div>
-
         <div id="name-alert-body">
             <form action="" id="name-form">
                 <label for="list-name">Naam:</label>
@@ -44,6 +43,7 @@ $QOH = $voorraad[0]["QOH"];//quantity on hand; voorraad
             <?php
             if($_SESSION['activeUser'] == NULL) {
                 echo '<h2><a href="login.php">Log in</a> om verlanglijstjes te gebruiken!</h2>';
+
             } else {
                 $userID = $_SESSION['activeUser'][0]['userID'];
                 $lijstNamen = getWishlistNames($userID, $databaseConnection);
@@ -327,6 +327,7 @@ $QOH = $voorraad[0]["QOH"];//quantity on hand; voorraad
         });
     });
 
+
 </script>
 
 <!-- stijl voor de overlay div van de naam formulier -->
@@ -395,7 +396,7 @@ $QOH = $voorraad[0]["QOH"];//quantity on hand; voorraad
         filter: brightness(85%);
     }
     #name-alert-body #cancel-button {
-        background-color: gray;
+        background-color: rgb(128, 128, 128);
         margin-top: 5%;
         float: right;
     }
@@ -404,7 +405,6 @@ $QOH = $voorraad[0]["QOH"];//quantity on hand; voorraad
     }
     #list-name {
         width: 80%;
-
     }
 </style>
 
@@ -531,7 +531,7 @@ $QOH = $voorraad[0]["QOH"];//quantity on hand; voorraad
         background-color: darkblue;
     }
     #alert-footer #cart-button {
-        background-color: gray;
+        background-color: rgb(128, 128, 128);
         color: #fff;
     }
     #alert-footer #cart-button:hover {
