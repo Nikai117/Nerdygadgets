@@ -1,7 +1,7 @@
-<!-- dit bestand bevat alle code die verbinding maakt met de database -->
 <?php
 
-function connectToDatabase() {
+function connectToDatabase()
+{
     $Connection = null;
 
     mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT); // Set MySQLi to throw exceptions
@@ -20,7 +20,8 @@ function connectToDatabase() {
     return $Connection;
 }
 
-function getHeaderStockGroups($databaseConnection) {
+function getHeaderStockGroups($databaseConnection)
+{
     $Query = "
                 SELECT StockGroupID, StockGroupName, ImagePath
                 FROM stockgroups 
@@ -35,7 +36,8 @@ function getHeaderStockGroups($databaseConnection) {
     return $HeaderStockGroups;
 }
 
-function getStockGroups($databaseConnection) {
+function getStockGroups($databaseConnection)
+{
     $Query = "
             SELECT StockGroupID, StockGroupName, ImagePath
             FROM stockgroups 
@@ -51,7 +53,8 @@ function getStockGroups($databaseConnection) {
     return $StockGroups;
 }
 
-function getStockItem($id, $databaseConnection) {
+function getStockItem($id, $databaseConnection)
+{
     $Result = null;
 
     $Query = " 
@@ -80,7 +83,8 @@ function getStockItem($id, $databaseConnection) {
     return $Result;
 }
 
-function getStockItemImage($id, $databaseConnection) {
+function getStockItemImage($id, $databaseConnection)
+{
 
     $Query = "
                 SELECT ImagePath
@@ -97,8 +101,9 @@ function getStockItemImage($id, $databaseConnection) {
 }
 
 //zelf gemaakt
-function getBackupImage($id, $databaseConnection) {
- 
+function getBackupImage($id, $databaseConnection)
+{
+
     $Query = "
                 SELECT SG.ImagePath
                 FROM stockgroups SG
@@ -116,7 +121,8 @@ function getBackupImage($id, $databaseConnection) {
 }
 
 //zelfgemaakt
-function getQuantity($id, $databaseConnection) {
+function getQuantity($id, $databaseConnection)
+{
 
     $Query = "
     SELECT QuantityOnHand AS QOH, QuantityPerOuter AS QPO
@@ -134,9 +140,10 @@ function getQuantity($id, $databaseConnection) {
 }
 
 //zelfgemaakt
-function addToCart($id, $databaseConnection) {
-    
-        $Query = "
+function addToCart($id, $databaseConnection)
+{
+
+    $Query = "
         SELECT StockItemID, StockItemName, (RecommendedRetailPrice*(1+(TaxRate/100))) AS SellPrice, TaxRate, UnitPrice
         FROM stockitems
         WHERE StockItemID = ?";
@@ -150,9 +157,10 @@ function addToCart($id, $databaseConnection) {
     return $R;
 }
 
-function updateStocks($id, $amount, $databaseConnection) {
-    
-        $Query = "
+function updateStocks($id, $amount, $databaseConnection)
+{
+
+    $Query = "
         UPDATE stockitemholdings
         SET LastStocktakeQuantity = QuantityOnHand,
             QuantityOnHand = QuantityOnHand - ?
@@ -160,12 +168,102 @@ function updateStocks($id, $amount, $databaseConnection) {
 
     $Statement = mysqli_prepare($databaseConnection, $Query);
     mysqli_stmt_bind_param($Statement, "ii", $amount, $id);
-    mysqli_stmt_execute($Statement);    
+    mysqli_stmt_execute($Statement);
+}
+
+function getAccountById($id, $databaseConnection) {
+    $Query = "
+        SELECT *
+        FROM accounts
+        WHERE userID = ?
+    ";
+
+    $statement = mysqli_prepare($databaseConnection, $Query);
+    mysqli_stmt_bind_param($statement, "i", $id);
+    mysqli_stmt_execute($statement);
+    $R = mysqli_stmt_get_result($statement);
+    $R = mysqli_fetch_all($R, MYSQLI_ASSOC);
+
+    return $R;
+}
+
+function registerCustomer($accountArray, $databaseConnection)
+{
+    $customer = getCustomerByEmail($accountArray['email'], $databaseConnection);
+
+
+
+    if ($customer == NULL) {
+        $Query1 = "INSERT INTO accounts VALUES (NULL, ?, ?)";
+
+        $Statement1 = mysqli_prepare($databaseConnection, $Query1);
+        mysqli_stmt_bind_param($Statement1, "ss", $accountArray['email'], $accountArray['password']);
+        mysqli_stmt_execute($Statement1);
+        
+        $last_id = mysqli_insert_id($databaseConnection);
+
+        $Query2 = "
+        INSERT INTO customers
+        VALUES ( NULL,
+            ?,
+            1,
+            9,
+            null,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0.00,
+            '2023-01-01',
+            0.00,
+            0,
+            0,
+            30,
+            ?,
+            '(201) 555-0101',
+            1,
+            1,
+            'http://www.example.com',
+            ?,
+            null,
+            ?,
+            'TestDeliveryLocation',
+            'TestPostalAddressLine1',
+            'TestPostalAddressLine2',
+            'TestPostalPostalCode',
+            1,
+            '2023-01-01 00:00:00',
+            '9999-12-31 23:59:59',
+            ?,
+            ?
+        );
+    ";
+
+        $Statement2 = mysqli_prepare($databaseConnection, $Query2);
+        mysqli_stmt_bind_param($Statement2, "sssssi", $accountArray['name'], $accountArray['phone'], $accountArray['address'], $accountArray['postalcode'], $accountArray['email'], $last_id);
+        mysqli_stmt_execute($Statement2);
+    }
+
+    else if ($customer['accountID'] == NULL) {
+        $Query = "
+        INSERT INTO accounts
+        VALUES(
+               NULL,
+               ?,
+               ?
+        );";
+            $Statement = mysqli_prepare($databaseConnection, $Query);
+        mysqli_stmt_bind_param($Statement, "ss", $accountArray['email'], $accountArray['password']);
+        mysqli_stmt_execute($Statement);
+    } else {
+        print("De ingevoerde email is al in gebruik");
+    }
 }
 
 //klant toevoegen
-function addCustomer($klantArray, $databaseConnection) {
-
+function addCustomer($klantArray, $databaseConnection)
+{
     $klant = getCustomerByEmail($klantArray['email'], $databaseConnection);
 
     if ($klant == NULL) {
@@ -210,12 +308,66 @@ function addCustomer($klantArray, $databaseConnection) {
         mysqli_stmt_execute($Statement);
 
         return "";
-    }else {
+    } else {
         return $klant;
     }
 }
 
-function getCustomerID($email, $databaseConnection) {
+function isNameUnique($name, $databaseConnection) {
+
+    $Query = "
+    SELECT *
+    FROM customers
+    WHERE CustomerName = ?;
+    ";
+
+    $statement = mysqli_prepare($databaseConnection, $Query);
+    mysqli_stmt_bind_param($statement, "s", $name);
+    mysqli_stmt_execute($statement);
+    $result = mysqli_stmt_get_result($statement);
+    $result = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+    if ($result == array()) {
+        return true;
+    } else {
+        return false;
+    }
+}
+function checkLogin($email, $password, $databaseConnection) {
+
+    $Query = "
+        SELECT *
+        FROM accounts
+        WHERE email = ? AND password = ?;
+    ";
+
+    $Statement = mysqli_prepare($databaseConnection, $Query);
+    mysqli_stmt_bind_param($Statement, "ss", $email, $password);
+    mysqli_stmt_execute($Statement);
+    $result = mysqli_stmt_get_result($Statement);
+    $result = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    return $result;
+}
+
+function getCustomerByAccountID($id, $databaseConnection) {
+
+    $Query = "
+    SELECT *
+    FROM customers
+    WHERE userID = ?
+    LIMIT 1;
+    ";
+
+    $Statement = mysqli_prepare($databaseConnection, $Query);
+    mysqli_stmt_bind_param($Statement, "i", $id);
+    mysqli_stmt_execute($Statement);
+    $result = mysqli_stmt_get_result($Statement);
+    $result = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    return $result;
+}
+
+function getCustomerID($email, $databaseConnection)
+{
 
     $Query = "
         SELECT CustomerID
@@ -232,7 +384,24 @@ function getCustomerID($email, $databaseConnection) {
     return $R;
 }
 
-function getCustomerByEmail($email, $databaseConnection) {
+function getAccountByEmail($email, $databaseConnection) {
+    $Query = "
+        SELECT *
+        FROM accounts
+        WHERE email = ?;
+    ";
+
+    $statement = mysqli_prepare($databaseConnection, $Query);
+    mysqli_stmt_bind_param($statement, "s", $email);
+    mysqli_stmt_execute($statement);
+    $R = mysqli_stmt_get_result($statement);
+    $R = mysqli_fetch_all($R, MYSQLI_ASSOC);
+
+    return $R;
+}
+
+function getCustomerByEmail($email, $databaseConnection)
+{
 
     $Query = "
     SELECT email 
@@ -249,14 +418,15 @@ function getCustomerByEmail($email, $databaseConnection) {
     return $R;
 }
 
-function addOrder($email, $databaseConnection) {
+function addOrder($email, $databaseConnection)
+{
     $customerID = getCustomerID($email, $databaseConnection);
 
     $vandaag = date("Y-m-d");
-    $morgen = date('Y-m-d', strtotime($vandaag. ' + 1 days'));
+    $morgen = date('Y-m-d', strtotime($vandaag . ' + 1 days'));
     $nu = date("Y-m-d H:i:s");
 
-        $Query = "
+    $Query = "
         INSERT INTO orders 
         VALUES (NULL, ?, '2', NULL, '3032', NULL, ?, ?, NULL, '1', NULL, NULL, NULL, NULL, '1', ?);";
 
@@ -265,9 +435,10 @@ function addOrder($email, $databaseConnection) {
     mysqli_stmt_execute($Statement);
 }
 
-function getOrderId($email, $databaseConnection) {
+function getOrderId($email, $databaseConnection)
+{
     $customerID = getCustomerID($email, $databaseConnection);
-    
+
     $Query = " 
        SELECT OrderID
        From orders
@@ -285,7 +456,43 @@ function getOrderId($email, $databaseConnection) {
 
 }
 
-function addOrderLine($email, $databaseConnection, $product) {
+function getOrderDetails($email, $databaseConnection) {
+    $customerID = getCustomerID($email, $databaseConnection);
+
+    $Query = " 
+       SELECT *
+       From orders
+       WHERE CustomerID = ?
+       ORDER BY OrderID DESC";
+
+    $Statement = mysqli_prepare($databaseConnection, $Query);
+    mysqli_stmt_bind_param($Statement, "i", $customerID);
+    mysqli_stmt_execute($Statement);
+    $R = mysqli_stmt_get_result($Statement);
+    $R = mysqli_fetch_all($R, MYSQLI_ASSOC);
+
+    return $R;
+}
+
+function getOrderLineDetails($orderID, $databaseConnection) {
+
+    $Query = " 
+       SELECT *
+       From orderlines
+       WHERE orderID = ?
+       ";
+
+    $Statement = mysqli_prepare($databaseConnection, $Query);
+    mysqli_stmt_bind_param($Statement, "i", $orderID);
+    mysqli_stmt_execute($Statement);
+    $R = mysqli_stmt_get_result($Statement);
+    $R = mysqli_fetch_all($R, MYSQLI_ASSOC);
+
+    return $R;
+}
+
+function addOrderLine($email, $databaseConnection, $product)
+{
     $orderID = getOrderId($email, $databaseConnection);
     $stockItemID = $product['StockItemID'];
     $stockItemDesc = $product['StockItemName'];//description voert die verkeerd in; nog naar kijken
@@ -315,7 +522,8 @@ function addOrderLine($email, $databaseConnection, $product) {
     mysqli_stmt_execute($Statement);
 }
 
-function getDeliveryDate($email, $databaseConnection) {
+function getDeliveryDate($email, $databaseConnection)
+{
     $orderID = getOrderId($email, $databaseConnection);
 
     $Query = "
@@ -329,6 +537,233 @@ function getDeliveryDate($email, $databaseConnection) {
 
     $R = mysqli_stmt_get_result($Statement);
     $R = mysqli_fetch_all($R, MYSQLI_ASSOC)[0]["ExpectedDeliveryDate"];
+
+    return $R;
+}
+
+
+function addStocksaleItem($databaseConnection) {
+
+    $Query = "
+    SELECT si.StockItemID, si.StockItemName, si.MarketingComments, sih.QuantityOnHand
+    FROM stockitems si
+    JOIN stockitemholdings sih ON si.StockItemID = sih.StockItemID
+    WHERE sih.QuantityOnHand > 200000";
+
+    $Statement = mysqli_prepare($databaseConnection, $Query);
+    mysqli_stmt_execute($Statement);
+
+    $result = mysqli_stmt_get_result($Statement);
+    $result = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+    return $result;
+}
+function getWishlistNames($userID, $databaseConnection) {
+    
+    $Query = "
+            SELECT WishlistName   
+            FROM wishlist
+            WHERE userID = ?
+            ORDER BY WishlistID;";
+
+        $Statement = mysqli_prepare($databaseConnection, $Query);
+        mysqli_stmt_bind_param($Statement, "i", $userID);
+        mysqli_stmt_execute($Statement);
+    
+        $R = mysqli_stmt_get_result($Statement);
+        $R = mysqli_fetch_all($R, MYSQLI_ASSOC);
+    
+        return $R;
+}
+
+function getWishlistID($lijstNaam, $databaseConnection) {
+
+    $Query = "
+            SELECT WishlistID   
+            FROM wishlist
+            WHERE WishlistName = ?";
+
+        $Statement = mysqli_prepare($databaseConnection, $Query);
+        mysqli_stmt_bind_param($Statement, "s", $lijstNaam);
+        mysqli_stmt_execute($Statement);
+
+        $R = mysqli_stmt_get_result($Statement);
+        $R = mysqli_fetch_all($R, MYSQLI_ASSOC)[0]["WishlistID"];
+
+        return $R;
+}
+
+function getMaxWishlistID($userID, $databaseConnection) {
+    
+    $Query = "
+            SELECT userID, MAX(WishlistID) as maxID
+            FROM wishlist 
+            WHERE userID = ? 
+            GROUP BY userID;";
+
+        $Statement = mysqli_prepare($databaseConnection, $Query);
+        mysqli_stmt_bind_param($Statement, "i", $userID);
+        mysqli_stmt_execute($Statement);
+
+        $R = mysqli_stmt_get_result($Statement);
+        $R = mysqli_fetch_all($R, MYSQLI_ASSOC)[0]["maxID"];
+
+        return $R;            
+}
+
+function getWishlistContent($userID, $lijstNaam, $databaseConnection) {
+    
+    $Query = "
+            SELECT StockItemID
+            FROM wishlist_content
+            WHERE userID = ?
+            AND WishlistID IN
+                (SELECT WishlistID
+                FROM wishlist
+                WHERE userID = ?
+                AND WishlistName = ?);";
+
+        $Statement = mysqli_prepare($databaseConnection, $Query);
+        mysqli_stmt_bind_param($Statement, "iis", $userID, $userID, $lijstNaam);
+        mysqli_stmt_execute($Statement);
+    
+        $R = mysqli_stmt_get_result($Statement);
+        $R = mysqli_fetch_all($R, MYSQLI_ASSOC);
+    
+        return $R;
+}
+
+function existsInWishlist($userID, $lijstNaam, $StockItemID, $databaseConnection){
+
+        $Query = "
+        SELECT StockItemID
+        FROM wishlist_content
+        WHERE userID = ?
+        AND StockItemID = ?
+        AND WishlistID IN
+            (SELECT WishlistID
+            FROM wishlist
+            WHERE userID = ?
+            AND WishlistName = ?);";
+
+    $Statement = mysqli_prepare($databaseConnection, $Query);
+    mysqli_stmt_bind_param($Statement, "iiis", $userID, $StockItemID, $userID, $lijstNaam);
+    mysqli_stmt_execute($Statement);
+
+    $R = mysqli_stmt_get_result($Statement);
+    $R = mysqli_fetch_all($R, MYSQLI_ASSOC);
+
+    if(isset($R[0]['StockItemID']))
+        return $R[0]['StockItemID'];
+    else
+        return null;
+}
+
+function insertToWishlist($userID, $lijstNaam, $itemID, $databaseConnection) {
+    try {
+    $lijstID = getWishlistID($lijstNaam, $databaseConnection);
+    if($lijstID !== null ) {
+            $Query = "
+            INSERT INTO wishlist_content
+            VALUES (?, ?, ?)";
+
+        $Statement = mysqli_prepare($databaseConnection, $Query);
+        mysqli_stmt_bind_param($Statement, "iii", $userID, $lijstID, $itemID);
+        mysqli_stmt_execute($Statement);
+
+        return true;
+    } else {
+        return false;
+    }
+    } catch (Exception $e) {
+        //returns false als inserten niet gelukt is
+        return false;
+    }
+}
+
+function removeFromWishlist($userID, $lijstNaam, $StockItemID, $databaseConnection) {
+    try {
+            $Query = "
+                DELETE FROM wishlist_content
+                WHERE userID = ?
+                AND StockItemID = ?
+                AND WishlistID IN
+                    (SELECT WishlistID
+                    FROM wishlist
+                    WHERE userID = ?
+                    AND WishlistName = ?);";
+
+            $Statement = mysqli_prepare($databaseConnection, $Query);
+            mysqli_stmt_bind_param($Statement, "iiis", $userID, $StockItemID, $userID, $lijstNaam);
+            mysqli_stmt_execute($Statement);
+
+            return true;
+        } catch (Exception $e) {
+            //returns false als verwijderen niet gelukt is
+            return false;
+        }
+}
+
+function createWishlist($userID, $lijstNaam, $databaseConnection) {
+    try {
+    $lijstID = getMaxWishlistID($userID, $databaseConnection);
+    if($lijstID !== null ) {
+        //verhoog het ID om te inserten; soort van incrementen gebeurt hier
+        $lijstID += 1;
+
+            $Query = "
+            INSERT INTO wishlist
+            VALUES (?, ?, ?)";
+
+        $Statement = mysqli_prepare($databaseConnection, $Query);
+        mysqli_stmt_bind_param($Statement, "iis", $userID, $lijstID, $lijstNaam);
+        mysqli_stmt_execute($Statement);
+
+        return true;
+    } else {
+        return false;
+    }
+    } catch (Exception $e) {
+        //returns false als inserten niet gelukt is
+        return false;
+    }
+}
+
+function deleteWishlist($userID, $lijstNaam, $databaseConnection) {
+    try {
+        $Query = "
+            DELETE FROM wishlist
+            WHERE userID = ?
+            AND WishlistName = ?;";
+
+        $Statement = mysqli_prepare($databaseConnection, $Query);
+        mysqli_stmt_bind_param($Statement, "is", $userID, $lijstNaam);
+        mysqli_stmt_execute($Statement);
+
+        return true;
+    } catch (Exception $e) {
+        //returns false als verwijderen niet gelukt is
+        return false;
+    }
+}
+
+function discountCodeCheck($code, $databaseConnection) {
+    date_default_timezone_set('Europe/Amsterdam');
+    $date = date("Y-m-d H:i:s");
+
+    $Query = "
+            SELECT code, korting_percentage 
+            FROM kortingscodes 
+            WHERE BINARY code = ? 
+            AND actief = 1 
+            AND geldig_tot >= ?";
+
+    $Statement = mysqli_prepare($databaseConnection, $Query);
+    mysqli_stmt_bind_param($Statement, "ss", $code, $date);
+    mysqli_stmt_execute($Statement);
+
+    $R = mysqli_stmt_get_result($Statement);
+    $R = mysqli_fetch_all($R, MYSQLI_ASSOC);
 
     return $R;
 }

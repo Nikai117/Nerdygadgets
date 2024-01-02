@@ -51,7 +51,8 @@
         "ext-curl": "*",
         "ext-json": "*",
         "ext-openssl": "*",
-        "composer\/ca-bundle": "^1.2"
+        "composer\/ca-bundle": "^1.2",
+      "ext-ctype": "*"
     },
     "require-dev": {
         "eloquent\/liberator": "^2.0||^3.0",
